@@ -12,10 +12,9 @@ public:
 		return dist(rng);
 	}
 	~CRand() {
-		LAGInterface::Writeln("CRand::~CRand() Destructor Called");
 		
 	}
 private:
-	std::mt19937 rng; // this might be a problem. Ideally inst inside of constructor.
+	std::mt19937 rng; // This is inefficient. Move to static or global initialize a driver. This could also lead to conflict between inter-system communication? I'm not exactly 100% positive on this rand stuff. Right now.
 	std::uniform_int_distribution<T> dist;
 };

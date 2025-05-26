@@ -18,7 +18,7 @@ public:
     static void AptTrigger(TriggerCtx* ctx) {
         if (ctx->m_bIsWithinBounds) {
 			HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");
-			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Press ~INPUT_CONTEXT~ to enter.");
+			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Press ~INPUT_CONTEXT~ to enter."); // GTA Online Does not use this type of enter system. They simply of a Trigger zone when player enters zone animation plays and they are warped to menu or apartment.
 			HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 0, -1);
         }
     }
