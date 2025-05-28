@@ -63,6 +63,9 @@
     <ClInclude Include="datattypes\Bit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="datattypes\allocs\memtrack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network\obj\windows_init.cpp">

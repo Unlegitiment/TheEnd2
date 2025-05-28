@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="datattypes\allocs\memtrack.h" />
     <ClInclude Include="datattypes\Bit.h" />
     <ClInclude Include="datattypes\color.h" />
     <ClInclude Include="datattypes\MyHndlGen.h" />

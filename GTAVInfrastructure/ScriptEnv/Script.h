@@ -19,7 +19,6 @@ public:
     static ScriptName* GetInstance() { static ScriptName instance = ScriptName(); return &instance; };
 protected:
     ScriptableBase() : fwScriptEnv(typeid(ScriptName).name()){
-        fwScriptMgr::Get().RegisterScript(this); // okie
     };
 };
 

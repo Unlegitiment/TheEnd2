@@ -9,6 +9,7 @@
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 // @todo: logger completely breaks game right now. not sure why?
 
+#include "ScriptHeader.h"
 #include <map>
 #include "GTAVInfrastructure\Hud\HudComponents.h"
 struct CDumpUtil {
@@ -33,19 +34,23 @@ struct CDumpUtil {
             "SNOW_HALLOWEEN" 
         };
         for (int i = 0; i < v.size(); i++) {
-            LAGInterface::Write("%s : %lu\n", v[i], MISC::GET_HASH_KEY(v[i]));
+            LAGInterface::Writeln("%s : %lu", v[i], MISC::GET_HASH_KEY(v[i]));
         }
     }
 };
-#include "ScriptHeader.h"
+
+
+
+
 void main()
 {
     //CRankBar::GetRawBar().Load();    
-    CApplication* g_Application = new CApplication();
-    g_Application->RegisterFuncStart(LAGInterface::Init);
-    g_Application->RegisterFuncStart(CGame::Init);
-    g_Application->RegisterFuncUpdate(CGame::Update);
-    g_Application->Init();
+    CApplication* g_App = new CApplication();
+    g_App->RegisterFuncStart(LAGInterface::Init);
+    g_App->RegisterFuncStart(CGame::Init);
+    g_App->RegisterFuncUpdate(CGame::Update);
+    g_App->RegisterFuncDestroy(CGame::Destroy);
+    g_App->Init();
     LAGInterface::GetFileLogger()->Write("test\n");
     CDumpUtil::DumpWeatherHash();
     CreateInstances();
@@ -53,10 +58,11 @@ void main()
     fwScriptMgr::Get().InitAll();
     while (true)
     {
-        g_Application->Update();
+        g_App->Update();
         
         WAIT(0);
     }
+    g_App->Destroy(); // this line will never get reached in debug. 
 }
 
 void ScriptMain()

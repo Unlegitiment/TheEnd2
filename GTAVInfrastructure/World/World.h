@@ -2,6 +2,7 @@
 #include "Water.h"
 #include "WorldState.h"
 #include "Ambience\GameAmbience.h"
+#include "GTAVInfrastructure\streaming\streamingMgr.h"
 class CGameWorld {
 public:
 	CGameWorld() { Init(); }
@@ -13,6 +14,7 @@ public:
 	static int GetWaterFile();
 	static CWaterMgr* GetWtrMgr() { return sm_pWater; }
 	static CGameAmbience* GetAmbience() { return sm_pAmbience; }
+	static CStreamingMgr* GetStreamingMgr() { return sm_pStreaming; }
 	static void Destroy();
 	~CGameWorld() { Destroy(); }
 private:
@@ -20,4 +22,5 @@ private:
 	inline static CWaterMgr* sm_pWater = nullptr;
 	inline static CWorldState* sm_pWorldState = nullptr;
 	inline static CGameAmbience* sm_pAmbience = nullptr;
+	inline static CStreamingMgr* sm_pStreaming = nullptr;
 };

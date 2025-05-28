@@ -1,0 +1,3 @@
+#pragma once
+#include <vector>
+#define ALLOC_OVERRIDES(T) private: static inline std::vector<T*> sm_Allocs; public: void* operator new(size_t size) { void* p = ::operator new(size); sm_Allocs.push_back((T*)p); return p;} void operator delete(void* p) { for(auto it = sm_Allocs.begin(); it< sm_Allocs.end(); it++) { if(*it == p){ ::operator delete (p); sm_Allocs.erase(it);}}} static std::vector<T*> GetAllocations() { return sm_Allocs; } 

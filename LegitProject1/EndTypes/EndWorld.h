@@ -6,7 +6,7 @@ class CEndWorld {
 public:
 	static void Init() {
 		sm_pMarkerMgr = new CMarkerMgr();
-		sm_pTriggers = new CTriggers();
+		//sm_pTriggers = new CTriggers();
 	}
 	static CMarkerMgr* GetMarkerMgr() { return sm_pMarkerMgr; }
 	static CTriggers* GetTriggers() { return sm_pTriggers; }
@@ -14,7 +14,7 @@ public:
 	static void Update() {
 		if (sm_pTriggers == nullptr || sm_pMarkerMgr == nullptr) { return; }
 		sm_pMarkerMgr->Update();
-		sm_pTriggers->Update();
+		//sm_pTriggers->Update();
 	} 
 	//static CPlayer* GetPlayer() { return &sm_pPlayer; }
 	static void Destroy() {

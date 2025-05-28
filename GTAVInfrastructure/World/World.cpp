@@ -5,6 +5,7 @@ void CGameWorld::Init()
     sm_pWater = new CWaterMgr();
     sm_pWorldState = new CWorldState();
     sm_pAmbience = new CGameAmbience();
+    sm_pStreaming = new CStreamingMgr();
     InitWorldState();
 }
 
@@ -44,6 +45,8 @@ void CGameWorld::Destroy()
 {
     delete sm_pWater;
     delete sm_pWorldState;
+    delete sm_pAmbience;
+    delete sm_pStreaming;
 }
 
 void CGameWorld::InitWorldState()

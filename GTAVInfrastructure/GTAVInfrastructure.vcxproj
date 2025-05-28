@@ -44,7 +44,10 @@
     <ClInclude Include="SHV\natives.h" />
     <ClInclude Include="SHV\OGnatives.h" />
     <ClInclude Include="SHV\types.h" />
-    <ClInclude Include="steaming\ModelLoad.h" />
+    <ClInclude Include="streaming\InteriorSet.h" />
+    <ClInclude Include="streaming\IPL.h" />
+    <ClInclude Include="streaming\ModelLoad.h" />
+    <ClInclude Include="streaming\streamingMgr.h" />
     <ClInclude Include="World\Ambience\GameAmbience.h" />
     <ClInclude Include="World\Ambience\Time.h" />
     <ClInclude Include="World\Ambience\Timecycle.h" />
@@ -70,7 +73,8 @@
     <ClCompile Include="Objects\Vehicle.cpp" />
     <ClCompile Include="ScriptEnv\Script.cpp" />
     <ClCompile Include="ScriptEnv\ScriptProc.cpp" />
-    <ClCompile Include="steaming\ModelLoad.cpp" />
+    <ClCompile Include="streaming\InteriorSet.cpp" />
+    <ClCompile Include="streaming\IPL.cpp" />
     <ClCompile Include="World\Ambience\GameAmbience.cpp" />
     <ClCompile Include="World\Ambience\Time.cpp" />
     <ClCompile Include="World\Ambience\Timecycle.cpp" />

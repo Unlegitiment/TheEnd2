@@ -42,7 +42,7 @@
     <ClInclude Include="Objects\baseEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steaming\ModelLoad.h">
+    <ClInclude Include="streaming\ModelLoad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
@@ -114,15 +114,21 @@
     <ClInclude Include="ScriptEnv\Script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="streaming\IPL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="streaming\streamingMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="streaming\InteriorSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\Ped.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Objects\baseEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="steaming\ModelLoad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Handlers.cpp">
@@ -186,6 +192,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScriptEnv\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="streaming\IPL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="streaming\InteriorSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

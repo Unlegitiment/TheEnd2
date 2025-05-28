@@ -10,6 +10,6 @@ public:
 	static void Writeln(const char* msg, ...);
 	static void Destroy();
 private:
-	static CNetLogger* sm_pNetLogger;
+	static CNetLogger* sm_pNetLogger; // make these ptrs because we want to control their lifetime.
 	static CLogger* sm_pLogger;
 };

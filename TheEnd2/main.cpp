@@ -9,6 +9,7 @@
 #include "keyboard.h"
 #include "LegitProject1\LInfras.h"
 #include "GTAVInfrastructure\ScriptEnv\ScriptProc.h"
+#include "GTAVInfrastructure\Application.h"
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)

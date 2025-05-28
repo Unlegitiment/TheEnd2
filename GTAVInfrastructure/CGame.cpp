@@ -91,6 +91,7 @@ void CGame::Destroy()
 	delete CGame::sm_pHudHandler	;
 	delete CGame::sm_pGameScriptMgr	;
 	delete CGame::sm_pCheats		; 
+	
 }
 
 void CGame::DeathCheck()

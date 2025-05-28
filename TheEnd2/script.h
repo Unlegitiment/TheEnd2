@@ -6,12 +6,9 @@
 
 #pragma once
 
-#include "GTAVInfrastructure\SHV\OGnatives.h"
-#include "GTAVInfrastructure\SHV\types.h"
-#include "GTAVInfrastructure\SHV\enums.h"
-
 #include "GTAVInfrastructure\SHV\main.h"
 
+class CApplication;
 
 
 void ScriptMain();
