@@ -5,6 +5,18 @@ CWorldState::CWorldState()
 
 }
 
+void CWorldState::EnableMPMap(bool b)
+{
+    if (b) {
+        DLC::ON_ENTER_MP();
+        this->m_bIsMultiplayerMapActive = b;
+    }
+    else {
+        DLC::ON_ENTER_SP();
+        this->m_bIsMultiplayerMapActive = b;
+    }
+}
+
 void CWorldState::SetWorldState(eWorldState state)
 {
     

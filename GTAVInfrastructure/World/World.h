@@ -15,6 +15,7 @@ public:
 	static CWaterMgr* GetWtrMgr() { return sm_pWater; }
 	static CGameAmbience* GetAmbience() { return sm_pAmbience; }
 	static CStreamingMgr* GetStreamingMgr() { return sm_pStreaming; }
+	static CWorldState* GetWorldStateMgr() { return sm_pWorldState; }
 	static void Destroy();
 	~CGameWorld() { Destroy(); }
 private:

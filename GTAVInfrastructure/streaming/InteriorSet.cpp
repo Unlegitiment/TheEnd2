@@ -1,6 +1,6 @@
 #include "InteriorSet.h"
 
-void CInterior::Request()
+void CMapData::Request()
 {
     this->status = LOADING;
     for (auto& r : m_IPL) {
@@ -10,7 +10,7 @@ void CInterior::Request()
     this->status = LOADED;
 }
 
-bool CInterior::IsLoaded()
+bool CMapData::IsLoaded()
 {
     for (auto& r : m_IPL) {
         if (!r.IsLoaded()) {
@@ -20,7 +20,7 @@ bool CInterior::IsLoaded()
     return true;
 }
 
-void CInterior::Derequest()
+void CMapData::Derequest()
 {
 	for (auto& r : m_IPL) {
 		r.Derequest();

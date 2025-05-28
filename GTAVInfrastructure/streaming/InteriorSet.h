@@ -6,9 +6,9 @@
 //Sometimes whole interiors need to be loaded through the use of single IPLS. This is typically seen in more massive interiors. For example the Doomsday Bunker, Arena, etc.
 
 
-class CInterior : public fwStreamObject{
-	ALLOC_OVERRIDES(CInterior);
-	CInterior() {
+class CMapData : public fwStreamObject{
+	ALLOC_OVERRIDES(CMapData);
+	CMapData() {
 
 	}
 	void Add(const fwIPL ipl) {
@@ -36,20 +36,20 @@ class CInterior : public fwStreamObject{
 	void Request() override;
 	bool IsLoaded() override;
 	void Derequest() override;
-	~CInterior() {
+	~CMapData() {
 		LAGInterface::Writeln(__FUNCTION__" called");
 		Derequest();
 	}
 private:
 	std::vector<fwIPL> m_IPL;
 };
-class InteriorBuilder {
+class MapDataBuilder {
 public:
-	InteriorBuilder& Add(const fwIPL ipl) {
+	MapDataBuilder& Add(const fwIPL ipl) {
 		this->interior->Add(ipl);
 		return *this;
 	}
-	CInterior* Build() { return interior; } // I think this copies? 
+	CMapData* Build() { return interior; } // I think this copies? 
 private:
-	CInterior* interior = new CInterior();
+	CMapData* interior = new CMapData();
 };

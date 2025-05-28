@@ -7,8 +7,28 @@
 #include "GTAVInfrastructure\SHV\natives.h"
 #include "GTAVInfrastructure\streaming\IPL.h"
 #include "GTAVInfrastructure\streaming\InteriorSet.h"
+#include "GTAVInfrastructure\streaming\Model.h"
 #include <string>
-class CFreemodeInteriors {
+
+/*
+    I'll just lay out how I program here:
+        - If you don't call new/malloc don't call delete. Unless doing a very specific pattern and its predictable i.e. Builder.
+        - Be explicit 
+        - Don't wrap in Inheritance if there is no value to the abstraction. Meaning "do we really need virtual behavior here?" 
+        - Naming Scheme should match Hungarian ((Relative Position)_(type)(Name) ex: m_iFoo (member variable of type int named Foo) or sm_iFoo (static member variable of type int named Foo)
+        - Use new if there is a value for it. For example "Do I want this data to exist later? (See CSlideObject* CTheEndScript::pObject)" 
+            Another reason for new would be to have stricter rules for objects that exist. 
+                For example the use of new can dictate whether an object should exist. 
+                This is important for static contexts because ScriptHookV hates globals and hates statics even more.
+        - Super Systems should be entirely static look at CGame or LAGInterface. Both interact with different stuff but are entirely static. 
+        - Pointers are innately dangerous, use-after-frees, which is why if you take a pointer in to an object, 
+            never expect to free it. In-fact that class doesn't own anything. It needs access to that pointer. 
+            Not the allocator to the pointer else we'd just call new. Or whatever.
+        - Other than that have fun. (Also char* when you don't allocate them suck) 
+                                            ^( had to get my StackOverflow points LOL) 
+
+*/
+class CFreemodeMap {
 public:
 	enum eInteriors : int{
 		FACILITY_HATCH_,
@@ -42,12 +62,12 @@ public:
         MAX_DLC,
     };
 	void Init() {
-		this->m_DefaultInteriors[FACILITY_HATCH_] = InteriorBuilder()
+		this->m_OnlineMapData[FACILITY_HATCH_] = MapDataBuilder()
             .Add("xm_hatches_terrain")
             .Add("xm_hatches_terrain_lod")
             .Add("xm_hatch_closed")
             .Build();
-        this->m_DefaultInteriors[BUNKER_HATCH_] =  InteriorBuilder()
+        this->m_OnlineMapData[BUNKER_HATCH_] =  MapDataBuilder()
 			.Add("gr_case0_bunkerclosed")
 			.Add("gr_case1_bunkerclosed")
 			.Add("gr_case2_bunkerclosed")
@@ -58,10 +78,10 @@ public:
 			.Add("gr_case7_bunkerclosed")
 			.Add("gr_case9_bunkerclosed")
             .Add("gr_case10_bunkerclosed")
-			.Add("gr_case11_bunkerclosed")
+			.Add("gr_case11_bunkerclosed") // Really could have kept the gr_case{x}_bunkerclosed thing but I see no reason to keep it. Was cool
             .Build();
-        this->m_DefaultInteriors[ARENA_BANNERS] = InteriorBuilder().Add("xs_arena_banners_ipl").Build();
-        this->m_DefaultInteriors[CASINO_DIAMOND_] = InteriorBuilder()
+        this->m_OnlineMapData[ARENA_BANNERS] = MapDataBuilder().Add("xs_arena_banners_ipl").Build();
+        this->m_OnlineMapData[CASINO_DIAMOND_] = MapDataBuilder()
 			.Add("hei_dlc_casino_aircon")
 			.Add("hei_dlc_casino_aircon_lod")
 			.Add("hei_dlc_casino_door")
@@ -78,20 +98,20 @@ public:
 			.Add("vw_casino_billboard_lod(1)")
 			.Add("vw_casino_billboard_lod") // apa_prop_ss1_mpint_garage2
             .Build();
-        this->m_DefaultInteriors[DRUG_WARS_ADD] = InteriorBuilder()
+        this->m_OnlineMapData[DRUG_WARS_ADD] = MapDataBuilder()
             .Add("xm3_warehouse")
             .Add("xm3_warehouse_grnd")
             .Add("xm3_warehouse_lod")
             .Build();
-		this->m_DefaultInteriors[SECURITY_EXT_] = InteriorBuilder()
-            .Add("sf_billboards") // MOMOMOTI billboards
+		this->m_OnlineMapData[SECURITY_EXT_] = MapDataBuilder()
+            .Add("sf_billboards") // MOMOMOTI?(lol) billboards
 			.Add("sf_billboards_lod") // 
 			.Add("sf_franklin") // Franklin's house
 			.Add("sf_mansionroof") // finale?
 			.Add("sf_musicrooftop") // rooftop for party
 			.Add("sf_musicrooftop_lod") 
 			.Add("sf_phones") // pay phones
-			.Add("sf_plaque_bh1_05") // plaques for outside agencys
+			.Add("sf_plaque_bh1_05") // plaques for outside Agencies
 			.Add("sf_plaque_bh1_05_lod")
 			.Add("sf_plaque_hw1_08")
 			.Add("sf_plaque_kt1_05")
@@ -105,20 +125,20 @@ public:
         }
     }
     void LoadInterior(eInteriors interiors) {
-        m_DefaultInteriors[interiors]->Request();
+        m_OnlineMapData[interiors]->Request();
     }
     void Unload(eInteriors interiors) { // this is so we don't delete interiors from the list.
-        this->m_DefaultInteriors[interiors]->Derequest();
+        this->m_OnlineMapData[interiors]->Derequest();
     }
     void Remove(eInteriors interiors) {
-        CInterior* interior = this->m_DefaultInteriors[interiors];
-        auto it = std::find(m_DefaultInteriors.begin(), m_DefaultInteriors.end(), interior);
-        if (it == m_DefaultInteriors.end()) { return; }
-        m_DefaultInteriors.erase(it);
+        CMapData* interior = this->m_OnlineMapData[interiors];
+        auto it = std::find(m_OnlineMapData.begin(), m_OnlineMapData.end(), interior);
+        if (it == m_OnlineMapData.end()) { return; }
+        m_OnlineMapData.erase(it);
         delete interior;
     }
     void AddIPLToInterior(eInteriors interiors, fwIPL ipl, bool load) {
-        this->m_DefaultInteriors[interiors]->Add(ipl);
+        this->m_OnlineMapData[interiors]->Add(ipl);
         if (load) {
             ipl.Request();
         }
@@ -126,7 +146,7 @@ public:
     // @Problem: Bug: Calling this multiple times will remove multiple instances without reason. 
     void RemoveIPLFromInterior(eInteriors interior, fwIPL ipl, bool unload) {
 		LAGInterface::Writeln(__FUNCTION__" called with ipl: %s", ipl.GetIPLName());
-        this->m_DefaultInteriors[interior]->Remove(ipl);
+        this->m_OnlineMapData[interior]->Remove(ipl);
 		LAGInterface::Writeln(__FUNCTION__" called with ipl: %s : 2nd Call", ipl.GetIPLName());
 
         if(unload) ipl.Derequest();
@@ -137,11 +157,11 @@ public:
             Remove((eInteriors)i);
         }
     }
-    ~CFreemodeInteriors() {
+    ~CFreemodeMap() {
         RemoveAll();
     }
 private:
-    std::vector<CInterior*> m_DefaultInteriors{MAX};
+    std::vector<CMapData*> m_OnlineMapData{MAX};
 
 };
 enum eState : int{
@@ -235,11 +255,13 @@ public:
         
     }
     // Inherited via ScriptableBase
-	CFreemodeInteriors* interiors = nullptr;
+	CFreemodeMap* m_pMap = nullptr;
     Object object = 0;
     float fCurrentGarageSpeed = 3.0f;
 	CVector3 vCurrentPos = { -79.488, -786.100, 37.338 };
     CSlideObject* pObject = nullptr;
+    CStreamingModel pModel = CStreamingModel(MISC::GET_HASH_KEY("mp_m_freemode_01"));
+    Ped iPlayerPed = 0;
     void OnTick() override
     {
 		int worldState = CGameWorld::GetWorldState();
@@ -282,7 +304,7 @@ public:
 
     void OnShutdown() override
     {
-        delete interiors;
+        delete m_pMap;
         CEndWorld::Destroy();
         LAGInterface::Writeln("Shutdown Called for CTheEndScript");
     }
@@ -291,10 +313,13 @@ public:
         State = _newState;
     }
     void LoadEnd() {
-		DLC::ON_ENTER_MP(); // Hand this off to CGame or something.
-		interiors = new CFreemodeInteriors();
-		interiors->InitFreemode();
+        CGameWorld::GetWorldStateMgr()->EnableMPMap(true);
+		m_pMap = new CFreemodeMap();
+        m_pMap->InitFreemode();
 		CEndWorld::Init();
+        CGameWorld::GetStreamingMgr()->Add(&pModel);
+        STATS::STAT_SET_INT(MISC::GET_HASH_KEY("MPPLY_LAST_MP_CHAR"), 0, 1);
+
 		LAGInterface::Writeln("Init Called for CTheEndScript");
     }
 private:

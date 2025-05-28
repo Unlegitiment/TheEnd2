@@ -25,6 +25,9 @@
     <ProjectReference Include="..\LegitProject1\LegitProject1.vcxproj">
       <Project>{681969ad-774c-42ae-9350-b8e83b1e2a4f}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\ScaleformUILib\ScaleformUILib.vcxproj">
+      <Project>{8e123e09-6796-4014-91c5-b24984d381c1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{a1064b6d-d14d-4c29-8ea8-d4d1e13bb56e}</ProjectGuid>
@@ -76,7 +79,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>"E:\ScriptHookV\lib\ScriptHookV.lib" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>LegitProject1.lib;GTAVInfrastructure.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(TargetName).asi" "E:\SteamLibrary\steamapps\common\Grand Theft Auto V"</Command>

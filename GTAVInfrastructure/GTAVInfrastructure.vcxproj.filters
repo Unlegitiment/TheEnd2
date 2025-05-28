@@ -123,6 +123,9 @@
     <ClInclude Include="streaming\InteriorSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="streaming\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\Ped.cpp">
@@ -198,6 +201,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="streaming\InteriorSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="streaming\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
