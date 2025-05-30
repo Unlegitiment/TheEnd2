@@ -15,6 +15,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LegitProject1", "LegitProje
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScaleformUI", "ScaleformUILib\ScaleformUILib.vcxproj", "{8E123E09-6796-4014-91C5-B24984D381C1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScaleformUITest", "ScaleformUITest\ScaleformUITest.vcxproj", "{07F452E0-D147-4D4C-96D7-45CD9894DB7B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0A86DFD6-6389-4BBC-A688-69B2C7CB2684} = {0A86DFD6-6389-4BBC-A688-69B2C7CB2684}
+		{681969AD-774C-42AE-9350-B8E83B1E2A4F} = {681969AD-774C-42AE-9350-B8E83B1E2A4F}
+		{8E123E09-6796-4014-91C5-B24984D381C1} = {8E123E09-6796-4014-91C5-B24984D381C1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -55,6 +62,14 @@ Global
 		{8E123E09-6796-4014-91C5-B24984D381C1}.Release|x64.Build.0 = Release|x64
 		{8E123E09-6796-4014-91C5-B24984D381C1}.Release|x86.ActiveCfg = Release|Win32
 		{8E123E09-6796-4014-91C5-B24984D381C1}.Release|x86.Build.0 = Release|Win32
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Debug|x64.ActiveCfg = Debug|x64
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Debug|x64.Build.0 = Debug|x64
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Debug|x86.ActiveCfg = Debug|Win32
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Debug|x86.Build.0 = Debug|Win32
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Release|x64.ActiveCfg = Release|x64
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Release|x64.Build.0 = Release|x64
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Release|x86.ActiveCfg = Release|Win32
+		{07F452E0-D147-4D4C-96D7-45CD9894DB7B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,8 @@
 #pragma once
 #include "..\common.h"
 #include <ScaleformUILib\Scaleform\ScaleformExtensions.h>
+#include <string>
+
 class CountdownHandler {
 public:
 	CountdownHandler() {}
@@ -45,7 +47,6 @@ private:
 		delete _sc;
 		_sc = nullptr;
 	}
-#include <string>
 	void ShowMessage(int number, int r = 255, int g = 255, int b = 255) {
 		ShowMessage(std::to_string(number).c_str(), r,g,b);
 	}
@@ -61,6 +62,6 @@ private:
 			WAIT(0);
 		}
 	}
-	string SCALEFORM_NAME = "COUNT_DOWN";
+	string SCALEFORM_NAME = "COUNTDOWN";
 	ScaleformWideScreen* _sc = nullptr;
 };

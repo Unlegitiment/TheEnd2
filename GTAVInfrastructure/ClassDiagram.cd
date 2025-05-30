@@ -1,0 +1,879 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CApplication" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAACAAABAAAIAAAAAAAAAACBAIAAAAAACAEAAAAA=</HashCode>
+      <FileName>Application.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGame" Collapsed="true">
+    <Position X="20.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAEAAAAADggBAIAAAAAAMBAIgAiBAADAAAEAgA=</HashCode>
+      <FileName>CGame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwCheatMgr&lt;T&gt;" Collapsed="true">
+    <Position X="15" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAQAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Cheats\CheatMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCheatMgr" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cheats\CheatMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameScriptMgr" Collapsed="true">
+    <Position X="23.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAACASAAABAAAABQAAAAgAAAAA=</HashCode>
+      <FileName>GameScripts.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEntityHandler" Collapsed="true">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAAEAAABAACAAAgAAAAAAABAABAAEAAAAAAEAAA=</HashCode>
+      <FileName>Handlers.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRankBar" Collapsed="true">
+    <Position X="20.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgIAAAAAAAAQAAAAAAAAAgAAAAAwAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Hud\HudComponents.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHudHandler" Collapsed="true">
+    <Position X="15" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAAAAAAABAAIAgAAAAABAAAAAIAACAAAAAAA=</HashCode>
+      <FileName>Hud\HudHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CText" Collapsed="true">
+    <Position X="8.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAACCAAAgAgAEIEBAgQACgAAICAIAAAoAgACAA=</HashCode>
+      <FileName>Hud\Obj\CText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTextJustification" Collapsed="true">
+    <Position X="3" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\CText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextJustifyLeft" Collapsed="true">
+    <Position X="0.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\CText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextJustifyRight" Collapsed="true">
+    <Position X="3" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\CText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextJustifyCenter" Collapsed="true">
+    <Position X="5.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\CText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwHudDrawable" Collapsed="true">
+    <Position X="9.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\HudDrawable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRect" Collapsed="true">
+    <Position X="10.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAgAAAAAEAAhQIAAAAAAAQAAAAEAAAAA=</HashCode>
+      <FileName>Hud\Obj\Rect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwScaleform" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAAAAAAAAAAAAAQgAEAAAAAgAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFrontendScaleform" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAABAAAIAAAAAAGAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScaleform" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAAAAAAAAAAAEAAAAEAAAAAwACAAAAACAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CHudComponent" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAiAAAAAAAAAAAAAAAAEAAABAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScaleformHandler" Collapsed="true">
+    <Position X="22" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABRAAAAAAAAAAAAAAAAABQAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwMission" Collapsed="true">
+    <Position X="16.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAACAEAAAAA=</HashCode>
+      <FileName>Mission\Missions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="baseEntity" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAEAAhACAgAgAAAAAAAgAAAAAAAEAAQAABIAAAIAA=</HashCode>
+      <FileName>Objects\baseEntity.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPedHeadshotMgr" Collapsed="true">
+    <Position X="18.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAAABAAABAAjAAAAAAAAAAAAAGAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Headshots.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPed" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IIAAAAAgAAAAAxAAAAgAAAwAAAAABAAAAABAAAAAAAA=</HashCode>
+      <FileName>Objects\Ped.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPedBuilder" Collapsed="true">
+    <Position X="16.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAgAAgAAA=</HashCode>
+      <FileName>Objects\Ped.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVehicle" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Vehicle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwScriptEnv" Collapsed="true">
+    <Position X="8.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAgAAAAAQAAAAAACAwAAAACAAAAAAA=</HashCode>
+      <FileName>ScriptEnv\Script.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScriptableBase&lt;ScriptName&gt;" Collapsed="true">
+    <Position X="8.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ScriptEnv\Script.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwScriptMgr" Collapsed="true">
+    <Position X="18.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIhAAAAIAACAABAAAAAAAAAAAAAAAgEAAAgAgAAAAA=</HashCode>
+      <FileName>ScriptEnv\ScriptProc.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMapData" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAKAAAAAIAAAIAAoABAAAAAIAgAAAAAAABAAAAAA=</HashCode>
+      <FileName>streaming\InteriorSet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapDataBuilder" Collapsed="true">
+    <Position X="20.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>streaming\InteriorSet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwIPL" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAIAAoAAQACAAAAiAAAAAACAAAAAAA=</HashCode>
+      <FileName>streaming\IPL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStreamingModel" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAKAAgAAAAQAAAAgAACAAAAAAAAAAA=</HashCode>
+      <FileName>streaming\Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fwStreamObject" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAIAAgAAAAAAAAAgAAAAAAABAAAAAA=</HashCode>
+      <FileName>streaming\ModelLoad.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStreamingMgr" Collapsed="true">
+    <Position X="23.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAABAAAAABAAAAAAIAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>streaming\streamingMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameAmbience" Collapsed="true">
+    <Position X="22" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QRQAAEAAAAAQAAAAAAAAAAgAAAAAAAABIAESABAAIAA=</HashCode>
+      <FileName>World\Ambience\GameAmbience.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTime" Collapsed="true">
+    <Position X="13.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAACAAAAAgAAAAAAAAAAAAAAAACiAAoAIAA=</HashCode>
+      <FileName>World\Ambience\Time.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDate" Collapsed="true">
+    <Position X="16.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ATAAAAAAAAEAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>World\Ambience\Time.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWorldTimeManager" Collapsed="true">
+    <Position X="13.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAAAAAEAAAAAAIAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>World\Ambience\Time.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTimeCycle" Collapsed="true">
+    <Position X="15" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAIAAAABABAAAAAAAAABAAAgAAAAABAA=</HashCode>
+      <FileName>World\Ambience\Timecycle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTimeCycleMgr" Collapsed="true">
+    <Position X="16.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEgAAAAAAEAAAAQAAAAAAgAAQAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>World\Ambience\Timecycle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWeather" Collapsed="true">
+    <Position X="20.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>World\Ambience\Weather.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWeatherMgr" Collapsed="true">
+    <Position X="22" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEQEAAIIQAEAAAABAAAAAAAIACAAAgAAAAAQAAAAA=</HashCode>
+      <FileName>World\Ambience\Weather.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWaterMgr" Collapsed="true">
+    <Position X="18.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAIAAAAAAAAAAAAAAAACACAAAA=</HashCode>
+      <FileName>World\Water.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameWorld" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIRQAAICEAAAAAAAAAAABhBAAABAAAAAAAAGIAACACA=</HashCode>
+      <FileName>World\World.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWorldState" Collapsed="true">
+    <Position X="23.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAEABAAAAAAACAABAABAAAAAAEAAAAAEAAAA=</HashCode>
+      <FileName>World\WorldState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="DeathState" Collapsed="true">
+    <Position X="13.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>CGame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="fwCheat" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Cheats\CheatMgr.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sGameCommand" Collapsed="true">
+    <Position X="0.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Cheats\CheatMgr.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sScript" Collapsed="true">
+    <Position X="15" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>GameScripts.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0409_1" Collapsed="true">
+    <Position X="4.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAABgAQAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Hash" Collapsed="true">
+    <Position X="18.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PresentCallback" Collapsed="true">
+    <Position X="18.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\main.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="KeyboardHandler" Collapsed="true">
+    <Position X="22" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\main.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Void" Collapsed="true">
+    <Position X="22" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Any" Collapsed="true">
+    <Position X="13.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="uint" Collapsed="true">
+    <Position X="18.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Entity" Collapsed="true">
+    <Position X="13.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Player" Collapsed="true">
+    <Position X="16.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FireId" Collapsed="true">
+    <Position X="15" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Ped" Collapsed="true">
+    <Position X="13.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Vehicle" Collapsed="true">
+    <Position X="20.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Cam" Collapsed="true">
+    <Position X="16.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CarGenerator" Collapsed="true">
+    <Position X="20.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Group" Collapsed="true">
+    <Position X="16.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Train" Collapsed="true">
+    <Position X="16.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Pickup" Collapsed="true">
+    <Position X="15" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Object" Collapsed="true">
+    <Position X="23.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Weapon" Collapsed="true">
+    <Position X="23.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Interior" Collapsed="true">
+    <Position X="20.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Blip" Collapsed="true">
+    <Position X="15" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Texture" Collapsed="true">
+    <Position X="13.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TextureDict" Collapsed="true">
+    <Position X="15" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CoverPoint" Collapsed="true">
+    <Position X="23.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Camera" Collapsed="true">
+    <Position X="18.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TaskSequence" Collapsed="true">
+    <Position X="23.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ColourIndex" Collapsed="true">
+    <Position X="22" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Sphere" Collapsed="true">
+    <Position X="22" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ScrHandle" Collapsed="true">
+    <Position X="20.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Vector3" Collapsed="true">
+    <Position X="4.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\types.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="eStackSize" Collapsed="true">
+    <Position X="20.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAERAAAAACIQgAAqAAAADwCAGgAAAYAIKEAAABAAAw=</HashCode>
+      <FileName>GameScripts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eMenu" Collapsed="true">
+    <Position X="15" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQiAKEEICgAAAQgEAAAQAAAIJIggIIAAAAAAAAACAiA=</HashCode>
+      <FileName>Hud\Obj\Scaleform.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eAudioFlag" Collapsed="true">
+    <Position X="13.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>cBACDAABAEAAAQgIASEAAAoCHAAIcQQAgBAAABAgAYA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eBlipColor" Collapsed="true">
+    <Position X="15" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAgAAAAAAAAAAAAABAAACAAAAAAAEAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eBlipSprite" Collapsed="true">
+    <Position X="16.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>VBp3gzrVdSS3WeZ0ylchWYVZn91/N36q37NRm9sRNh4=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eCameraShake" Collapsed="true">
+    <Position X="20.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAECAAAAACAAQAAIAAAAAAQAAAAAAAAQIAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eControl" Collapsed="true">
+    <Position X="22" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>+0d+bk9v1x3w/+z+fb32VXutz/3/l3Y/+u3+9kZ/If0=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eRadioStation" Collapsed="true">
+    <Position X="13.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QFIASAAAAAgIgAAAAAAAFAQIAAAEAAAAgAAAAAAIgAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWindowTitle" Collapsed="true">
+    <Position X="15" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAACAAIAAAAAIAAAgMAAAYAAACAAgAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eGender" Collapsed="true">
+    <Position X="20.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eDrivingStyle" Collapsed="true">
+    <Position X="23.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAIAAIAAAAAAAAAAAAQAAABAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eBone" Collapsed="true">
+    <Position X="18.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BZgQQoAgIABFBMJhSIogAlCAAGKQsRQSiAGAkIARGWg=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eFiringPattern" Collapsed="true">
+    <Position X="15" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIAAAACAACAgAEAAAAAAAAAAAgQAAIAAAABAgQggAE=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eFont" Collapsed="true">
+    <Position X="16.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DAAAAAAABAAAAAAAgAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleColor" Collapsed="true">
+    <Position X="23.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>thr6FsE/ReMUMUBl8JgYBJGUffOnb60QJMT+lPMY5sE=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleDoor" Collapsed="true">
+    <Position X="13.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEoAAAAAAAAAAAAwIAAAAAAAE=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleLockStatus" Collapsed="true">
+    <Position X="16.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAMAACAAAAAAwAAAIAgAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleLandingGear" Collapsed="true">
+    <Position X="15" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAgAAAAAAAAAEAAAAAAAAEAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleMod" Collapsed="true">
+    <Position X="18.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAECAAAAAQgAIAQAAAAEIAAgAEABAQBAAQAYAI=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleNeonLight" Collapsed="true">
+    <Position X="20.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAEAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleRoofState" Collapsed="true">
+    <Position X="22" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAQAAAAAAAAAAAAAACAAACAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleSeat" Collapsed="true">
+    <Position X="23.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAkAAAAACAAAAAAAAAIAAAEAAAAAAAAgAABA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleToggleMod" Collapsed="true">
+    <Position X="13.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAEAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleWheelType" Collapsed="true">
+    <Position X="15" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAEACAAAAAAAAAAAAAAAgAIAAAAAAABSAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleWindow" Collapsed="true">
+    <Position X="16.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAUCAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleWindowTint" Collapsed="true">
+    <Position X="18.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAIEAAAAAAIAAAAAAACAAEIAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eNumberPlateMounting" Collapsed="true">
+    <Position X="16.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAQAAAAAAAAAAAAAAAAAAAAAAAAEAEAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eNumberPlateType" Collapsed="true">
+    <Position X="18.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIBAAAAAAAAAAAAAAAAAAACAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eVehicleClass" Collapsed="true">
+    <Position X="22" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EKAECAAgAEAAAkCAABAAAAAABACABAAQAAAAAAACoFA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eExplosionType" Collapsed="true">
+    <Position X="13.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCABBAQCAGihACAZCAQEQQBgDBIAIQAhFUgABAAAg=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eIntersectFlags" Collapsed="true">
+    <Position X="23.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAEAAEAAgAAAAAAAAAAAAAACgAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ePedType" Collapsed="true">
+    <Position X="20.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQQCQQBAABQAQAEhAAAIAwCgAG0AAAACEAAADCQAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ePlayerSwitchTypes" Collapsed="true">
+    <Position X="23.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAIAAAAQAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eMarkerType" Collapsed="true">
+    <Position X="13.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ERARQRgQBBAKAAgCUACBAAQAiBBEAAAQAkACbABAKAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eRelationship" Collapsed="true">
+    <Position X="15" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAgAAgAAAAAAAAAAAQAAAAIIAAAAAAAQAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eRopeType" Collapsed="true">
+    <Position X="18.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWeapon" Collapsed="true">
+    <Position X="20.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CggMLAAAYAAGCwAGSTAASkACRIQ4AEkAAgpgAQgQmCU=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWeaponGroup" Collapsed="true">
+    <Position X="22" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAEAQAAAEAAAAAAAAgBAREAggA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWeaponTint" Collapsed="true">
+    <Position X="23.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIABAAAgCAAAAAAAAAgAgAAAAAAIAQAAAAAAAAA=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ePickupType" Collapsed="true">
+    <Position X="22" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQZ/EJgQQQMSCEOUAEQAABJQ8CMACAsQJiFJlaAAAoY=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eHudComponent" Collapsed="true">
+    <Position X="22" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIABQDBQCASAGQAABSAgyAQAQEKIUAAQmBBgIlFJgAM=</HashCode>
+      <FileName>SHV\enums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eGameVersion" Collapsed="true">
+    <Position X="18.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JQABAEIAAAEAKBAAAAAAAAAAAABACAIAEAgRCAAAgEA=</HashCode>
+      <FileName>SHV\main.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eRequestStatus" Collapsed="true">
+    <Position X="16.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAQAAAAAACAAAAAAARAAA=</HashCode>
+      <FileName>streaming\ModelLoad.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWeekday" Collapsed="true">
+    <Position X="13.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIAIAIAAAAAIAAAAAAAAAAAABAAAAAAAAgAAAA=</HashCode>
+      <FileName>World\Ambience\Time.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eWorldState" Collapsed="true">
+    <Position X="16.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>World\WorldState.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -66,10 +66,34 @@
     <ClInclude Include="Scaleform\Scoreboard\PlayerListHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\PauseMenuBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\PauseMenu\TabView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\Elements\CrewTag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\Elements\Panels\PlayerStatsPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\Elements\Columns\PM_Column.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\Items\PauseMenuItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menus\Pause Menus\Items\TabLeftItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

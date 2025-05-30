@@ -8,7 +8,8 @@
 
 class BigMessageHandler {
 private:
-	ScaleformWideScreen* _sc;
+	friend class CTest;
+	ScaleformWideScreen* _sc = nullptr;
 	int _start;
 	int _duration;
 	bool _transitionExecuted = false;
@@ -17,7 +18,7 @@ public:
 	string Transition = "TRANSITION_OUT";
 	float TransitionDuration = 0.4f;
 	bool TransitionAutoExpansion = false;
-	BigMessageHandler();
+	BigMessageHandler() {}
 	void Load() {
 		if (_sc != nullptr) return;
 		_sc = new ScaleformWideScreen("MP_BIG_MESSAGE_FREEMODE");
@@ -102,14 +103,21 @@ public:
 	template<typename... Args>
 	void ShowCustomShard(string funcName, Args&&... paremeters)
 	{
-		await Load();
+		Load();
 		_sc->CallFunction(funcName, paremeters);
 	}
 
 private:
 	void Update()
 	{
+		LAGInterface::Writeln(__FUNCTION__ " Called ! 0x%p",_sc);
+		return;
+		if (_sc == nullptr) {
+			LAGInterface::Writeln("Failed due to _sc being null!");
+			return;
+		}
 		_sc->Render2D();
+		LAGInterface::Writeln("After sc call");
 
 		if (ManualDispose) return;
 

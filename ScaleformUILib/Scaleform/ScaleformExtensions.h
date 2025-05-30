@@ -4,10 +4,22 @@
 #include <ScaleformUILib\DataTypes\Point.h>
 #include "..\DataTypes\Screen.h"
 #include <LegitProject1\datattypes\vector.h>
+#include "LegitProject1\LInfras.h"
+#include <utility>
 class ScaleformWideScreen {
 public:
 	ScaleformWideScreen(const char* scaleformId) {
-
+		int x = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scaleformId);
+		int uAttempts = 0;
+		while (!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(x) || uAttempts == 12) {
+			uAttempts++;
+			WAIT(0);
+		}
+		if (uAttempts >= 12) {
+			LAGInterface::GetNetLogger()->Write("[SCL Failed] Unable to load Scaleform, Does it exist?");
+			return;
+		}
+		this->_handle = x;
 	}
 	virtual ~ScaleformWideScreen() {
 		Dispose();
@@ -26,27 +38,32 @@ public:
 		GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(_handle);
 	}
 	template<typename... Args>
-	void CallFunction(const char* function, Args&&... args) {
+	void CallFunction(const char* function, Args... args) {
 		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(_handle, function);
-		Call(std::forward(args)...); // I hate C++ :/
+		(Call(std::forward<Args>(args)), ...);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	}
 	template<typename T> void Call(T data) {
 		LAGInterface::Writeln(__FUNCTION__"<%s> Unknown Type! Cannot perform Call Operation", typeid(T).name()); // @Todo: Move away or keep typeid(T).name?
 		return;
 	};
+	template<>
 	void Call<int>(int data){
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(data);
 	}
+	template<>
 	void Call<const char*>(const char* data){ // @Todo ScaleformUI C# does a custom action if it begins with "b_" || "t_" fix.
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(data);
 	}
+	template<>
 	void Call<bool>(bool data){
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(data);
 	}
+	template<>
 	void Call<float>(float data){
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(data);
 	}
+	template<>
 	void Call<double>(double data) {
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(static_cast<float>(data)); // no valid double parametsr/
 	}
@@ -86,9 +103,9 @@ public:
 	}
 private:
 	template<typename... Args>
-	int CallFunctionReturnInternal(const char* func, Args&&... args) {
+	int CallFunctionReturnInternal(const char* func, Args... args) {
 		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(_handle, func);
-		Call(std::forward(args)...);
+		(Call(std::forward<Args>(args)), ...);
 		return GRAPHICS::END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE();
 	}
 	int _handle;

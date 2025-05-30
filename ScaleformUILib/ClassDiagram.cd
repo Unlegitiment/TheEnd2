@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Point&lt;T&gt;" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>DataTypes\Point.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Screen" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAgAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Screen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PM_Column" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAIAAAAAgBAAAAAAAACAABAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Elements\Columns\PM_Column.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CrewTag" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAACBAAAAgAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Elements\CrewTag.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TabLeftItem" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAAAAAAAgBCQAYAIAJqBAgAQAAAhAAQAAAAEEAwAAIA=</HashCode>
+      <FileName>Menus\Pause Menus\Items\TabLeftItem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PauseMenuItem" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAEAAAAAAAAAAAEAAAAAAAAAQAAAAAAAACAAI=</HashCode>
+      <FileName>Menus\Pause Menus\Items\PauseMenuItem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PauseMenuBase" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAIEgIAAAAAAAEAAAAAAEAAAQAQCgAAEAA=</HashCode>
+      <FileName>Menus\Pause Menus\PauseMenuBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TabView" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAEBAAAAAAQAAAAAAgAAAAAEEIAAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\PauseMenu\TabView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BigFeedHandler" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQQAoAAEQGAAAACAAIGAhEAAAAEAEAABAAAAgEAAAIA=</HashCode>
+      <FileName>Scaleform\BigFeed\BigFeedHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BigMessageHandler" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAgCBEBCAAgACAIDAIAAAAAAHAAAAABAAAAQAJAAA=</HashCode>
+      <FileName>Scaleform\BigMessage\BigMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CountdownHandler" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAgAACAAAAAAAAAAgAAAAAEAAAAAACAAAAAAgAA=</HashCode>
+      <FileName>Scaleform\Countdown\CountdownHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstructionalButton" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scaleform\Instructional_Buttons\InstructionalButtons.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediumMesageHandler" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAAAACAggACAAAAAAgAAIAEAAAEAAAAAAQAAAAA=</HashCode>
+      <FileName>Scaleform\MediumMessage\MediumMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MissionSelectorHandler" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAACAAAAAAgAAAAAQCQAAAIAAEAIAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Scaleform\MissionSelector\MissionSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MultiplayerChatHandler" Collapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AcUIgAAAACAAhAAJEBAAgAAAAAMEQAgCAAAAAACAgAA=</HashCode>
+      <FileName>Scaleform\MultiplayerChat\MultiplayerChatHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PopupWarning" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgEAAACAAAAAAAAAAEAAAAAEAEABAAgACEAEAQAA=</HashCode>
+      <FileName>Scaleform\PopupWarning\PopupWarning.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RankBarHandler" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAIAAAAAAABAgAAEAEAAAAAAgAgAAAAAA=</HashCode>
+      <FileName>Scaleform\Rankbar\RankBarHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScaleformWideScreen" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACQAAAAGAAIBAIAAgABGAAAAAAABAAAQAAAAYAAAA=</HashCode>
+      <FileName>Scaleform\ScaleformExtensions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerListHandler" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BYQBgAAEACAggOAiECASABgAAAEAAIQAkIEAgAAAAAI=</HashCode>
+      <FileName>Scaleform\Scoreboard\PlayerListHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTest" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Test.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimerBarBase" Collapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAgAgAAAAAACQAggBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TimerBars\Bars\TimerBarBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="PlayerRow" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAiAAAAAAEAAQAAAAgAAAAQQAAiEAAAAA=</HashCode>
+      <FileName>Scaleform\Scoreboard\PlayerListHandler.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="OnInstructionControlSelected" Collapsed="true">
+    <Position X="3" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scaleform\Instructional_Buttons\InstructionalButtons.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PopupWarningEvent" Collapsed="true">
+    <Position X="4.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scaleform\PopupWarning\PopupWarning.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="PM_COLUMNS" Collapsed="true">
+    <Position X="10" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAQAAAAgAAAAAAQAAAAAAAABAgAAAAAAAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Elements\Columns\PM_Column.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CrewHierarchy" Collapsed="true">
+    <Position X="6.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAQMAAAAAAAIAAAAAAgAAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Elements\CrewTag.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LeftItemType" Collapsed="true">
+    <Position X="6.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAIAAAAAAAAAAAABgAAAAEAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Items\TabLeftItem.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LeftItemBGType" Collapsed="true">
+    <Position X="4.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Menus\Pause Menus\Items\TabLeftItem.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HudColour" Collapsed="true">
+    <Position X="8.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>rqLGUgSg5ybNTHg22bl3qwPSfr7/9+YQlhv/Y78Aups=</HashCode>
+      <FileName>Scaleform\common.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PadCheck" Collapsed="true">
+    <Position X="8.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scaleform\Instructional_Buttons\InstructionalButtons.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InputGroup" Collapsed="true">
+    <Position X="10" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMAAFgAGCAAAAIgUAIQAAAkQAAAAEAAAAJUgkQQCAAw=</HashCode>
+      <FileName>Scaleform\Instructional_Buttons\InstructionalButtons.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="JobSelectionCardIcon" Collapsed="true">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEVAAAAACAAABEQRABAIIAAAAAJABIAAAEAQBAIA=</HashCode>
+      <FileName>Scaleform\MissionSelector\MissionSelector.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ChatScope" Collapsed="true">
+    <Position X="3" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIAAAAAJAAA=</HashCode>
+      <FileName>Scaleform\MultiplayerChat\MultiplayerChatHandler.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ChatVisibility" Collapsed="true">
+    <Position X="4.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAEAAAAAEAAA=</HashCode>
+      <FileName>Scaleform\MultiplayerChat\MultiplayerChatHandler.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WarningPopupType" Collapsed="true">
+    <Position X="6.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Scaleform\PopupWarning\PopupWarning.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ScoreDisplayType" Collapsed="true">
+    <Position X="3" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAQAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scaleform\Scoreboard\PlayerListHandler.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ScoreRightIconType" Collapsed="true">
+    <Position X="4.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAICCAAAggQAAAAQgAAAkAAAAAAAAgAAAAIA=</HashCode>
+      <FileName>Scaleform\Scoreboard\PlayerListHandler.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -2,6 +2,7 @@
 #include "ScaleformUILib/Scaleform/ScaleformExtensions.h"
 class BigFeedHandler {
 public:
+	friend class CTest;
 	BigFeedHandler() : _sc(nullptr) {
 		Load();
 	}
@@ -25,7 +26,7 @@ public:
 	}
 	const char* GetTitle() { return this->title; }
 	void SetTitle(const char* value) {
-		this->title = value;
+		strncpy_s(this->title, value, sizeof title);
 		if (enabled) {
 			UpdateInfo();
 		}
@@ -34,20 +35,22 @@ public:
 	const char* GetTextureDictionary() { return this->textureDictionary; }
 	const char* GetTextureName() { return this->textureName; }
 	void SetSubtitle(const char* value) { 
-		this->subtitle = value; 
+		strncpy_s(this->subtitle, value, sizeof subtitle);
+
+
 		if (enabled) {
 			UpdateInfo();
 		}
 	}
 	void SetBodyText(const char* value) {
-		bodyText = value;
+		strncpy_s(this->bodyText, value, sizeof bodyText);
 		if (enabled) {
 			UpdateInfo();
 		}
 	}
 	void UpdatePicture(const char* txd, const char* txn) {
-		this->textureDictionary = txd;
-		this->textureName = txn;
+		strncpy_s(this->textureDictionary, txd, sizeof textureDictionary);
+		strncpy_s(this->textureName, txn, sizeof textureName);
 		if (!enabled) { return; }
 		_sc->CallFunction("SET_BIGFEED_IMAGE", txd, txn);
 	}
@@ -86,11 +89,11 @@ private:
 	/*internal*/ void Update() { //  C# is a weird language. 
 		if (enabled) _sc->Render2D();
 	}
-	ScaleformWideScreen* _sc;
+	ScaleformWideScreen* _sc = nullptr;
 	bool enabled;
-	const char* title = "";
-	const char* subtitle = "";
-	const char* bodyText = "";
-	const char* textureDictionary = "";
-	const char* textureName = "";
+	char title[256] = { "\0" };
+	char subtitle[256] = { "\0" };
+	char bodyText[256] = { "\0" };
+	char textureDictionary[256] = { "\0" };
+	char textureName[256] = { "\0" };
 };

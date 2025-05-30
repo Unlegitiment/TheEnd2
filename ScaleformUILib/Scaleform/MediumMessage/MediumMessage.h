@@ -3,6 +3,7 @@
 #include "..\common.h"
 class MediumMesageHandler {
 private:
+	friend class CTest;
 	ScaleformWideScreen* _sc = nullptr;
 	int _start;
 	int _timer;
@@ -10,7 +11,9 @@ private:
 	HudColour outColor = HudColour::HUD_COLOUR_FREEMODE;
 	float _animOutTime = 0.33f;
 public:
-	MediumMesageHandler() {}
+	MediumMesageHandler() {
+		Load();
+	}
 	void Load()
 	{
 		if (_sc != nullptr) return;
@@ -18,7 +21,7 @@ public:
 
 		int timeout = 1000;
 		int start = MISC::GET_GAME_TIMER();
-		while (!_sc->IsLoaded() && MISC::GET_GAME_TIMER()) - start < timeout) WAIT(0);
+		while (!_sc->IsLoaded() && MISC::GET_GAME_TIMER() - start < timeout) WAIT(0);
 	}
 
 	void Dispose()
@@ -41,8 +44,9 @@ public:
 private:
 	void Update()
 	{
+		if (!_sc) return;
 		_sc->Render2D();
-		if (_start != 0 && MISC::GET_GAME_TIMER()) - _start > _timer)
+		if (_start != 0 && MISC::GET_GAME_TIMER() - _start > _timer)
 		{
 			if (!_hasAnimatedOut)
 			{

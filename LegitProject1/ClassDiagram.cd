@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CTriggerMarker" Collapsed="true">
+    <Position X="10.5" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Typedef Name="CTriggerMarker::Trigger" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>EndTypes\Triggers.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAEAAAAQAABAQBAACAAAQAAACA=</HashCode>
+      <FileName>EndTypes\Triggers.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTriggers">
+    <Position X="3.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAkBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Triggers.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_Color&lt;T&gt;">
+    <Position X="1.75" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAkgAQEAAAAAAAQAAIAAAAAAABKAEAAAA=</HashCode>
+      <FileName>datattypes\color.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyMgr&lt;Hndl, Val&gt;">
+    <Position X="2.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAEAAAAAABAAAAAACAAAAAAACAAAAAAAAAAACA=</HashCode>
+      <FileName>datattypes\MyHndlGen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PointerLike&lt;T&gt;" Collapsed="true">
+    <Position X="7" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAQAAIAA=</HashCode>
+      <FileName>datattypes\PointerLike.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRand&lt;T&gt;" Collapsed="true">
+    <Position X="10.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAAAAAAAAAAAEAAAAAAAAAIAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>datattypes\Rand.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_CVector3&lt;T&gt;" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAABYACAAAAQAAAAAAAAAAYAFgAYAAAgA=</HashCode>
+      <FileName>datattypes\vector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEndWorld" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAABAAAAAAAAAAAAAAAAACAABCAQAAAAACAAAAAAA=</HashCode>
+      <FileName>EndTypes\EndWorld.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMarker" Collapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAIABAAACAoAKIAAABQIAGAAgAEAFEBEAgAAAA=</HashCode>
+      <FileName>EndTypes\Marker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMarkerMgr">
+    <Position X="0.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAABAAAAA=</HashCode>
+      <FileName>EndTypes\Markers.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRankData" Collapsed="true">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACCAAACIAIACZVACAAAAAAEAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRankController" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAECAAAAACAAAAAAhAAAAAAEAAQAAAAAA=</HashCode>
+      <FileName>EndTypes\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StringHash" Collapsed="true">
+    <Position X="8.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAgAAAAAAAAAAAACAAAAAAAABAA=</HashCode>
+      <FileName>EndTypes\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPlayer" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAACAAAAAAAAIAAAEAAIAIAAEAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLogger" Collapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAGAAAI=</HashCode>
+      <FileName>fi\logger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAGInterface" Collapsed="true">
+    <Position X="14" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAABEAABAAAACAQEAAEA=</HashCode>
+      <FileName>LInfras.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNetLogger" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAQAAAAABAAAAAAACAAEAAAA=</HashCode>
+      <FileName>Network\netLog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNetSocket" Collapsed="true">
+    <Position X="7" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="CNetSocket::CxnDetails" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Network\obj\basesocket.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Enum Name="CNetSocket::eProtocol" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Network\obj\basesocket.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAIABAAQAAAAAAAAAAAAAAAAAAAAGAAAA=</HashCode>
+      <FileName>Network\obj\basesocket.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNetInit" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAIAAABAAAA=</HashCode>
+      <FileName>Network\obj\windows_init.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSlideObject" Collapsed="true">
+    <Position X="7" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CSlideObject::SlideState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>kIAAAAAgABAABAIABYgAIAKAABAQAAAgAAAAAAAAADA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFreemodeMapLoader" Collapsed="true">
+    <Position X="7" Y="1.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CFreemodeMapLoader::eInteriors" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="CFreemodeMapLoader::BunkerHatchLocations" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="CFreemodeMapLoader::eSupportedDLCs" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAABCCAAAQAAAAAAAAABAAAAgAAAAAAIAAGIAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDoorManager" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAAAAAAgBAQAAAAAAAAAAACAAAAAAAAAAAAAI=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFreemodeMap" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CFreemodeMap::eDoors" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAAQAAAEAJAAAAAAIAAAAAAgBAAAgAACAAAAI=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Action" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWorldCapture" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAABAAAAIAAAAAAAAAAAAAIAAAACAAAQAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTheEndScript" Collapsed="true">
+    <Position X="8.75" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CTheEndScript::eSlideState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UScript.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAACAABAAiABAAAAAAAAIACEQAAgAABAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TriggerCtx" Collapsed="true">
+    <Position X="8.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAQAAAAAIAAAAAGAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Triggers.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sTimeData" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAgAAAAAAQAAAAAAAAAAmAAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="TriggerHandle" Collapsed="true">
+    <Position X="8.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Triggers.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Color32" Collapsed="true">
+    <Position X="1.5" Y="13.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>datattypes\color.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Color64" Collapsed="true">
+    <Position X="1.5" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>datattypes\color.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MarkerHandle" Collapsed="true">
+    <Position X="7" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EndTypes\Markers.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="eTriggerState" Collapsed="true">
+    <Position X="8.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABACA=</HashCode>
+      <FileName>EndTypes\Triggers.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="eState" Collapsed="true">
+    <Position X="7" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UScript.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

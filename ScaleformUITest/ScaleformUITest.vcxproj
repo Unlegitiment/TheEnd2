@@ -19,80 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="CGame.h" />
-    <ClInclude Include="Cheats\CheatMgr.h" />
-    <ClInclude Include="GameScripts.h" />
-    <ClInclude Include="Handlers.h" />
-    <ClInclude Include="Hud\HudComponents.h" />
-    <ClInclude Include="Hud\HudHandler.h" />
-    <ClInclude Include="Hud\Obj\CText.h" />
-    <ClInclude Include="Hud\Obj\HudDrawable.h" />
-    <ClInclude Include="Hud\Obj\Rect.h" />
-    <ClInclude Include="Hud\Obj\Scaleform.h" />
-    <ClInclude Include="Mission\Missions.h" />
-    <ClInclude Include="Mission\MissionHandler.h" />
-    <ClInclude Include="Objects\baseEntity.h" />
-    <ClInclude Include="Objects\Headshots.h" />
-    <ClInclude Include="Objects\Ped.h" />
-    <ClInclude Include="Objects\Vehicle.h" />
-    <ClInclude Include="ScriptEnv\Script.h" />
-    <ClInclude Include="ScriptEnv\ScriptProc.h" />
+    <ClInclude Include="keyboard.h" />
+    <ClInclude Include="script.h" />
     <ClInclude Include="SHV\enums.h" />
     <ClInclude Include="SHV\main.h" />
     <ClInclude Include="SHV\nativeCaller.h" />
     <ClInclude Include="SHV\natives.h" />
     <ClInclude Include="SHV\OGnatives.h" />
     <ClInclude Include="SHV\types.h" />
-    <ClInclude Include="streaming\InteriorSet.h" />
-    <ClInclude Include="streaming\IPL.h" />
-    <ClInclude Include="streaming\Model.h" />
-    <ClInclude Include="streaming\ModelLoad.h" />
-    <ClInclude Include="streaming\streamingMgr.h" />
-    <ClInclude Include="World\Ambience\GameAmbience.h" />
-    <ClInclude Include="World\Ambience\Time.h" />
-    <ClInclude Include="World\Ambience\Timecycle.h" />
-    <ClInclude Include="World\Ambience\Weather.h" />
-    <ClInclude Include="World\Water.h" />
-    <ClInclude Include="World\World.h" />
-    <ClInclude Include="World\WorldState.h" />
+    <ClInclude Include="TestClass.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CGame.cpp" />
-    <ClCompile Include="Cheats\CheatMgr.cpp" />
-    <ClCompile Include="GameScripts.cpp" />
-    <ClCompile Include="Handlers.cpp" />
-    <ClCompile Include="Hud\HudComponents.cpp" />
-    <ClCompile Include="Hud\HudHandler.cpp" />
-    <ClCompile Include="Hud\Obj\CText.cpp" />
-    <ClCompile Include="Hud\Obj\Rect.cpp" />
-    <ClCompile Include="Hud\Obj\Scaleform.cpp" />
-    <ClCompile Include="Mission\MissionHandler.cpp" />
-    <ClCompile Include="Objects\baseEntity.cpp" />
-    <ClCompile Include="Objects\Headshots.cpp" />
-    <ClCompile Include="Objects\Ped.cpp" />
-    <ClCompile Include="Objects\Vehicle.cpp" />
-    <ClCompile Include="ScriptEnv\Script.cpp" />
-    <ClCompile Include="ScriptEnv\ScriptProc.cpp" />
-    <ClCompile Include="streaming\InteriorSet.cpp" />
-    <ClCompile Include="streaming\IPL.cpp" />
-    <ClCompile Include="streaming\Model.cpp" />
-    <ClCompile Include="World\Ambience\GameAmbience.cpp" />
-    <ClCompile Include="World\Ambience\Time.cpp" />
-    <ClCompile Include="World\Ambience\Timecycle.cpp" />
-    <ClCompile Include="World\Ambience\Weather.cpp" />
-    <ClCompile Include="World\Water.cpp" />
-    <ClCompile Include="World\World.cpp" />
-    <ClCompile Include="World\WorldState.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="script.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ProjectReference Include="..\GTAVInfrastructure\GTAVInfrastructure.vcxproj">
+      <Project>{0a86dfd6-6389-4bbc-a688-69b2c7cb2684}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LegitProject1\LegitProject1.vcxproj">
+      <Project>{681969ad-774c-42ae-9350-b8e83b1e2a4f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ScaleformUILib\ScaleformUILib.vcxproj">
+      <Project>{8e123e09-6796-4014-91c5-b24984d381c1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0a86dfd6-6389-4bbc-a688-69b2c7cb2684}</ProjectGuid>
-    <RootNamespace>GTAVInfrastructure</RootNamespace>
+    <ProjectGuid>{07f452e0-d147-4d4c-96d7-45cd9894db7b}</ProjectGuid>
+    <RootNamespace>ScaleformUITest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -116,7 +73,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -141,7 +98,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -183,11 +140,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -206,17 +160,19 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>"E:\ScriptHookV\lib\ScriptHookV.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(TargetName).asi" "E:\SteamLibrary\steamapps\common\Grand Theft Auto V"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

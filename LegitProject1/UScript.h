@@ -9,6 +9,9 @@
 #include "GTAVInfrastructure\streaming\InteriorSet.h"
 #include "GTAVInfrastructure\streaming\Model.h"
 #include <string>
+#include "EndTypes\Player.h"
+#include <array>
+#include <algorithm>
 
 /*
     I'll just lay out how I program here:
@@ -28,15 +31,92 @@
                                             ^( had to get my StackOverflow points LOL) 
 
 */
-class CFreemodeMap {
+class CSlideObject {
+public:
+	CSlideObject(CVector3 objectOrigin, Object o, float zDist) : m_Object(o), m_ObjectOrigin(objectOrigin), m_fzMax(objectOrigin.GetZ() + zDist), m_fzMin(m_fzMax - zDist) {}
+	void SetStep(float _step) {
+		this->m_fStep = _step;
+	}
+	float GetAjarState() {
+		return m_fAjar;
+	}
+	bool _Slide(CVector3& out, float Step) { // impl
+		CVector3 vector = ENTITY::GET_ENTITY_COORDS(m_Object, true);
+		if (Step < 0) {
+			if (vector.GetZ() <= m_ObjectOrigin.GetZ()) {
+				return false;
+			}
+		}
+		else { // Step > 0
+			if (vector.GetZ() > m_fzMax) {
+				return false;
+			}
+		}
+		vector.SetZ(vector.GetZ() + Step);
+		out = vector;
+		return true; // we are sliding
+	}
+	void Reset() {
+		ENTITY::SET_ENTITY_COORDS(m_Object, m_ObjectOrigin.GetX(), m_ObjectOrigin.GetY(), m_ObjectOrigin.GetZ(), 1, 0, 0, 1);
+	}
+	void RecalcAjar(const CVector3& curLocation) {
+		m_fAjar = (curLocation.GetZ() - m_fzMin) / (m_fzMax - m_fzMin); // 
+	}
+	void SlideUp() {
+		CVector3 out = m_ObjectOrigin;
+		if (_Slide(out, m_fStep) && m_SlideState != SLIDE_MAX_UP) { // we are sliding
+			ENTITY::SET_ENTITY_COORDS(m_Object, out.GetX(), out.GetY(), out.GetZ(), 1, 0, 0, 1);
+			RecalcAjar(out);
+			m_SlideState = SLIDING_UP;
+		}
+		else { // we are not sliding
+			m_SlideState = SLIDE_MAX_UP;
+		}
+	}
+	void SlideDown() {
+		CVector3 out = m_ObjectOrigin;
+		if (_Slide(out, m_fNegStep) && m_SlideState != SLIDE_MAX_DOWN) { // we are sliding
+			ENTITY::SET_ENTITY_COORDS(m_Object, out.GetX(), out.GetY(), out.GetZ(), 1, 0, 0, 1);
+			RecalcAjar(out);
+			m_SlideState = SLIDING_DOWN;
+		}
+		else { // we are not sliding
+			m_SlideState = SLIDE_MAX_DOWN;
+		}
+	}
+    CVector3 GetOrigin() { return this->m_ObjectOrigin; }
+	enum SlideState {
+		SLIDING_UP,
+		SLIDING_DOWN,
+		SLIDE_MAX_DOWN, // this should be the default position
+		SLIDE_MAX_UP,
+	};
+    float& GetTriggerDistance() {
+        return m_fTriggerDistance;
+    }
+private:
+	float m_fAjar = 0.0f;
+	SlideState m_SlideState = SLIDE_MAX_DOWN;
+	Object m_Object;
+	CVector3 m_ObjectOrigin;
+	float m_fzMax;
+	float m_fzMin; // Min
+	float m_fStep = 0.035f; // smooth enough
+	float m_fNegStep = -m_fStep;
+    float m_fTriggerDistance = 6.0f;
+};
+class CFreemodeMapLoader {
 public:
 	enum eInteriors : int{
 		FACILITY_HATCH_,
         BUNKER_HATCH_,
         ARENA_BANNERS,
         CASINO_DIAMOND_,
+        LOS_SANTOS_TUNERS,
         SECURITY_EXT_,
         DRUG_WARS_ADD,
+        BAIL_OFFICE,
+        AGENT_SABOTAGE,
 		MAX
 	};
     enum BunkerHatchLocations {
@@ -115,8 +195,38 @@ public:
 			.Add("sf_plaque_bh1_05_lod")
 			.Add("sf_plaque_hw1_08")
 			.Add("sf_plaque_kt1_05")
-			.Add("sf_plaque_kt1_08")
-            .Build();
+			.Add("sf_plaque_kt1_08") .Build();
+        this->m_OnlineMapData[LOS_SANTOS_TUNERS] = MapDataBuilder()
+            .Add("tr_tuner_meetup")
+            .Add("tr_tuner_meetup_lod")
+            .Add("tr_tuner_race_line")
+            .Add("tr_tuner_shop_burton")
+            .Add("tr_tuner_shop_burton_lod")
+            .Add("tr_tuner_shop_mesa")
+            .Add("tr_tuner_shop_mesa_lod")
+            .Add("tr_tuner_shop_mission")
+            .Add("tr_tuner_shop_mission_lod")
+            .Add("tr_tuner_shop_rancho")
+            .Add("tr_tuner_shop_rancho_lod")
+            .Add("tr_tuner_shop_strawberry")
+            .Add("tr_tuner_shop_strawberry_lod").Build();
+        this->m_OnlineMapData[AGENT_SABOTAGE] = MapDataBuilder()
+            .Add("m24_2_airstrip")
+            .Add("m24_2_airstrip_lod")
+            .Add("m24_2_cargoship_overlay")
+            .Add("m24_2_garment_factory")
+            .Add("m24_2_garment_factory_door")
+            .Add("m24_2_garment_factory_lod")
+            .Add("m24_2_hanger_additions")
+            .Add("m24_2_legacy_fixes")
+            .Add("m24_2_mfh_finale_ground")
+            .Add("m24_2_mfh_finale_ground_lod").Build(); // these don't work given that the game build is different under OpenIV. Need to Repatch I think.
+        this->m_OnlineMapData[BAIL_OFFICE] = MapDataBuilder()
+			.Add("m24_1_bailoffice_davis")
+			.Add("m24_1_bailoffice_delperro")
+			.Add("m24_1_bailoffice_missionrow")
+			.Add("m24_1_bailoffice_paletobay")
+            .Add("m24_1_bailoffice_vinewood").Build();
     }
     void InitFreemode() {   
         this->Init();
@@ -157,92 +267,180 @@ public:
             Remove((eInteriors)i);
         }
     }
-    ~CFreemodeMap() {
+    ~CFreemodeMapLoader() {
         RemoveAll();
     }
 private:
     std::vector<CMapData*> m_OnlineMapData{MAX};
+};
+/*
+    Modeling after R*'s Door Sys
+*/
+class CDoorManager {
+public:
+    CDoorManager() {}
+    unsigned long AddSlide(CVector3 originCoord, Object o, float zDist){
+        auto hash = GenerateHash(originCoord);
+        this->m_pObject.insert({ hash, new CSlideObject(originCoord, o, zDist) });
+        return hash;
+    }
+    CSlideObject* Get(const CVector3& coord) {
+        unsigned long hash = GenerateHash(coord);
+        auto it = m_pObject.find(hash);
+        if (it == m_pObject.end()) return nullptr;
+        return it->second;
+    }
+	CSlideObject* Get(unsigned long hash) {
+		auto it = m_pObject.find(hash);
+		if (it == m_pObject.end()) return nullptr;
+		return it->second;
+	}
+    void RemoveSlide(CSlideObject* obj){
+        auto it = std::find(m_pObject.begin(), m_pObject.end(), obj);
+        if (it == m_pObject.end()) return;
+        delete it->second; // ensure we delete the object first. 
+        m_pObject.erase(it);
+    }
+    void RemoveHash(unsigned long hash){
+		auto it = std::find(m_pObject.begin(), m_pObject.end(), hash);
+		if (it == m_pObject.end()) return;
+		delete it->second; // ensure we delete the object first. 
+		m_pObject.erase(it);
+    }
+private:
+    unsigned long GenerateHash(const CVector3& hash){
+        return MISC::GET_HASH_KEY((std::to_string(hash.GetX()) += std::to_string(hash.GetY()) += std::to_string(hash.GetZ())).c_str());
+    }
+    std::unordered_map<unsigned long,CSlideObject*> m_pObject; 
+};
+class CFreemodeMap {
+public:
+    enum class eDoors  : int {
+        MAZE_BANK_GARAGE,
+        MAZE_BANK_WEST_GARAGE,
+        LOMBANK_WEST_GARAGE,
+        ARCADIUS_GARAGE,
+        MAX_DOORS
+    };
+    CFreemodeMap() {
+        this->m_pMapLoader = new CFreemodeMapLoader();
+        m_pMapLoader->InitFreemode(); // Setup Map Data
+        this->m_pDoorManager = new CDoorManager();
+        InitCustomDoors();
+    }
+    void Update() {
+        for (int i = 0; i < (int)eDoors::MAX_DOORS; i++) {
+            if (OFFICE_GARAGE_DOORS[i] == nullptr) { continue; }
+            auto* door = OFFICE_GARAGE_DOORS[i];
+            if (CVector3(ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1)).Dist(door->GetOrigin()) <= door->GetTriggerDistance()) {
+                door->SlideUp();
+            }
+            else {
+                door->SlideDown();
+            }
+        }
+    }
+    static CVector3 GetDoorLocation(eDoors doors) {
+        switch (doors) {
+        case eDoors::ARCADIUS_GARAGE:
+            return { 0,0,0 };
+        case eDoors::LOMBANK_WEST_GARAGE:
+            return { 0,0,0 };
+        case eDoors::MAZE_BANK_GARAGE:
+            return { -79.488, -786.100, 37.338 };
+        case eDoors::MAZE_BANK_WEST_GARAGE:
+            return { 0,0,0 };
+        }
+    }
+	static CVector3 GetDoorRotation(eDoors doors) {
+		switch (doors) {
+		case eDoors::ARCADIUS_GARAGE:
+			return { 0,0,0 };
+		case eDoors::LOMBANK_WEST_GARAGE:
+			return { 0,0,0 };
+		case eDoors::MAZE_BANK_GARAGE:
+			return { 0, 0, 14.750 };
+		case eDoors::MAZE_BANK_WEST_GARAGE:
+			return { 0,0,0 };
+		}
+	}
+    void InitCustomDoors() { // Sliding Objects
+        Object o = CreateObject("imp_Prop_ImpEx_Gate_01", GetDoorLocation(eDoors::MAZE_BANK_GARAGE), true);
+        CVector3 v = GetDoorRotation(eDoors::MAZE_BANK_GARAGE);
+        ENTITY::SET_ENTITY_ROTATION(o, v.GetX(), v.GetY(), v.GetZ(), 1, 1); // its time. 
+        ScriptObjects.push_back(o);
+        CSlideObject* SlideObject = CreateSlideObject(GetDoorLocation(eDoors::MAZE_BANK_GARAGE), o, 4.25f);
+        OFFICE_GARAGE_DOORS[(int)eDoors::MAZE_BANK_GARAGE] = SlideObject;
+    }
+    ~CFreemodeMap() {
+        for (auto* ptr : OFFICE_GARAGE_DOORS) {
+            delete ptr; 
+        }
+        std::for_each(ScriptObjects.begin(), ScriptObjects.end(), [](Object o) {
+            OBJECT::DELETE_OBJECT(&o);
+        });
+        delete m_pDoorManager;
+        delete m_pMapLoader;
+        // I can't remove ScriptObjects without causing issue with exit procedure. Need a fix for that since destroying all the doors won't do. 
+        // Normally on game exit its not as horrible because map is gone with it. But problem is that I am doing debug reloads
+    }
+private:
+    Object CreateObject(StringHash hash, CVector3 position, bool dynamic) {
+        CStreamingModel model = hash.GetHash();
+        model.Request(); // not a pointer type. we don't need to send to other thing for this. temp model
+        return OBJECT::CREATE_OBJECT(hash.GetHash(), position.GetX(), position.GetY(), position.GetZ(), 0, 0, 1);
+    }
+    CSlideObject* CreateSlideObject(CVector3 objectOrigin, Object o, float zDist) {
+        return new CSlideObject(objectOrigin, o, zDist);
+    }
+    CSlideObject* OFFICE_GARAGE_DOORS[(int)eDoors::MAX_DOORS] = { nullptr };
+    CFreemodeMapLoader* m_pMapLoader = nullptr;
+    CDoorManager* m_pDoorManager = nullptr;
+    std::vector<Object> ScriptObjects;
+};
+/*
+    This represents a strand of a World State.
+    This means props, objects, spawned items are constrained to this world capture. 
+    World Captures can be persistent in the case of potentially Map Data or other extreme cases. 
+    Or other minor cases. Copying data is also important. Which means override Copy is important. Always take from the current and supply the next world state.
+    Chain them like a list to get an Entire Mission's/Activity's WorldState.
+    Built from the ashes of the old Capture System from TheEnd.
+    TheEnd's Capture was more significant in the fact it captured PlayerState.
+    PlayerState is not included in a WorldCapture, this is because PlayerState and WorldState are different innately. 
+*/
+class Action {
+public:
+    virtual void Perform() = 0;
+    virtual void Cancel() = 0;
+private:
+};
+struct sTimeData {
+    int hour, minute, second;
+    bool DoTransition;
+    bool AllowTransitionToSpinBackTime; 
+    bool FreezeTimeAt;
+};
+class CWorldCapture {
+public:
+
+protected:
+    std::vector<Object> m_GameObjects; 
+    std::vector<Vehicle> m_GameVehicles; 
+    std::vector<Ped> m_Peds;
+    std::vector<CMapData> m_MapData; // IPL Changes, Interior Protocols, etc.
+    std::vector<Action> m_Interactions;
+    sTimeData m_TimeData;
+private:
 
 };
 enum eState : int{
     SP,
     END
 };
-class CSlideObject {
-public:
-    CSlideObject(CVector3 objectOrigin, Object& o, float zDist):  m_Object(o), m_ObjectOrigin(objectOrigin), m_fzMax(objectOrigin.GetZ() + zDist), m_fzMin(m_fzMax - zDist){}
-    void SetStep(float _step) {
-        this->m_fStep = _step;
-    }
-    float GetAjarState() {
-        return m_fAjar;
-    }
-    bool _Slide(CVector3& out, float Step) { // impl
-        CVector3 vector = ENTITY::GET_ENTITY_COORDS(m_Object, true);
-        if (Step < 0) {
-            if (vector.GetZ() <= m_ObjectOrigin.GetZ()) {
-                return false;
-            }
-        }
-        else { // Step > 0
-            if (vector.GetZ() > m_fzMax) {
-                return false;
-            }
-        }
-		vector.SetZ(vector.GetZ() + Step);  
-        out = vector;
-		return true; // we are sliding
-    }
-    void Reset() {
-        ENTITY::SET_ENTITY_COORDS(m_Object, m_ObjectOrigin.GetX(), m_ObjectOrigin.GetY(), m_ObjectOrigin.GetZ(), 1,0,0,1);
-    }
-    void RecalcAjar(const CVector3& curLocation) {
-		m_fAjar = (curLocation.GetZ() - m_fzMin) / (m_fzMax - m_fzMin); // 
-    }
-    void SlideUp() {
-        CVector3 out = m_ObjectOrigin;
-        if (_Slide(out, m_fStep) && m_SlideState != SLIDE_MAX_UP) { // we are sliding
-            ENTITY::SET_ENTITY_COORDS(m_Object, out.GetX(), out.GetY(), out.GetZ(), 1,0,0,1);
-            RecalcAjar(out);
-            m_SlideState = SLIDING_UP;
-        }
-        else { // we are not sliding
-            m_SlideState = SLIDE_MAX_UP;
-        }
-    }
-    void SlideDown() {
-		CVector3 out = m_ObjectOrigin;
-		if (_Slide(out, m_fNegStep) && m_SlideState != SLIDE_MAX_DOWN) { // we are sliding
-			ENTITY::SET_ENTITY_COORDS(m_Object, out.GetX(), out.GetY(), out.GetZ(), 1, 0, 0, 1);
-            RecalcAjar(out);
-            m_SlideState = SLIDING_DOWN;
-		}
-		else { // we are not sliding
-			m_SlideState = SLIDE_MAX_DOWN;
-		}
-    }
-    enum SlideState {
-        SLIDING_UP,
-        SLIDING_DOWN,
-        SLIDE_MAX_DOWN, // this should be the default position
-        SLIDE_MAX_UP,
-    };
-private:
-    float m_fAjar = 0.0f;
-    SlideState m_SlideState = SLIDE_MAX_DOWN;
-    Object& m_Object;
-    CVector3 m_ObjectOrigin;
-    float m_fzMax;
-    float m_fzMin; // Min
-    float m_fStep = 0.035f; // smooth enough
-    float m_fNegStep = -m_fStep;
-};
+
 class CTheEndScript : public ScriptableBase<CTheEndScript> {
 private: 
     static inline int State = SP;
-    bool Slide(CVector3& base, float step, float fMax) {
-
-    }
     enum eSlideState {
         SLIDE_UP,
         SLIDE_MAX_UP,
@@ -269,31 +467,7 @@ public:
             if(pObject) pObject->Reset();
             vCurrentPos = { -79.488, -786.100, 37.338 };
         }
-        if (IsKeyJustUp(VK_DIVIDE)) {
-            Hash objectHash = MISC::GET_HASH_KEY("imp_Prop_ImpEx_Gate_01");
-            while (!STREAMING::HAS_MODEL_LOADED(objectHash)) {
-                STREAMING::REQUEST_MODEL(objectHash);
-                WAIT(0);
-            }
-            object = OBJECT::CREATE_OBJECT(objectHash, vCurrentPos.GetX(), vCurrentPos.GetY(), vCurrentPos.GetZ(), 1, 1, 1);
-            ENTITY::SET_ENTITY_ROTATION(object, 0, 0, 14.750, 1, true);   
-            pObject = new CSlideObject(vCurrentPos, object, 4.25);
-        }
-        if (pObject) {
-            float fOldAjar = pObject->GetAjarState();
-            if (CVector3(ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1)).Dist(vCurrentPos) <= 6.0f) {
-                pObject->SlideUp();
-            }
-            else {
-                pObject->SlideDown();
-            }
-            if (fOldAjar != pObject->GetAjarState()) {
-                fOldAjar = pObject->GetAjarState();
-                LAGInterface::Writeln("%f", fOldAjar);
-            }
-        }
-
-        
+        m_pMap->Update();
         CEndWorld::Update();
     }
 
@@ -315,7 +489,6 @@ public:
     void LoadEnd() {
         CGameWorld::GetWorldStateMgr()->EnableMPMap(true);
 		m_pMap = new CFreemodeMap();
-        m_pMap->InitFreemode();
 		CEndWorld::Init();
         CGameWorld::GetStreamingMgr()->Add(&pModel);
         STATS::STAT_SET_INT(MISC::GET_HASH_KEY("MPPLY_LAST_MP_CHAR"), 0, 1);
