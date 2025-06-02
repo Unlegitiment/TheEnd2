@@ -2,9 +2,11 @@
 #include "Obj\Rect.h"
 #include "Obj\CText.h"
 #include "Obj\Scaleform.h"
+#include "Obj\MissionText.h"
 void CHudHandler::Init()
 {
     this->m_ScaleformHandler = new CScaleformHandler();
+    this->m_TextHelper = new CGameTextHelper();
 }
 CRect* CHudHandler::CreateRect(CVector3 pos, Color32 col, float width, float height)
 {
@@ -25,14 +27,21 @@ CScaleformHandler* CHudHandler::GetScaleformHandler()
     return this->m_ScaleformHandler;
 }
 
+CGameTextHelper* CHudHandler::GetGameText()
+{
+    return this->m_TextHelper;
+}
+
 void CHudHandler::Update()
 {
     for (auto& draws : m_vDrawList) {
         draws->Draw(); 
     }
+    this->m_TextHelper->Draw();
 }
 
 void CHudHandler::Destroy()
 {
-    
+    delete m_TextHelper;
+    delete m_ScaleformHandler;
 }

@@ -12,7 +12,9 @@
 #include "EndTypes\Player.h"
 #include <array>
 #include <algorithm>
-
+#include <GTAVInfrastructure\CGame.h>
+#include <GTAVInfrastructure\Hud\Obj\MissionText.h>
+#include "GTAVInfrastructure\macros\WHILE.h"
 /*
     I'll just lay out how I program here:
         - If you don't call new/malloc don't call delete. Unless doing a very specific pattern and its predictable i.e. Builder.
@@ -29,7 +31,6 @@
             Not the allocator to the pointer else we'd just call new. Or whatever.
         - Other than that have fun. (Also char* when you don't allocate them suck) 
                                             ^( had to get my StackOverflow points LOL) 
-
 */
 class CSlideObject {
 public:
@@ -279,39 +280,39 @@ private:
 class CDoorManager {
 public:
     CDoorManager() {}
-    unsigned long AddSlide(CVector3 originCoord, Object o, float zDist){
+    int AddSlide(CVector3 originCoord, Object o, float zDist){
         auto hash = GenerateHash(originCoord);
         this->m_pObject.insert({ hash, new CSlideObject(originCoord, o, zDist) });
         return hash;
     }
     CSlideObject* Get(const CVector3& coord) {
-        unsigned long hash = GenerateHash(coord);
+        int hash = GenerateHash(coord);
         auto it = m_pObject.find(hash);
         if (it == m_pObject.end()) return nullptr;
         return it->second;
     }
-	CSlideObject* Get(unsigned long hash) {
+	CSlideObject* Get(int hash) {
 		auto it = m_pObject.find(hash);
 		if (it == m_pObject.end()) return nullptr;
 		return it->second;
 	}
     void RemoveSlide(CSlideObject* obj){
-        auto it = std::find(m_pObject.begin(), m_pObject.end(), obj);
-        if (it == m_pObject.end()) return;
-        delete it->second; // ensure we delete the object first. 
-        m_pObject.erase(it);
+        //auto it = std::find(m_pObject.begin(), m_pObject.end(), obj);
+        //if (it == m_pObject.end()) return;
+        //delete it->second; // ensure we delete the object first. 
+        //m_pObject.erase(it);
     }
-    void RemoveHash(unsigned long hash){
-		auto it = std::find(m_pObject.begin(), m_pObject.end(), hash);
-		if (it == m_pObject.end()) return;
-		delete it->second; // ensure we delete the object first. 
-		m_pObject.erase(it);
+    void RemoveHash(int hash){
+		//auto it = std::find(m_pObject.begin(), m_pObject.end(), hash);
+		//if (it == m_pObject.end()) return;
+		//delete it->second; // ensure we delete the object first. 
+		//m_pObject.erase(it);
     }
 private:
-    unsigned long GenerateHash(const CVector3& hash){
+    int GenerateHash(const CVector3& hash){
         return MISC::GET_HASH_KEY((std::to_string(hash.GetX()) += std::to_string(hash.GetY()) += std::to_string(hash.GetZ())).c_str());
     }
-    std::unordered_map<unsigned long,CSlideObject*> m_pObject; 
+    std::unordered_map<int, CSlideObject*> m_pObject; 
 };
 class CFreemodeMap {
 public:
@@ -325,7 +326,7 @@ public:
     CFreemodeMap() {
         this->m_pMapLoader = new CFreemodeMapLoader();
         m_pMapLoader->InitFreemode(); // Setup Map Data
-        this->m_pDoorManager = new CDoorManager();
+        //this->m_pDoorManager = new CDoorManager();
         InitCustomDoors();
     }
     void Update() {
@@ -379,7 +380,7 @@ public:
         std::for_each(ScriptObjects.begin(), ScriptObjects.end(), [](Object o) {
             OBJECT::DELETE_OBJECT(&o);
         });
-        delete m_pDoorManager;
+        //delete m_pDoorManager;
         delete m_pMapLoader;
         // I can't remove ScriptObjects without causing issue with exit procedure. Need a fix for that since destroying all the doors won't do. 
         // Normally on game exit its not as horrible because map is gone with it. But problem is that I am doing debug reloads
@@ -395,7 +396,7 @@ private:
     }
     CSlideObject* OFFICE_GARAGE_DOORS[(int)eDoors::MAX_DOORS] = { nullptr };
     CFreemodeMapLoader* m_pMapLoader = nullptr;
-    CDoorManager* m_pDoorManager = nullptr;
+    //CDoorManager* m_pDoorManager = nullptr;
     std::vector<Object> ScriptObjects;
 };
 /*
@@ -438,6 +439,119 @@ enum eState : int{
     END
 };
 
+struct TextureGTAV {
+    const char* Dictionary;
+    const char* Name;
+    TextureGTAV(const char* Dict, const char* Name) :Dictionary(Dict), Name(Name){
+        GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT(Dictionary, 1); // we need this immediately. 
+    }
+    const char* GetDictionary() { return Dictionary; }
+    const char* GetName() { return Name; }
+};
+void DrawMarker(eMarkerType marker, CVector3 position, CVector3 Direction, CVector3 Rotation, CVector3 Scale, Color32 col, TextureGTAV text, bool bobUpDwn = false, bool faceCam = false, bool rotate = false, bool drawOnEnter = false) {
+    GRAPHICS::DRAW_MARKER(marker, position.GetX(), position.GetY(), position.GetZ(), Direction.GetX(), Direction.GetY(), Direction.GetZ(), Rotation.GetX(), Rotation.GetY(), Rotation.GetZ(), Scale.GetX(), Scale.GetY(), Scale.GetZ(), col.GetR(), col.GetG(), col.GetB(), col.GetA(), bobUpDwn, faceCam, 0, rotate, text.GetDictionary(), text.GetName(), drawOnEnter);
+}
+#include "Interiors/Submarine.h"
+class CFreemodeMission;
+class CMissionLauncher {
+public:
+    void ActivateMission(CFreemodeMission* actMission) {
+        this->IsMissionActive = true;
+        MissionActive = actMission;    
+    }
+    void DeactivateMission() {
+        MissionActive = nullptr;
+        this->IsMissionActive = false;
+    }
+private:
+	bool IsMissionActive = false;
+	CFreemodeMission* MissionActive = false;
+};
+
+class CFreemodeMission {
+public:
+    void Init(CMissionLauncher* launchParameters) {
+        this->pLauncher = launchParameters;
+        pLauncher->ActivateMission(this);
+        CGameWorld::GetStreamingMgr()->Add(&this->model);
+        SpawnAssets();
+        SpawnBlips();
+        missionstate = 10;
+    }
+    int missionstate = 0;
+    void Update() {
+        if (missionstate == 10) {
+            HUD::BEGIN_TEXT_COMMAND_PRINT("STRING");
+            HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Go to the ~b~Kosatka");
+            HUD::END_TEXT_COMMAND_PRINT(0, true);
+            if (CVector3(ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1)).Dist(VehicleEntrance) < 3.f) {
+                HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");;
+                HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Press ~INPUT_CONTEXT~ to enter.");
+                HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 0, -1);
+                if (PAD::IS_CONTROL_JUST_PRESSED(0, 51)) {
+                    pInterior = new CSubInterior();
+					pInterior->SetMissileChairState(CSubInterior::LEFT, CSubInterior::EMSA_READY);
+					pInterior->SetMissileChairState(CSubInterior::RIGHT, CSubInterior::EMSA_READY);
+                    pInterior->SetSonarState(CSubInterior::ESSA_OFFLINE);
+                    ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1561.5070, 392.0058, -50, 1,0,0,1);
+                    ENTITY::SET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID(), 178.0);
+                    CAM::SET_GAMEPLAY_CAM_RELATIVE_HEADING(0);
+                    missionstate = 20;
+                }
+            }
+        }
+        if (missionstate == 20) {
+            //Set player blip inside of Kosatka's
+            //Remove blip assets from outside world.
+            //Summon enemies
+            //Summon Pickups.
+            //Handle Death Logic. 
+        }
+    }
+    void Deactivate() {
+        CGameWorld::GetStreamingMgr()->Remove(&this->model);
+        this->pLauncher->DeactivateMission();
+        this->CleanAssets();
+        delete pInterior;
+    }
+    ~CFreemodeMission() {
+        Deactivate();
+    }
+private:
+    void SpawnBlips() {
+        bMissionEntity = HUD::ADD_BLIP_FOR_ENTITY(Kosatka);
+        HUD::SET_BLIP_SPRITE(bMissionEntity, 760);
+        HUD::SET_BLIP_COLOUR(bMissionEntity, 28);
+        HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+        HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Kosatka");
+        HUD::END_TEXT_COMMAND_SET_BLIP_NAME(bMissionEntity);
+        HUD::SET_BLIP_ROTATION(bMissionEntity, VehRot.GetZ());
+    }
+    void SpawnAssets() {
+        WHILE(!model.IsLoaded()) {
+            model.Request();
+            LAGInterface::Writeln("Model Was not loaded!");
+        }
+        Kosatka = VEHICLE::CREATE_VEHICLE(model.GetHash(), VehPos.GetX(), VehPos.GetY(), VehPos.GetZ(), VehRot.GetZ(), 1, 1, 1);
+        ENTITY::SET_ENTITY_INVINCIBLE(Kosatka, 1);
+        ENTITY::FREEZE_ENTITY_POSITION(Kosatka, 1);
+    }
+    void CleanAssets() {
+        if (HUD::DOES_BLIP_EXIST(bMissionEntity)) HUD::REMOVE_BLIP(&bMissionEntity);
+        if(ENTITY::DOES_ENTITY_EXIST(Kosatka)) VEHICLE::DELETE_VEHICLE(&Kosatka);
+        if (pInterior) delete pInterior; pInterior = nullptr;
+    }
+    CStreamingModel model = CStreamingModel(StringHash("KOSATKA").GetHash());
+    CSubInterior* pInterior = nullptr; 
+    Blip bMissionEntity = 0;
+	CVector3 VehPos = {  422.7261, -3048.638, -8.5299 };
+    CVector3 VehRot = { 0, 0,180 };
+	CVector3 VehicleEntrance = { 422.6445, -3078.946, 3.2290 };
+    Vehicle Kosatka = 0;
+    CMissionLauncher* pLauncher = nullptr;
+    Interior iKosatkaInteriorId;
+};
+
 class CTheEndScript : public ScriptableBase<CTheEndScript> {
 private: 
     static inline int State = SP;
@@ -452,6 +566,7 @@ public:
     CTheEndScript() : ScriptableBase() { // @TODO: Create some way to create instances more nicely. Since ScriptableBase basically just adds it to the list rn. 
         
     }
+    CFreemodeMission* m_pMission = nullptr;
     // Inherited via ScriptableBase
 	CFreemodeMap* m_pMap = nullptr;
     Object object = 0;
@@ -460,12 +575,44 @@ public:
     CSlideObject* pObject = nullptr;
     CStreamingModel pModel = CStreamingModel(MISC::GET_HASH_KEY("mp_m_freemode_01"));
     Ped iPlayerPed = 0;
+    CMissionLauncher Launcher = CMissionLauncher();
+    int curAction = CSubInterior::EMSA_OFFLINE;
     void OnTick() override
     {
 		int worldState = CGameWorld::GetWorldState();
-		if (IsKeyJustUp(VK_ADD)) {
-            if(pObject) pObject->Reset();
+        if (IsKeyJustUp(VK_ADD)) {
+            if (pObject) pObject->Reset();
             vCurrentPos = { -79.488, -786.100, 37.338 };
+        }
+        if (IsKeyJustUp(VK_MULTIPLY)) {
+            int currentSet = 0;
+
+            ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 345.00000000, 4842.00000000, -60.00000000, 1, 0, 0, 1);
+            Interior interior = INTERIOR::GET_INTERIOR_AT_COORDS(345.00000000, 4842.00000000, -60.00000000);
+            INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, "set_int_02_shell");
+            CVector3 vec = { 345.00000000, 4842.00000000, -60.00000000 };
+            WHILE_EX(5000, currentSet != 11) {
+                INTERIOR::SET_INTERIOR_ENTITY_SET_TINT_INDEX(interior, "set_int_02_shell", currentSet);
+                INTERIOR::REFRESH_INTERIOR(interior);
+                currentSet++;
+                LAGInterface::Writeln("Interior: %d {%.f, %.f, %.f}Setting interior index %d", interior, vec.GetX(), vec.GetY(), vec.GetZ(), currentSet);
+            }
+        }
+        if (m_pMission) {
+            m_pMission->Update();
+        }
+		if (IsKeyJustUp(VK_F13)) {
+            if (m_pMission) {
+                delete m_pMission;
+                m_pMission = nullptr;
+            }
+		}
+        if (IsKeyJustUp(VK_F14)) {
+            //INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(intid, "entity_set_brig");
+            //INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(intid, "entity_set_guide");
+            m_pMission = new CFreemodeMission();
+            m_pMission->Init(&Launcher);
+            LAGInterface::Writeln("Test");
         }
         m_pMap->Update();
         CEndWorld::Update();
@@ -478,6 +625,7 @@ public:
 
     void OnShutdown() override
     {
+        delete m_pMission; // Mission removes stuff when it goes out of scope this is called before deconstructor. 
         delete m_pMap;
         CEndWorld::Destroy();
         LAGInterface::Writeln("Shutdown Called for CTheEndScript");
@@ -492,7 +640,7 @@ public:
 		CEndWorld::Init();
         CGameWorld::GetStreamingMgr()->Add(&pModel);
         STATS::STAT_SET_INT(MISC::GET_HASH_KEY("MPPLY_LAST_MP_CHAR"), 0, 1);
-
+        
 		LAGInterface::Writeln("Init Called for CTheEndScript");
     }
 private:

@@ -12,6 +12,8 @@
 #include "ScriptHeader.h"
 #include <map>
 #include "GTAVInfrastructure\Hud\HudComponents.h"
+#include "GTAVInfrastructure\macros\WHILE.h"
+
 struct CDumpUtil {
     static void DumpWeatherHash() {
         std::vector<const char*> v = {
@@ -56,11 +58,9 @@ void main()
     CreateInstances();
     //CPlayer Player = CPlayer(); 
     fwScriptMgr::Get().InitAll();
-    while (true)
+    WHILE(true)
     {
-        g_App->Update();
-        
-        WAIT(0);
+        g_App->Update();   
     }
     g_App->Destroy(); // this line will never get reached in debug. 
 }

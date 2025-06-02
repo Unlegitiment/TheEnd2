@@ -1,17 +1,18 @@
 #include "IPL.h"
 #include "GTAVInfrastructure/SHV/natives.h"
 #include <LegitProject1\LInfras.h>
+#include "GTAVInfrastructure\macros\WHILE.h"
+
 void fwIPL::Request()
 {
 	STREAMING::REQUEST_IPL(this->m_aName);
 	this->status = REQUESTED;
 	int NumTries = 0;
 	static constexpr int MAX_TRIES = 10;
-	while (!STREAMING::IS_IPL_ACTIVE(this->m_aName) && NumTries <= MAX_TRIES) {
+	WHILE(!STREAMING::IS_IPL_ACTIVE(this->m_aName) && NumTries <= MAX_TRIES) {
 		this->status = LOADING;
 		STREAMING::REQUEST_IPL(this->m_aName);
 		NumTries++;
-		WAIT(0);
 	}
 	if (NumTries >= MAX_TRIES) {
 		LAGInterface::Writeln("IPL: %s Failed to load max retries reached", this->m_aName);

@@ -28,8 +28,10 @@
     <ClInclude Include="Hud\HudHandler.h" />
     <ClInclude Include="Hud\Obj\CText.h" />
     <ClInclude Include="Hud\Obj\HudDrawable.h" />
+    <ClInclude Include="Hud\Obj\MissionText.h" />
     <ClInclude Include="Hud\Obj\Rect.h" />
     <ClInclude Include="Hud\Obj\Scaleform.h" />
+    <ClInclude Include="macros\WHILE.h" />
     <ClInclude Include="Mission\Missions.h" />
     <ClInclude Include="Mission\MissionHandler.h" />
     <ClInclude Include="Objects\baseEntity.h" />
@@ -67,6 +69,7 @@
     <ClCompile Include="Hud\Obj\CText.cpp" />
     <ClCompile Include="Hud\Obj\Rect.cpp" />
     <ClCompile Include="Hud\Obj\Scaleform.cpp" />
+    <ClCompile Include="macros\WHILE.cpp" />
     <ClCompile Include="Mission\MissionHandler.cpp" />
     <ClCompile Include="Objects\baseEntity.cpp" />
     <ClCompile Include="Objects\Headshots.cpp" />

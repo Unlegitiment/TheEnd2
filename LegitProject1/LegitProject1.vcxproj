@@ -31,6 +31,7 @@
     <ClInclude Include="EndTypes\Markers.h" />
     <ClInclude Include="EndTypes\Player.h" />
     <ClInclude Include="fi\logger.h" />
+    <ClInclude Include="Interiors\Submarine.h" />
     <ClInclude Include="LInfras.h" />
     <ClInclude Include="Network\netLog.h" />
     <ClInclude Include="Network\obj\basesocket.h" />
