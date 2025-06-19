@@ -33,14 +33,54 @@ public:
 	}
 private:
 	int m_Handle = 0;
-
+}; 
+struct HeistCelebBase {
+	HeistCelebBase(const char* base, int _wallId) : method(base) , wallId(_wallId){}
+	const char* GetMethod() {
+		return method;
+	}
+	int GetWallId() { return this->wallId; }
+private:
+	int wallId;
+	const char* method;
 };
-struct HeistCelebRepWall {
-	int repGained, startRepPoints, MinRepOfRank, MaxRepOfRank, CurrentRank, NextRank;
+struct HeistCelebRepWall : public HeistCelebBase{
+	HeistCelebRepWall(int Wall) : HeistCelebBase("ADD_REP_POINTS_AND_RANK_BAR_TO_WALL", Wall) {}
+	void ExeScaleformCommand(CScaleform& scaleform, int wallID) {
+		scaleform.CallScaleform(GetMethod(), wallID, );
+	}
+	int repGained = 0, startRepPoints = 0, MinRepOfRank = 0, MaxRepOfRank = 0, CurrentRank = 0, NextRank = 0;
 	char* SmallText = "NICE";
 	char* BigText = "RANKUP!"; //on average
 };
-struct HeistCelebSetup {
+struct HeistCelebJobPoints : public HeistCelebBase {
+	bool xAlign;
+	int pointsGained;
+};
+
+struct HeistCelebWallStat : public HeistCelebBase{
+	HeistCelebWallStat(int Wall) : HeistCelebBase("ADD_STAT_TO_TABLE", Wall) {};
+	char* name;
+	char* value;
+	bool isNameRawText = true;
+	bool isValueRawText = true;
+	bool isTotalRow = true;
+	bool isStatValueTime = false;
+	char* colourId; // HUD_COLOURS.
+};
+struct HeistCelebWallStatTable : public HeistCelebBase {
+public:
+	HeistCelebWallStatTable(int Wall) : HeistCelebBase("ADD_STAT_TABLE_TO_WALL", Wall){}
+	void ExeAllScaleformCommands(CScaleform& scaleform, int wallid, int stepId) {
+		for (auto& stat : m_Stats) {
+			scaleform.CallScaleform(stat.GetMethod(), wallid, stepId, stat.name, stat.value, stat.isNameRawText, stat.isValueRawText, stat.isTotalRow, stat.isStatValueTime, stat.colourId); // this is expected to be a wall stat thus add_stat_to_table's syntax is used.
+		}
+	}
+private:
+	std::vector<HeistCelebWallStat> m_Stats;
+};
+
+struct HeistCelebSetup { // background,and other stuff.
 	const char* bgColour = "HUD_COLOUR_BLACK";
 	const int sfxId = 3; 
 	const int alpha = 100;
@@ -64,18 +104,25 @@ class CHeistCeleb {
 	enum eScaleformIndex {
 		BASE = 0,
 		BACKGROUND = 1,
-		FOREGROUND = 2
+		FOREGROUND = 2,
+		MAX_SCALEFORM
 	};
+	template<typename... T>
+	bool CallScaleform(const char* method, T&&... args) {
+		for (auto& s : m_ScaleformInstances) {
+			CScaleform scaleform = CScaleform(s);
+			scaleform.CallScaleform(method, std::forward<T>(args)...);
+		}
+		return true;
+	}
 public:
+	//this shit floods the logs. @TODO: remove all debugprint statements pretty please!
 	void Update(HeistCelebData* data) {
 		if (data == nullptr) {
 			LAGInterface::Writeln("data is nullptr! quick return triggered");
 			if (m_State != eSM_INVALID) {
 				//yikes we got a problem! Scaleform data was just randomly changed to nullptr! this is a problem!
-				for (auto& i : m_ScaleformInstances) {
-					CScaleform scl = CScaleform(i);
-					scl.CallScaleform("CLEANUP", WallId);
-				}
+				CallScaleform("CLEANUP", WallId);
 				LAGInterface::Writeln("data is nullptr! but our state is not invalid! quick return triggered");
 				m_State = eSM_INVALID;
 			}
@@ -102,10 +149,7 @@ public:
 			RenderData();
 		}
 		if (m_State == eSM_CLEANUP) {
-			for (auto& it : m_ScaleformInstances) {
-				CScaleform scaleform = CScaleform(it);
-				scaleform.CallScaleform("CLEANUP", WallId); // clean the wall
-			}
+			CallScaleform("CLEANUP", WallId);
 			LAGInterface::Writeln("CLEANUP Triggered");
 			data->m_Base.IsScaleformDone = true;
 			m_State = eSM_DONE;
@@ -383,3 +427,40 @@ public:
 		ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
 	}
 };
+
+/* old test cutscene data. 
+			//Add commentMore actions
+			//	hs4f_drp_off cutscene where lootbag gets dropped off. AFTER FIRST HEIST NOT MADRAZO CUT
+			//	hs4f_drp_cel cutscene where player drinks and throws lime off of balcony
+			
+const char* cutname = "hs4f_drp_cel";
+if (!isSceneRunning) {
+	CUTSCENE::REQUEST_CUTSCENE(cutname, 8);
+	CUTSCENE::START_CUTSCENE(0);
+	isSceneRunning = true;
+}
+//isSceneRunning = CUTSCENE::IS_CUTSCENE_PLAYING();
+		}
+		if (isSceneRunning) {
+			//LAGInterface::Writeln("%d", CUTSCENE::GET_CUTSCENE_TIME());
+			if (CUTSCENE::GET_CUTSCENE_TIME() >= 12080 && GRAPHICS::GET_TOGGLE_PAUSED_RENDERPHASES_STATUS()) {
+				//LAGInterface::Writeln("Over 12080! %d", CUTSCENE::GET_CUTSCENE_TIME());
+				GRAPHICS::TOGGLE_PAUSED_RENDERPHASES(false);
+			}
+		}
+		//GRAPHICS::DRAW_MARKER_SPHERE(26.07468000, -1398.97900000, -75.00000000, fRadius, 255, 0, 0, 0.7);
+
+		isSceneRunning = CUTSCENE::IS_CUTSCENE_PLAYING();
+		if (m_bIsScaleformActive) { // gotta start a timer or something 
+			GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN_MASKED(SCL_BG, SCL_FG, 255, 255, 255, 255);
+			GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN(SCL, 255, 255, 255, 255, 1);
+			HUD::HIDE_HUD_AND_RADAR_THIS_FRAME();
+			HUD::HIDE_STREET_AND_CAR_NAMES_THIS_FRAME();
+			if (MISC::GET_GAME_TIMER() >= reqTimer) {
+				GRAPHICS::SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED(&SCL);
+				GRAPHICS::SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED(&SCL_BG);
+				GRAPHICS::SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED(&SCL_FG);
+				m_bIsScaleformActive = false;
+			}
+
+*/
