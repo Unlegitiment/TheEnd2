@@ -30,6 +30,54 @@ private:
 		unsigned long long hash;
 		std::array<const char* , 2> strs;
 	};
+	void TestFunc() {
+		//PLAYER::FORCE_CLEANUP(2);
+		bool m_bTestCollisions = true;
+		//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -1160.49400000, -1538.93200000, -49.00000000, 0, 0, 0, 1);
+		Interior interior = INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID());
+		std::vector<hashTEst> m_Tests = {
+			{ 0x0c2b3a7f, {
+				"acarbuncle.guantanamo", // higgins helli base
+				"aworkloaddentist" // higgons helli props
+			}},
+			{ 0x5128b294, {
+				"aorthopaedists.snitching", // weed ?
+				"adeputing_hansel" // weed props?
+			}},
+		};
+		LAGInterface::Writeln("populated hashes : size: %d ", m_Tests.size());
+		WHILE(m_bTestCollisions) {
+			auto it = m_Tests.begin();
+			std::array<const char*, 2> m_Props = {};
+			int index = 0;
+			bool needsUpdate = true;
+			WHILE(it != m_Tests.end()) {
+				if (needsUpdate) {
+					m_Props[0] = it->strs[0];
+					m_Props[1] = it->strs[1]; // done
+					INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[0]);
+					INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[1]);
+					INTERIOR::REFRESH_INTERIOR(interior);
+					needsUpdate = false;
+				}
+				if (IsKeyJustUp(VK_F15)) {
+					index++;
+					INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[0]);
+					INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[1]);
+					INTERIOR::REFRESH_INTERIOR(interior);
+					LAGInterface::Writeln("Deactivating interior set: %s , %s", m_Props[0], m_Props[1]);
+					needsUpdate = true;
+					if (index > m_Tests.size()) {
+						index = 0;
+					}
+					it = m_Tests.begin() + index;
+				}
+			}
+			m_bTestCollisions = false;
+		};
+
+		INTERIOR::REFRESH_INTERIOR(interior);
+	}
 public:
 	// Inherited via ScriptableBase
 	void OnTick() override
@@ -42,52 +90,39 @@ public:
 			GRAPHICS::TOGGLE_PAUSED_RENDERPHASES(true);
 		}
 		if (IsKeyJustUp(VK_F14)) {
-			//PLAYER::FORCE_CLEANUP(2);
-			bool m_bTestCollisions = true;
-			//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -1160.49400000, -1538.93200000, -49.00000000, 0, 0, 0, 1);
-			Interior interior = INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID());
-			std::vector<hashTEst> m_Tests = {
-				{ 0x0c2b3a7f, {
-					"acarbuncle.guantanamo", // higgins helli base
-					"aworkloaddentist" // higgons helli props
-				}},
-				{ 0x5128b294, {
-					"aorthopaedists.snitching", // weed ?
-					"adeputing_hansel" // weed props?
-				}},
-			};
-			LAGInterface::Writeln("populated hashes : size: %d ", m_Tests.size());
-			WHILE(m_bTestCollisions) {
-				auto it = m_Tests.begin();
-				std::array<const char*, 2> m_Props = {};
-				int index = 0;
+			//TestFunc();
+			const std::vector<const char*> Strings = { "aanthologies.burlesque", // all of these are the shell props for the game. just required a little bit of cleanup from collision checker.
+				"acallouses_inebriations",
+				"aguffhuffiness",
+				"amummersspousals",
+				"aintracranialbabushkas",
+				"aphotoengravings_reexplaining",
+				"abaptizerdebs" };
+			bool m_bTestStrings = true;
+			Interior interior = INTERIOR::GET_INTERIOR_AT_COORDS(26.07468000, -1398.97900000, -75.00000000);
+			if (INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID() ) != interior) {
+				ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 26.07468000, -1398.97900000, -74.00000000, 1, 0, 0, 1);
+				GRAPHICS::REMOVE_DECALS_IN_RANGE(26.07468000, -1398.97900000, -75.00000000, 22);
+			}
+			WHILE(m_bTestStrings) {
+				auto it = Strings.begin();
 				bool needsUpdate = true;
-				WHILE(it != m_Tests.end()) {
+				WHILE (it != Strings.end()) {
+					GRAPHICS::DRAW_MARKER_SPHERE(26.07468000, -1398.97900000, -75.00000000, 22, 255,0,0,0.7);
 					if (needsUpdate) {
-						m_Props[0] = it->strs[0];
-						m_Props[1] = it->strs[1]; // done
-						INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[0]);
-						INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[1]);
+						INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, *it);
 						INTERIOR::REFRESH_INTERIOR(interior);
 						needsUpdate = false;
 					}
 					if (IsKeyJustUp(VK_F15)) {
-						index++;										   
-						INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[0]);
-						INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(interior, m_Props[1]);
+						INTERIOR::DEACTIVATE_INTERIOR_ENTITY_SET(interior, *it);
 						INTERIOR::REFRESH_INTERIOR(interior);
-						LAGInterface::Writeln("Deactivating interior set: %s , %s", m_Props[0], m_Props[1]);
-						needsUpdate = true;
-						if (index > m_Tests.size()) {
-							index = 0;
-						}
-						it = m_Tests.begin() + index;
+						it++;
+						needsUpdate = true; 
 					}
 				}
-				m_bTestCollisions = false;
-			};
-
-			INTERIOR::REFRESH_INTERIOR(interior);
+				m_bTestStrings = false;
+			}
 		}
 		if (m_bIsInvincible) {
 			HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -97,7 +132,13 @@ public:
 		if (IsKeyJustUp(VK_F15) && !m_bIsScaleformActive) {
 			TestOp();
 			timeStarted = MISC::GET_GAME_TIMER();
-			reqTimer = MISC::GET_GAME_TIMER() + 3330; // 10 seconds roughly? 
+			
+			//GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(Scaleforms[0], "GET_TOTAL_WALL_DURATION");
+			//int val = GRAPHICS::END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE();
+			//WHILE(!GRAPHICS::IS_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_READY(val));
+			//int mxs = GRAPHICS::GET_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_INT(val);
+
+			reqTimer = MISC::GET_GAME_TIMER() + 11000; // 600~ per-segment unless paused?
 		}
 		if (IsKeyJustUp(VK_F16)) {
 			/*
@@ -133,6 +174,25 @@ public:
 			}
 		}
 	}
+	template<typename... T> bool CallScaleform(int scl, const char* method, T&&... args) {
+		bool bRes = GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scl, method);
+		(Call(std::forward<T>(args)), ...); // this syntax is just so weird. 
+		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+		return bRes;
+	}
+	template<typename T> void Call(T data) {}
+	template<> void Call<int>(int data) {
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(data);
+	}
+	template<> void Call<const char*>(const char* data) {
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(data);
+	}
+	template<> void Call<float>(float data) {
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(data);
+	}
+	template<> void Call<bool>(bool data) {
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(data);
+	}
 	int timeStarted = 0;
 	int reqTimer = 0;
 	void TestOp() {
@@ -140,54 +200,35 @@ public:
 		for (int i = 0; i < 3; i++) {
 			int s = Scaleforms[i];
 			int WallId = 1;
-			GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(s, "CREATE_STAT_WALL");
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(WallId);
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("HUD_COLOUR_BLACK");
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+			CallScaleform(s, "CREATE_STAT_WALL", WallId, "HUD_COLOUR_BLACK", 1);
+			CallScaleform(s, "ADD_MISSION_RESULT_TO_WALL", WallId, "MissionText", "PASSED", "Msg", true, true, true);
+			int stepId = 1;
+			CallScaleform(s, "CREATE_INCREMENTAL_CASH_ANIMATION", WallId, stepId);
+			CallScaleform(s, "ADD_INCREMENTAL_CASH_WON_STEP", WallId, stepId, 0, 10000, "TopText", "bottomText", "rightHandStat", 1, 1);
+			CallScaleform(s, "ADD_INCREMENTAL_CASH_ANIMATION_TO_WALL", WallId, stepId);
+			CallScaleform(s, "ADD_REP_POINTS_AND_RANK_BAR_TO_WALL", WallId, 2000, 0, 0, 2000, 0, 1, "NICE!", "RANKUP!");
 
-			GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(s, "ADD_INTRO_TO_WALL");
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(WallId); // wallid
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("MISSION"); //mode label
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("Don't Fuck With Dre"); // jobName
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("1"); // challengeTextLabel - makes the box bigger? 
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(""); // ChallengePartsText
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(""); // targetTypeTextLabel
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(""); // targetval
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0); // delay
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(""); // TargetValuePrefix
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(1); // modeIsStringLiteral
-			//GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("HUD_COLOUR_WHITE"); // when we override text color the mode label does not appear?
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-			//GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(s, "ADD_SCORE_TO_WALL");
-			//GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(WallId);
-			//GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("textLabel");
-			//GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(10000); // score
-			//GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-			GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(s, "ADD_BACKGROUND_TO_WALL"); // this has to be down here? I'm not sure why. has to happen after all the ADD_X_TO_WALL calls
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(WallId);
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("HUD_COLOUR_BLACK");
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(40);
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-			GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(s, "SHOW_STAT_WALL");
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(WallId);
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+			CallScaleform(s, "ADD_BACKGROUND_TO_WALL", WallId, 255, 1);
+			CallScaleform(s, "SHOW_STAT_WALL", WallId);
 			m_bIsScaleformActive = true;
 		}
 	}
 	bool m_bIsScaleformActive = false;
 	void ScaleformInit() {
-		SCL = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION");
-		SCL_BG = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION_BG");
-		SCL_FG = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION_FG");
+		const char* scl_base = "HEIST_CELEBRATION";
+		const char* scl_base_bg = "HEIST_CELEBRATION_BG";
+		const char* scl_base_fg = "HEIST_CELEBRATION_FG";
+		SCL = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base);
+		SCL_BG = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base_bg);
+		SCL_FG = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base_fg);
 		WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(SCL)) {
-			SCL = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION");
+			SCL = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base);
 		}
 		WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(SCL_BG)) {
-			SCL_BG = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION_BG");
+			SCL_BG = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base_bg);
 		}
 		WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(SCL_FG)) {
-			SCL_FG = GRAPHICS::REQUEST_SCALEFORM_MOVIE("MP_CELEBRATION_FG");
+			SCL_FG = GRAPHICS::REQUEST_SCALEFORM_MOVIE(scl_base_fg);
 		}
 		Scaleforms[0] = SCL;
 		Scaleforms[1] = SCL_BG;
