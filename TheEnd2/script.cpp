@@ -14,8 +14,8 @@
 #include "GTAVInfrastructure\Hud\HudComponents.h"
 #include "GTAVInfrastructure\macros\WHILE.h"
 
-struct CDumpUtil {
-    static void DumpWeatherHash() {
+namespace CDumpUtil {
+    void DumpWeatherHash() {
         std::vector<const char*> v = {
             "EXTRASUNNY",
             "CLEAR       ",
@@ -60,7 +60,7 @@ void main()
     fwScriptMgr::Get().InitAll();
     WHILE(true)
     {
-        g_App->Update();   
+        g_App->Update(); 
     }
     g_App->Destroy(); // this line will never get reached in debug. 
 }

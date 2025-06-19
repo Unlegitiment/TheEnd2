@@ -5,12 +5,14 @@
     <ClCompile Include="script.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="ScriptHeader.cpp" />
+    <ClCompile Include="ShittySituationsDog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="TheEnd.h" />
     <ClInclude Include="ScriptHeader.h" />
+    <ClInclude Include="ShittySituationsDog.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

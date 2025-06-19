@@ -11,11 +11,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="ScriptHeader.cpp" />
+    <ClCompile Include="ShittySituationsDog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="ScriptHeader.h" />
+    <ClInclude Include="ShittySituationsDog.h" />
     <ClInclude Include="TheEnd.h" />
   </ItemGroup>
   <ItemGroup>

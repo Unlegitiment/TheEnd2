@@ -13,6 +13,7 @@ void CGame::Init(void)
 	CGame::sm_pHudHandler = new CHudHandler(); sm_pHudHandler->Init();
 	CGame::sm_pGameScriptMgr = new CGameScriptMgr(); sm_pGameScriptMgr->LoadScripts();
 	CGame::sm_pCheats = new CCheatMgr();
+	CGame::sm_pCameraManager = new CCameraManager();
 	LoadCheats();
 }
 
@@ -20,6 +21,7 @@ void CGame::Update() {
 	CGame::sm_pHudHandler->Update();
 	CGame::sm_pCheats->Update();
 	CGame::sm_pWorld->Update();
+	CGame::sm_pCameraManager->Update();
 	fwScriptMgr::Get().TickAll();
 	CGame::DeathCheck();
 	static bool isMenuOpen = false;
@@ -91,7 +93,7 @@ void CGame::Destroy()
 	delete CGame::sm_pHudHandler	;
 	delete CGame::sm_pGameScriptMgr	;
 	delete CGame::sm_pCheats		; 
-	
+	delete CGame::sm_pCameraManager ;
 }
 
 void CGame::DeathCheck()
@@ -102,7 +104,7 @@ void CGame::DeathCheck()
 	else {
 		DeathState state{};
 		state.PLAYER_PED_ID = PLAYER::PLAYER_PED_ID();
-		CGame::sm_pfnDeathScript(&state);
+		if(CGame::sm_pfnDeathScript) CGame::sm_pfnDeathScript(&state);
 	}
 }
 

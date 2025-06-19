@@ -13,7 +13,7 @@ public:
 	int Find(fwStreamObject* data) {
 		auto it = std::find(m_Object.begin(), m_Object.end(), data);
 		if (it != m_Object.end()) {
-			return std::distance(m_Object.begin(), it); // i hate C++ mate.
+			return (int)std::distance(m_Object.begin(), it); // i hate C++ mate.
 		}
 		return -1;
 	}

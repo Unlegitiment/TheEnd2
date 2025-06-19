@@ -24,7 +24,7 @@ public:
 	// returns if Player has Leveled Up from XP Addition;
 	bool AddXp(unsigned long long x) {
 		m_rRankData.SetPreviousXP(m_rRankData.GetCurrentXP());
-		m_rRankData.SetCurrentXP(m_rRankData.GetCurrentXP() + x); // cast
+		m_rRankData.SetCurrentXP(m_rRankData.GetCurrentXP() + (int)x); // cast
 		if (m_rRankData.GetCurrentXP() >= m_rRankData.GetXPHighRange()) {
 			m_rRankData.SetXPLowRange(XP(m_rRankData.GetRank()));
 			m_rRankData.SetXPHighRange(XP(m_rRankData.GetRank() + 1));

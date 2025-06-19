@@ -5,6 +5,7 @@
 #include "Cheats\CheatMgr.h"
 #include "World\World.h"
 #include "ScriptEnv\ScriptProc.h"
+#include "Camera\Camera.h"
 struct DeathState { // All for now but its fine.
 	int PLAYER_PED_ID;
 };
@@ -20,6 +21,7 @@ public:
 	static CPedHeadshotMgr& GetHeadshotMgr() { return sm_pEntityHandler->GetHeadshotMgr(); }
 	static CCheatMgr& GetCheatMgr() { return *sm_pCheats; }
 	static CPed* GetLocalPlayer() { return GetEntityHandler().GetLocalPlayer(); }
+	static CCameraManager& GetCameraMgr() { return *sm_pCameraManager; }
 	static void Update();
 	static void Destroy();
 private:
@@ -30,6 +32,7 @@ private:
 	inline static CHudHandler* sm_pHudHandler = nullptr;
 	inline static CGameScriptMgr* sm_pGameScriptMgr = nullptr;
 	inline static CCheatMgr* sm_pCheats = nullptr;
+	inline static CCameraManager* sm_pCameraManager = nullptr;
 private:
 	using DeathScript = std::function<void(const DeathState*)>;
 	inline static DeathScript sm_pfnDeathScript = nullptr;

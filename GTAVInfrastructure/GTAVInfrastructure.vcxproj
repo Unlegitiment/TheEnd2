@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="CGame.h" />
     <ClInclude Include="Cheats\CheatMgr.h" />
     <ClInclude Include="GameScripts.h" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Objects\Headshots.h" />
     <ClInclude Include="Objects\Ped.h" />
     <ClInclude Include="Objects\Vehicle.h" />
+    <ClInclude Include="Scene\SyncScene.h" />
     <ClInclude Include="ScriptEnv\Script.h" />
     <ClInclude Include="ScriptEnv\ScriptProc.h" />
     <ClInclude Include="SHV\enums.h" />
@@ -75,6 +77,7 @@
     <ClCompile Include="Objects\Headshots.cpp" />
     <ClCompile Include="Objects\Ped.cpp" />
     <ClCompile Include="Objects\Vehicle.cpp" />
+    <ClCompile Include="Scene\SyncScene.cpp" />
     <ClCompile Include="ScriptEnv\Script.cpp" />
     <ClCompile Include="ScriptEnv\ScriptProc.cpp" />
     <ClCompile Include="streaming\InteriorSet.cpp" />

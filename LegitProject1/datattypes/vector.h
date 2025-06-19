@@ -29,10 +29,10 @@ public:
 	T GetZ() const { return z; };
 	bool operator==(const _CVector3<T> oth) { return this->x == oth.x && this->y == oth.y && this->z = oth.z; };
 	T Dist(const _CVector3<T>& oth) {
-		return std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2) + std::pow(oth.z - this->z, 2));
+		return (T)std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2) + std::pow(oth.z - this->z, 2));
 	}; // WTF
 	T DistNoZ(const _CVector3<T>& oth) {
-		return std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2));
+		return (T)std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2));
 	};
 	_CVector3<T> operator-(const _CVector3<T>& other) {
 		return { this->x - other.x, this->y - other.y, this->z - other.z };

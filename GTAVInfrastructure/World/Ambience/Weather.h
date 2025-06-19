@@ -27,7 +27,7 @@ public:
 	const char* GetWeatherFromHash(unsigned long hsh);
 
 private:
-	std::map<unsigned long, const char*> WeatherTypes;
+	std::map<long long, const char*> WeatherTypes;
 	CWeather m_pWeather, *m_pComboWeather;
 	float m_fMixPercentage = 0.0f;
 };
