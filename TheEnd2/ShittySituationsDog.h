@@ -39,7 +39,10 @@ struct HeistCelebRepWall {
 	int repGained, startRepPoints, MinRepOfRank, MaxRepOfRank, CurrentRank, NextRank;
 	char* SmallText = "NICE";
 	char* BigText = "RANKUP!"; //on average
-
+};
+struct HeistCelebJobWall {
+	int points;
+	bool xAlign;
 };
 struct HeistCelebData{ // how do I have timed events
 	HeistCelebRepWall* RepWall = nullptr;
