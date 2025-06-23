@@ -13,3 +13,4 @@ private:
 	static CNetLogger* sm_pNetLogger; // make these ptrs because we want to control their lifetime.
 	static CLogger* sm_pLogger;
 };
+#define logf(expr, ...) LAGInterface::Writeln("%s@@@%d: " expr, __FUNCTION__, __LINE__, __VA_ARGS__)

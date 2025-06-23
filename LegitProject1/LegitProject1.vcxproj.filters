@@ -72,6 +72,27 @@
     <ClInclude Include="Interiors\Submarine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ui\HeistCelebration\HeistCelebration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\HeistCelebration\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\HeistCelebration\CelebTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Scaleform\Scaleform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Scaleform\ScaleformMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\NewHud\Hud_Testing_Env.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network\obj\windows_init.cpp">
@@ -102,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EndTypes\Marker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\Scaleform\ScaleformMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\HeistCelebration\CelebTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

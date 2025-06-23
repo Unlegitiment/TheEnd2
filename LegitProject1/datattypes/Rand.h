@@ -1,20 +1,19 @@
 #pragma once 
 #include <random>
 #include "..\LInfras.h"
-
 template<typename T = int>
 class CRand {
+    T GenerateRandom() {
+        LAGInterface::Writeln("god damn it! T is not implemented you will be going toward a crash implement CRand for <%s>", typeid(T).name());
+        return 0;
+    }
+};
+template<>
+class CRand<int> {
 public:
-	CRand() :rng{ std::random_device{}() } {
-
-	}
-	T operator()() {
-		return dist(rng);
-	}
-	~CRand() {
-		
-	}
-private:
-	std::mt19937 rng; // This is inefficient. Move to static or global initialize a driver. This could also lead to conflict between inter-system communication? I'm not exactly 100% positive on this rand stuff. Right now.
-	std::uniform_int_distribution<T> dist;
+    static int GenerateRandom() {
+        static std::mt19937 rng{ std::random_device{}() };
+        static std::uniform_int_distribution<int> dist;
+        return dist(rng);
+    }
 };

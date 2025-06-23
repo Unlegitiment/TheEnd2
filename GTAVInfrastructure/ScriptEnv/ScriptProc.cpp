@@ -1,6 +1,7 @@
 #include "ScriptProc.h"
 #include "Script.h"
 #include "LegitProject1\LInfras.h"
+#ifdef USE_OLD_SCRIPT
 void fwScriptMgr::InitAll()
 {
 
@@ -24,6 +25,7 @@ void fwScriptMgr::RegisterScript(fwScriptEnv* pEnv) {
 
 void fwScriptMgr::TickAll()
 {
+	//LAGInterface::Writeln("Fuck");
 	for (auto* scr : m_Scripts) {
 		scr->OnTick();
 	}
@@ -46,3 +48,4 @@ void fwScriptMgr::DbgPrntAll()
 		LAGInterface::Write("\n");
 	}
 }
+#endif // USE_OLD_SCRIPT

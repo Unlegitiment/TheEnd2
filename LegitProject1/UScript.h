@@ -713,7 +713,7 @@ private:
 	Blip b = 0;
 };
 
-class CTheEndScript : public ScriptableBase<CTheEndScript> {
+class CTheEndScript : public ScriptableBaseV1<CTheEndScript> {
 private:
 	static inline int State = SP;
 	enum eSlideState {
@@ -725,7 +725,7 @@ private:
 	};
 	ApartmentTest Test;
 public:
-	CTheEndScript() : ScriptableBase() { // @TODO: Create some way to create instances more nicely. Since ScriptableBase basically just adds it to the list rn. 
+	CTheEndScript() : ScriptableBaseV1() { // @TODO: Create some way to create instances more nicely. Since ScriptableBase basically just adds it to the list rn. 
 
 	}
 	CFreemodeMission* m_pMission = nullptr;

@@ -18,11 +18,14 @@ void CGame::Init(void)
 }
 
 void CGame::Update() {
+	//LAGInterface::Writeln("wtf");
 	CGame::sm_pHudHandler->Update();
 	CGame::sm_pCheats->Update();
 	CGame::sm_pWorld->Update();
 	CGame::sm_pCameraManager->Update();
+#ifdef USE_OLD_SCRIPT
 	fwScriptMgr::Get().TickAll();
+#endif //USE_OLD_SCRIPT
 	CGame::DeathCheck();
 	static bool isMenuOpen = false;
 	if (IsKeyJustUp(VK_MULTIPLY)) {
@@ -87,7 +90,9 @@ void CGame::Update() {
 
 void CGame::Destroy()
 {
+#ifdef USE_OLD_SCRIPT
 	fwScriptMgr::Get().ShutdownAll();
+#endif //USE_OLD_SCRIPT
 	delete CGame::sm_pEntityHandler	;
 	delete CGame::sm_pWorld			;
 	delete CGame::sm_pHudHandler	;

@@ -37,6 +37,13 @@
     <ClInclude Include="Network\obj\basesocket.h" />
     <ClInclude Include="Network\obj\terminalColors.h" />
     <ClInclude Include="Network\obj\windows_init.h" />
+    <ClInclude Include="ui\HeistCelebration\CelebTypes.h" />
+    <ClInclude Include="ui\HeistCelebration\HeistCelebration.h" />
+    <ClInclude Include="ui\HeistCelebration\Renderer.h" />
+    <ClInclude Include="ui\Hud.h" />
+    <ClInclude Include="ui\NewHud\Hud_Testing_Env.h" />
+    <ClInclude Include="ui\Scaleform\Scaleform.h" />
+    <ClInclude Include="ui\Scaleform\ScaleformMgr.h" />
     <ClInclude Include="UScript.h" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +57,8 @@
     <ClCompile Include="Network\netLog.cpp" />
     <ClCompile Include="Network\obj\basesocket.cpp" />
     <ClCompile Include="Network\obj\windows_init.cpp" />
+    <ClCompile Include="ui\HeistCelebration\CelebTypes.cpp" />
+    <ClCompile Include="ui\Scaleform\ScaleformMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GTAVInfrastructure\GTAVInfrastructure.vcxproj">
@@ -112,7 +121,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
