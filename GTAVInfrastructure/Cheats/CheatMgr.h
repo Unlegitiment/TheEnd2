@@ -22,7 +22,7 @@ public:
 	static_assert(std::is_base_of<fwCheat, T>::value, "T is not a base of fwCheat");
 	template<typename... Args>
 	void Add(Args&&... args) {
-		this->m_Cheats.push_back(T(args)); // icl ts pmo
+		this->m_Cheats.push_back(T(std::forward<Args>(args)...)); // icl ts pmo
 	}
 	void Add(T& val) {
 		this->m_Cheats.push_back(val);

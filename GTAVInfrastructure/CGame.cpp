@@ -23,6 +23,7 @@ void CGame::Update() {
 	CGame::sm_pCheats->Update();
 	CGame::sm_pWorld->Update();
 	CGame::sm_pCameraManager->Update();
+	CScriptRuntime::Get()->Update();
 #ifdef USE_OLD_SCRIPT
 	fwScriptMgr::Get().TickAll();
 #endif //USE_OLD_SCRIPT
@@ -93,6 +94,7 @@ void CGame::Destroy()
 #ifdef USE_OLD_SCRIPT
 	fwScriptMgr::Get().ShutdownAll();
 #endif //USE_OLD_SCRIPT
+	CScriptRuntime::Get()->ShutdownAllScripts(); // shutdown all Scripts.
 	delete CGame::sm_pEntityHandler	;
 	delete CGame::sm_pWorld			;
 	delete CGame::sm_pHudHandler	;
@@ -115,13 +117,17 @@ void CGame::DeathCheck()
 
 void CGame::LoadCheats()
 {
-	sGameCommand deloadAllScr = { MISC::GET_HASH_KEY("ULOAD_SCR"),[&]()->void {
+	sGameCommand deloadAllScr2 = { MISC::GET_HASH_KEY("ULOAD_SCR2"),[&]()->void {
 		CGame::GetScriptMgr().TerminateAllNonSHVThreads();
+	} };
+	sGameCommand deloadAllScr = { MISC::GET_HASH_KEY("ULOAD_SCR"),[&]()->void {
+		PLAYER::FORCE_CLEANUP(2);
 	} };
 	sGameCommand reloadScripts = { MISC::GET_HASH_KEY("LOAD_SCR"), [&]()->void {
 			CGame::GetScriptMgr().LoadScript("initial", eStackSize::FRIEND);
 		} };
 	sm_pCheats->GetBase()->Add(deloadAllScr);
+	sm_pCheats->GetBase()->Add(deloadAllScr2);
 	sm_pCheats->GetBase()->Add(reloadScripts);
 }
 

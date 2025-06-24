@@ -7,10 +7,10 @@
 #ifdef USE_OLD_SCRIPT
 class [[deprecated("fwScriptMgr has been replaced by CScriptRuntime.")]] fwScriptMgr {
 public:
-	static fwScriptMgr& Get() { 
-		static fwScriptMgr instance;  
-		return instance; 
-	}; 
+	static fwScriptMgr& Get() {
+		static fwScriptMgr instance;
+		return instance;
+	};
 	void RegisterScript(fwScriptEnv* pEnv);
 	void InitAll();
 	void TickAll();
@@ -28,7 +28,8 @@ private:
 class CScriptRegistry {
 public:
 	friend class CScriptRuntime;
-	using Functor = fwScriptEnv* (*)();
+	using Functor = fwScriptEnv * (*)();
+
 	bool AppendScript(const char* Script, Functor CreationFunc, bool overrideExisting = false) {
 		auto it = m_Scripts.find(Script);
 		if (it != m_Scripts.end()) { // this script already has a creation func
@@ -66,8 +67,8 @@ public:
 	int AddScriptToRuntime(fwScriptEnv* scriptInstance) {
 		LAGInterface::Writeln(__FUNCTION__" called 0x%p", scriptInstance);
 		int id = CRand<int>().GenerateRandom(); // yk this might spit the same number out lmao because device gets init'd everytime. I wonder.
-		
-		m_Script.push_back({id, scriptInstance});
+
+		m_Script.push_back({ id, scriptInstance });
 		scriptInstance->OnInit();
 		return id;
 	}
@@ -93,26 +94,29 @@ public:
 		return false;
 	}
 	void TerminateScript(fwScriptEnv* Id) {
-		LAGInterface::Writeln(__FUNCTION__"called");
 		for (auto it = m_Script.begin(); it != m_Script.end(); it++) {
-			if (it->script == Id) {
-				LAGInterface::Writeln(__FUNCTION__" script found");
+			if (it->script == Id && it->script != nullptr) {
+				//it->script->OnShutdown();
+				//delete it->script; -- You can't delete here because the iterator state gets changed. Do not call in a loop lmao. 
 				m_Script.erase(it);
-				LAGInterface::Writeln(__FUNCTION__" script found");
-				return;
+				break;
 			}
 		}
+		LAGInterface::Writeln(__FUNCTION__" called 0x%p", Id);
 	}
+	//Method is broken. Not sure why?
 	void TerminateScript(int Id) {
 		for (auto it = m_Script.begin(); it != m_Script.end(); it++) {
 			if (it->Id == Id) {
 				m_Script.erase(it);
+				return; // I don't return thats why lmao
 			}
 		}
 	}
 	~CScriptEnv() {
+		LAGInterface::Writeln("~CScriptEnv");
 		for (auto& script : m_Script) {
-			TerminateScript(script.Id);
+			TerminateScript(script.script);
 		}
 	}
 private:
@@ -124,18 +128,31 @@ private:
 };
 class CScriptRuntime {
 public:
-	template<typename T>
-	void AddScriptToRegistry(bool create = false) {
+	template<typename T, typename... Args>
+	fwScriptEnv* AddScriptAndCreate(Args&&... args) {
 		static_assert(std::is_base_of<fwScriptEnv, T>::value && "[SCRIPT_RUNTIME] " __FUNCTION__ ": Script Must be a Sub-type of fwScriptEnv!");
-		m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), T::CREATE, true);
-		if (create) {
-			LAGInterface::Writeln("Create specified as true");
-			CreateScript(T::GetScriptName_STATIC());
-			LAGInterface::Writeln("Create specified as true");
-
+		fwScriptEnv* retVal = nullptr;
+		if (sizeof...(Args) < 0) {
+			m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), T::CREATE, true);
+			retVal = CreateScriptNoArgs(T::GetScriptName_STATIC());
+			LAGInterface::Writeln("Script created with no VarArgs");
 		}
+		else {
+			m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), nullptr, true);
+			retVal = CreateScript<T>(std::forward<Args>(args)...);
+			LAGInterface::Writeln("Script created with VarArgs");
+		}
+		return retVal;
 	}
-	fwScriptEnv* CreateScript(const char* script) {
+	template<typename T, typename... Args> fwScriptEnv* CreateScript(Args&&... args) {
+		fwScriptEnv* ptr = T::CREATE(std::forward<Args>(args)...);
+		this->m_Scripts->AddScriptToRuntime(ptr);
+		return ptr;
+	}
+	fwScriptEnv* GetScriptWithId(int Id) {
+
+	}
+	fwScriptEnv* CreateScriptNoArgs(const char* script) {
 		LAGInterface::Writeln("[NEW_SCRIPT_ENV] Create Script: %s", script);
 
 		auto func = m_ScriptRegistry->GetCreationFromName(script);
@@ -150,13 +167,12 @@ public:
 		return ptr;
 	}
 	void TerminateScript(fwScriptEnv* script, bool removeFromRegistry = false) {
+		if (!script) return;
 		m_Scripts->TerminateScript(script);
-		//LAGInterface::Writeln(__FUNCTION__" after terminate ");
-
+		LAGInterface::Writeln(__FUNCTION__" after terminate ");
 		if (removeFromRegistry) {
 			m_ScriptRegistry->RemoveScriptFromRegistry(script->GetScriptName());
 		}
-		delete script; // I think that this is a sufficient problem
 	}
 	void PrintAll() {
 		LAGInterface::Writeln("Script Registry:");
@@ -171,13 +187,25 @@ public:
 	void Update() {
 		this->m_Scripts->Tick();
 	}
-	~CScriptRuntime() {
-		delete m_ScriptRegistry;
+	void ShutdownAllScripts() {
+		std::vector<fwScriptEnv*> m_KillList;
 		for (auto& scr : m_Scripts->m_Script) {
-			delete scr.script;
+			m_KillList.push_back(scr.script);
+			scr.script->OnShutdown();
 		}
+		for (auto* scr : m_KillList) {
+			delete scr;
+		}
+		return;
+	}
+	~CScriptRuntime() {
+		//LAGInterface::Writeln(__FUNCTION__" deconstructor start");
+		ShutdownAllScripts();
+		//LAGInterface::Writeln(__FUNCTION__" deconstructor start 1");
+		delete m_ScriptRegistry;
+		//LAGInterface::Writeln(__FUNCTION__" deconstructor start 2");
 		delete m_Scripts;
-		
+		//LAGInterface::Writeln(__FUNCTION__" deconstructor start 3");
 	}
 	static void Init() {
 		sm_pRuntime = new CScriptRuntime();

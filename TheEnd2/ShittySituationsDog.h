@@ -12,9 +12,44 @@
 #include <LegitProject1\ui\Hud.h>
 #include <LegitProject1\ui\Scaleform\ScaleformMgr.h>
 
+class CCarWash : public fwScriptEnv{
+public:
+public: static const char* GetScriptName_STATIC() {
+	return "CCarWash";
+} template<typename... Args>static fwScriptEnv* CREATE(Args&&... args) {
+	LAGInterface::Writeln("CCarWash"":: static CREATE method called"); return new CCarWash(std::forward<Args>(args)...);
+};;
+const char* GetScriptName() {
+	return GetScriptName_STATIC();
+}
+	CCarWash() = default;
+	CCarWash(int arg_1, int arg_2) {
+		this->Test1 = arg_1; this->Test2 = arg_2;
+	}
+	void OnInit() {
+		LAGInterface::Writeln("%d, %d", this->Test1, this->Test2);
+	}
+	void OnShutdown() {
+		LAGInterface::Writeln(__FILE__ "@@%d::" __FUNCTION__ "Shutdown triggered", __LINE__);
+	}
+	void OnTick() {
 
+	}
+
+private:
+	const char* m_InteriorShellEntitySet = "aanthologies.burlesque";
+	int Test1 = 0, Test2 = 0;
+};
+template< typename T >
+std::string int_to_hex(T i)
+{
+	std::stringstream stream;
+	stream << "0x"
+		<< std::setfill('0') << std::setw(sizeof(T) * 2)
+		<< std::hex << i;
+	return stream.str();
+}
 class CTest : public fwScriptEnv {
-	//SPAWN_SCRIPT_MACRO(CTest);
 	SCRIPT_INIT(CTest);
 private:
 	Hash DominatorHash = MISC::GET_HASH_KEY("DOMINATOR");
@@ -23,15 +58,7 @@ private:
 	int SCL = 0, SCL_BG = 0, SCL_FG = 0;
 	int Scaleforms[3] = { 0 };
 	bool isSceneRunning = false;
-	template< typename T >
-	std::string int_to_hex(T i)
-	{
-		std::stringstream stream;
-		stream << "0x"
-			<< std::setfill('0') << std::setw(sizeof(T) * 2)
-			<< std::hex << i;
-		return stream.str();
-	}
+
 	struct hashTEst {
 		unsigned long long hash;
 		std::array<const char* , 2> strs;
@@ -122,10 +149,20 @@ public:
 	// Inherited via ScriptableBase
 	float fRadius = 19.f;
 	CHud* hud = nullptr;
+	//fwScriptEnv* m_CarWash = nullptr;
 	void OnTick() override
 	{
 		//logf("Test");
-		if (IsKeyDown(VK_F14)) {
+		if (IsKeyJustUp(VK_F14)) {
+			static int i = 0;
+			CScriptRuntime::Get()->AddScriptAndCreate<CCarWash>(i,0); // idk if this would work
+			CScriptRuntime::Get()->PrintAll();
+			i++;
+		}
+		if (IsKeyJustUp(VK_F15) /*&& m_CarWash*/) {
+			//CScriptRuntime::Get()->TerminateScript(m_CarWash);
+			CScriptRuntime::Get()->PrintAll();
+			//m_CarWash = nullptr;
 		}
 		hud->Update();
 		/*
@@ -165,6 +202,7 @@ public:
 	void OnShutdown() override
 	{
 		delete hud;
+		LAGInterface::Writeln("Help");
 		LAGInterface::Writeln("[CTest] Shutdown called");
 		m_bIsInvincible = false;
 		ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);

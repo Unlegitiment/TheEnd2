@@ -42,7 +42,7 @@ namespace CDumpUtil {
 };
 
 static void NewInit() {
-    CScriptRuntime::Get()->AddScriptToRegistry<CInitial>(true);
+    CScriptRuntime::Get()->AddScriptAndCreate<CInitial>();
 }
 void main()
 {
@@ -55,20 +55,14 @@ void main()
     g_App->Init();
     LAGInterface::GetFileLogger()->Write("test\n");
     CDumpUtil::DumpWeatherHash();
-    //CreateInstances();
-    CScriptRuntime::Get()->Init(); // init before.
-    NewInit(); // depends on CScriptRuntime
+    CScriptRuntime::Get()->Init(); 
+    NewInit(); 
     CScriptRuntime::Get()->PrintAll();
-    //CPlayer Player = CPlayer(); 
-    //fwScriptMgr::Get().InitAll();
     WHILE(true)
     {
-        //LAGInterface::Writeln("Test");
-        CScriptRuntime::Get()->Update();
         g_App->Update(); 
     }
-    CScriptRuntime::Get()->Shutdown(); // I don't think this will get called inside of this object?
-    g_App->Destroy(); // this line will never get reached in debug. 
+    g_App->Destroy(); 
 }
 
 void ScriptMain()
