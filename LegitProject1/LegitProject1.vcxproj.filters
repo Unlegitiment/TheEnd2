@@ -93,6 +93,9 @@
     <ClInclude Include="ui\NewHud\Hud_Testing_Env.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Markers\MarkerCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network\obj\windows_init.cpp">

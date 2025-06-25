@@ -19,7 +19,7 @@ public:
 		this->m_Map.erase(h);
 	}
 protected:
-	Hndl Gen() { return m_HandleGen->operator()(); }
+	Hndl Gen() { return m_HandleGen->GenerateRandom(); }
 	CRand<Hndl>* m_HandleGen = nullptr;
 	std::unordered_map<Hndl, Val*> m_Map;
 private:

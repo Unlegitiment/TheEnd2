@@ -441,21 +441,9 @@ enum eState : int {
 	SP,
 	END
 };
-
-struct TextureGTAV {
-	const char* Dictionary;
-	const char* Name;
-	TextureGTAV(const char* Dict, const char* Name) :Dictionary(Dict), Name(Name) {
-		GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT(Dictionary, 1); // we need this immediately. 
-	}
-	const char* GetDictionary() { return Dictionary; }
-	const char* GetName() { return Name; }
-};
-void DrawMarker(eMarkerType marker, CVector3 position, CVector3 Direction, CVector3 Rotation, CVector3 Scale, Color32 col, TextureGTAV* text, bool bobUpDwn = false, bool faceCam = false, bool rotate = false, bool drawOnEnter = false) {
-	GRAPHICS::DRAW_MARKER(marker, position.GetX(), position.GetY(), position.GetZ(), Direction.GetX(), Direction.GetY(), Direction.GetZ(), Rotation.GetX(), Rotation.GetY(), Rotation.GetZ(), Scale.GetX(), Scale.GetY(), Scale.GetZ(), (int)col.GetR(), (int)col.GetG(), (int)col.GetB(), (int)col.GetA(), bobUpDwn, faceCam, 0, rotate, text ? text->GetDictionary() : nullptr, text ? text->GetName() : nullptr, drawOnEnter);
-}
 #include "Interiors/Submarine.h"
 #include <GTAVInfrastructure\Scene\SyncScene.h>
+#include "Markers\MarkerCommon.h"
 class CFreemodeMission;
 class CMissionLauncher {
 public:

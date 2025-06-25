@@ -6,6 +6,7 @@
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="ScriptHeader.cpp" />
     <ClCompile Include="ShittySituationsDog.cpp" />
+    <ClCompile Include="..\LegitProject1\Markers\MarkerCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />

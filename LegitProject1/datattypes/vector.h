@@ -31,6 +31,9 @@ public:
 	T Dist(const _CVector3<T>& oth) {
 		return (T)std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2) + std::pow(oth.z - this->z, 2));
 	}; // WTF
+	T DistCustomZ(const _CVector3<T>& oth, float f_Z) {
+		return (T)std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2) + std::pow(oth.z - (this->z + f_Z), 2));
+	}
 	T DistNoZ(const _CVector3<T>& oth) {
 		return (T)std::sqrt(std::pow(oth.x - this->x, 2) + std::pow(oth.y - this->y, 2));
 	};
