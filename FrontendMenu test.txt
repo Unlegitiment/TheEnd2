@@ -1,0 +1,52 @@
+				//LAGInterface::Writeln("Hovering over Mission Creator Blip!");
+				//SelectedBlipId = HUD::GET_NEW_SELECTED_MISSION_CREATOR_BLIP();
+				//LAGInterface::Writeln("Selecting Blip: %d", SelectedBlipId);
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 1, 0); // first is columnID, second is Index In itemList
+			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 1, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 1, 0, 0, 0, 2, 3, false, "name22", 116, false, 0, 1, 0, "..+ICO", false, "status", 1);
+			//int icon = 8;
+			//int iconComplete = 2;
+			//int iconColour = 116;
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 1, 1, 0, 1, 2, 3, 4, "Name", "IconRightText", icon, iconColour, iconComplete);
+			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 1);
+			//Unsure
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 2, 0); // first is columnID, second is Index In itemList
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 2, 0, 0, 0, 2, 3, false, "name33", 116, false, 0, 1, 0, "..+ICO", false, "status", 1);
+			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 2);
+			//PLAYER LIST -- PauseMPMenuFriendsListItem -- pause_menu_shared_components.gfx
+			//int PLAYERLIST_COLUMN_ID = 3;
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 0, column1Colour);
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 1, column2Colour);
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 2, column3Colour);
+			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 0, column3Colour);
+			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 1, column2Colour);
+			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 2, column1Colour);
+			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_FOCUS", 0, 0, 1, 0);
+			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 0, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
+			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 2, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
+			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 3, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", PLAYERLIST_COLUMN_ID); // first is columnID, second is Index In itemList
+			//for (int i = 0; i < 2; i++) {
+			//	CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 
+			//		PLAYERLIST_COLUMN_ID, // Column Id 
+			//		i, // Index In Item List
+			//		0, // Menu Id?
+			//		0, // Unique Id?
+			//		2, // TYPE?
+			//		1000, // PlayerRank?
+			//		false, // isSelectable 
+			//		"ITheWorthy", // Player Name 0
+			//		116, // Row Colour (HUDCOLOUR) 1
+			//		false, // vespura: reduce colours (pretty much always off no benefit.) 2
+			//		0, // unused3
+			//		65, // RightPlayerIcon 4
+			//		0, // unused5
+			//		".*+RSG", // 6
+			//		false, // vespura says : blink kick icon 7
+			//		"INVITED", // status Symbol Text 8
+			//		6, // Status Symbol colour 9
+			//		TestVal // 10?
+			//	);
+			//	CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", PLAYERLIST_COLUMN_ID);
+			//int f = GRAPHICS::ANIMPOSTFX_IS_RUNNING("PauseMenuFranklinIn");
+

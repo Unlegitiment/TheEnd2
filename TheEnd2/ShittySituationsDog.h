@@ -38,30 +38,31 @@ public:
 			LAGInterface::Writeln("Debug Cam: \n\tDump To log: \n\t\t%f, %f, %f\n\t\t%f, %f, %f\n\t\t%f", m_CamPos.GetX(), m_CamPos.GetY(), m_CamPos.GetZ(), m_CamRotation.GetX(), m_CamRotation.GetY(), m_CamRotation.GetZ(), fCurrentFov);
 		}
 		StopPlayerMovement();
+		static constexpr int SPEED = 5.0f;
 		if (PAD::IS_CONTROL_PRESSED(1, 32)) { //  --W key
-			m_CamPos = m_CamPos + (GetForwardVec() * 0.1);
+			m_CamPos = m_CamPos + (GetForwardVec() * SPEED);
 		}
 		if (PAD::IS_CONTROL_PRESSED(1, 33)) { //  --S key
-			m_CamPos = m_CamPos - (GetForwardVec() * 0.1);
+			m_CamPos = m_CamPos - (GetForwardVec() * SPEED);
 		}
 		if (PAD::IS_CONTROL_PRESSED(1, 34)) { //  --A key(move left);
-			m_CamPos = m_CamPos + (GetRightVec() * 0.1);
+			m_CamPos = m_CamPos + (GetRightVec() * SPEED);
 		}
 		if (PAD::IS_CONTROL_PRESSED(1, 35)) { //  --D key(move right);
-			m_CamPos = m_CamPos - (GetRightVec() * 0.1);
+			m_CamPos = m_CamPos - (GetRightVec() * SPEED);
 		}
 		if (PAD::IS_CONTROL_PRESSED(1, 44)) { //  --Q key(move up);
-			m_CamPos = m_CamPos + CVector3(0.0, 0.0, 0.1);
+			m_CamPos = m_CamPos + CVector3(0.0, 0.0, SPEED);
 		}
 		if (PAD::IS_CONTROL_PRESSED(1, 38)) { //  --E key(move down);
-			m_CamPos = m_CamPos - CVector3(0.0, 0.0, 0.1);
+			m_CamPos = m_CamPos - CVector3(0.0, 0.0, SPEED);
 		}
 		CAM::SET_CAM_COORD(this->cCam, m_CamPos.GetX(), m_CamPos.GetY(), m_CamPos.GetZ());
 		if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 16)) {
-			this->fCurrentFov = max(30, fCurrentFov - 1.0);
+			this->fCurrentFov = max(30, fCurrentFov - 1.0f);
 		}
 		if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 17)) {
-			this->fCurrentFov = min(120.f, fCurrentFov + 1.0);
+			this->fCurrentFov = min(120.f, fCurrentFov + 1.0f);
 		}
 		CAM::SET_CAM_FOV(this->cCam, fCurrentFov);
 		auto xMagnitude = PAD::GET_CONTROL_NORMAL(0, 1) * 8.0f; //--Mouse X
@@ -202,63 +203,393 @@ private:
 	eCharacter m_Character;
 	char* RunningPostEffect = "";
 };
+class CScaleformBase {
+public:
+	template<typename T> void Call(T) { LAGInterface::Writeln("Invalid Type specified To Frontend! Type: %s" typeid(T).name()); }
+	template<>void Call<const char*>(const char* x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(x); }
+	template<>void Call<char[]>(char x[]) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(x); }
+	template<>void Call<int>(int x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(x); }
+	template<>void Call<float>(float f) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(f); }
+	template<>void Call<bool>(bool x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(x); }
+	template<>void Call<char*>(char* x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(x); }
+};
 #define Static static inline
+class CFrontendMenu{
+public:
+	template<typename... T>
+	void Header(const char* Method, T&&... args) {
+		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD_ON_FRONTEND_HEADER(Method);
+		(m_SclBase.Call(std::forward<T>(args)), ...);
+		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+	}
+	template<typename... T>
+	void Frontend(const char* Method, T&&... args) {
+		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD_ON_FRONTEND(Method);
+		(m_SclBase.Call(std::forward<T>(args)),...);
+		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+	}
+	CScaleformBase& GetBase() { return m_SclBase; }
+private:
+	CScaleformBase m_SclBase = CScaleformBase();
+};
+//This is just a frontend mapping of items hmm. 
+/*
+			//CPauseMenu::DoMethodOnHeader("SET_HEADING_DETAILS", "Unknown_Player_1", "SAT?SUN?MON?TUES?WEDS", "BANK $?,???,rscStructure::FixUpPointer", false); // FUCKING FINALLY BABY!!!
+			//CPauseMenu::DoMethodOnHeader("SET_CREW_TAG", true, true, "...RSG", true); // FUCKING FINALLY BABY!!!
+			//CPauseMenu::DoMethodOnHeader("SET_HEADER_TITLE", "CGAME::0x0000021277DA7720@@::RAGE_TITLE_NAME", true, "", false); // FUCKING FINALLY BABY!!!
+			//CPauseMenu::DoMethodOnHeader("SHIFT_CORONA_DESC", 0, 1); // FUCKING FINALLY BABY!!!
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 0, "SCALEFORM::MAP");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 1, "CNetwork@@131");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 2, "CNetwork@@m_SC->Friends");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 3, "RAGE::INFORM");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 4, "CNetTransaction");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 5, "RAGE::SETCONFIG");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 6, "RAGE::TELEMETRY");
+			//CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 7, "CSocialClubV1::GetPictures()", 1, 0);
+			//CPauseMenu::DoMethodOnHeader("addColumn", "freemodeList", 8, 540);
+			//CPauseMenu::DoMethodOnHeader("SHOW_HEADING_DETAILS", true);
+			//CPauseMenu::DoMethodOnHeader("SHOW_MENU", true);
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0);
+			//CPauseMenu::DoMethodOnHeader("SET_DATA_SLOT", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 0);
+			//Unsure
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0); // first is columnID, second is Index In itemList
+			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 0, 0, 0, 0, 2, 3, false, "name1", 116, false, 0, 1, 0, ".*+ICO", false, "status", 1);
+			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 0);
+*/
+class CPauseMenuBase {
+public:
+	void ActivateMenu() {
+		StartInPostEffects();
+		// we don't actually worry about opening the menu here. we don't care about that. 
+		m_pScaleform = new CFrontendMenu();
+	}
+	//Header Methods. (not all but most of them in fairness. I think im missing some CREW stuff and character profile picture but no use to modify picture lmao. and the crew stuff is broken.)
+	void ShowHeadingDetails(bool b = true) {
+		if (!m_pScaleform) return;
+		m_pScaleform->Header("SHOW_HEADING_DETAILS", b);
+	}
+	void ShowHeader(bool b = true) {
+		if (!m_pScaleform) return; // you don't have an active menu lmao
+		m_pScaleform->Header("SHOW_MENU", b); // I think this is syntax check below
+	}
+	void SetHeaderTitle(const char* title, bool Somevar, const char* subHeader, bool SomeOthervar) { // @TODO: Fix var name
+		if (!m_pScaleform) return;
+		m_pScaleform->Header("SET_HEADER_TITLE", title, Somevar, subHeader, SomeOthervar); 
+	}
+	void SetHeadingDetails(const char* FirstLine, const char* SecondLine, const char* ThirdLine, bool SomeFlag) {
+		if (!m_pScaleform) return;
+		m_pScaleform->Header("SET_HEADING_DETAILS", FirstLine, SecondLine, ThirdLine, SomeFlag); // maybe separate header flags?
+	}
+	void ShiftCoronaDescription(bool arg0, bool arg1) {
+		if (!m_pScaleform) return;
+		m_pScaleform->Header("SHIFT_CORONA_DESC", arg0, arg1);
+	}
+	void SetMenuHeaderTextByIndex(int idx, const char* Title) {
+		if (!m_pScaleform) return;
+		m_pScaleform->Header("SET_MENU_HEADER_TEXT_BY_INDEX", Title);
+	}
+	//begin of annoying stuff.
+	 
+	void EmptyDataSlot(int PM_COLUMN_ID, int m_ItemIndex) {
+		//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0); // first is columnID, second is Index In itemList
+		if (!m_pScaleform) return;
+		m_pScaleform->Frontend("SET_DATA_SLOT_EMPTY", PM_COLUMN_ID, m_ItemIndex); // fun.
+	}
+	/*
+	7 standard arguments but can vary depending on the scaleform lmao Here:
+		0	Column Index	INT	The column containing the slot to set the data of.
+		1	slotIndex	INT	The index of slot to set the data of.
+		2	menuID	INT	Used to keep track of what item of the pause menu this slot belongs to. You should use IDs from com.rockstargames.gtav.constants.PauseMenuLUT where it makes sense to do so.
+		3	uniqueID	INT	Used to uniquely identify items within a view. You can really use anything you want however, integers greater than 1000 can have special functions and execute actions when clicked that you’d otherwise not want to happen so, to be safe, don’t use anything greater than 1000.
+		4	type	INT	The subtype of this item.
+		5	initialIndex	INT	The initial index to show in a list item.
+		6	isSelectable	BOOL	A boolean controlling if the item can be selected. Unselectable items are greyed out when displayed and skipped over in navigation.
+	Src: https://forum.cfx.re/t/lobby-menus-discussion-pause-menu-research/3909562/12
+	*/
+	template<typename... Args>
+	void SetDataSlot(int PM_COLUMN_ID, int ItemId, Args&&... args) { 
+		if (!m_pScaleform) return;
+		m_pScaleform->Frontend("SET_DATA_SLOT", PM_COLUMN_ID, ItemId, std::forward<Args>(args)...); // gotta perfect forward lmao
+	}
+	void DisplayDataSlot(int PM_COLUMN_ID) { // check vars
+		//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 0);
+		if (!m_pScaleform) return;
+		m_pScaleform->Frontend("DISPLAY_DATA_SLOT", PM_COLUMN_ID); // gotta perfect forward lmao
+	}
+	void CloseMenu() {
+		ShutdownPostEffects();
+	}
+	CFrontendMenu*& GetRawScaleform() {
+		return m_pScaleform; // if you shoot me in the foot I will execute you. 
+	}
+private:
+	void StartInPostEffects(){
+		m_pPostEffects = new CPauseMenuPostFx();
+		m_pPostEffects->Init(CPauseMenuPostFx::MP);
+		m_pPostEffects->StartFade(CPauseMenuPostFx::FT_IN); // open Menu
+		m_pPostEffects->Update();
+	}
+	void ShutdownPostEffects() {
+		m_pPostEffects->StartFade(CPauseMenuPostFx::FT_OUT);
+		m_pPostEffects->Update();
+		//m_pPostEffects->Shutdown();
+		delete m_pPostEffects;
+		m_pPostEffects = nullptr;
+	}
+	CFrontendMenu* m_pScaleform = nullptr;
+	CPauseMenuPostFx* m_pPostEffects = nullptr;
+};
+constexpr size_t MAX_SAFE_STRING_LENGTH = 1024; // Fetch this from a file if applicable. Would be nicer <3 
+inline bool IsStringEmptyOrNull(const char* String) {
+	return String == nullptr || strnlen_s(String, MAX_SAFE_STRING_LENGTH) == 0; 
+}
+inline char* CopySafeStr(const char* src, size_t maxLen = MAX_SAFE_STRING_LENGTH) {
+	if (IsStringEmptyOrNull(src)) return "";
+	size_t size = strnlen_s(src, maxLen);
+	char* result = new char[size + 1] {};
+	strncpy_s(result, size+1, src, maxLen);
+	return result;
+}
+class CPauseMenuHeader {
+public:
+	struct sPauseMenuHeaderInfo {
+		char* m_HeaderString = nullptr;
+		int m_HudColourBody, m_HudColourTab;
+	};
+	struct CoronaInformation {
+		char* m_TitleInfo = nullptr;
+		char* m_Description = nullptr;
+	};
+	struct HeaderInformation {
+		//Could take a texture dict here to make sure that we know what we are doing but idrc about setting picture right now lmao
+		char* NameLine;
+		char* DateLine; // omg weird show reference !?!?!
+		char* CashLine;
+		bool m_bHeaderInfo;
+	};
+	static constexpr size_t cMaxHeaderLength = 64;
+	CPauseMenuHeader(CPauseMenuBase*& rbase, int& rmenumax) : m_rMenuMax(rmenumax), m_rBase(rbase){
+		this->m_vpHeaderInfo.resize(m_rMenuMax, nullptr);
+	} // values must exist before we get here. 
+	static constexpr size_t DESCRIPTION_MAX = MAX_SAFE_STRING_LENGTH * 2;
+	void SetTitleAndDesc(const char* Title, const char* Desc) {
+		if (IsStringEmptyOrNull(Title) && IsStringEmptyOrNull(Desc)) {
+			if (m_pCoronaInfo) {
+				DestroyCorona();
+			}
+			return; // theres no point in continuing all the shit is empty anyways. 
+		}
+		if (!m_pCoronaInfo) {
+			m_pCoronaInfo = new CoronaInformation();
+		}
+		delete[] this->m_pCoronaInfo->m_TitleInfo;
+		this->m_pCoronaInfo->m_TitleInfo = CopySafeStr(Title);
+		delete[] this->m_pCoronaInfo->m_Description;
+		this->m_pCoronaInfo->m_Description = CopySafeStr(Desc, DESCRIPTION_MAX);
+
+	}
+	void SetHeaderInfo(const char* FirstLine, const char* SecondLine, const char* ThirdLine, bool fHeaderSomething) {
+		if (IsStringEmptyOrNull(FirstLine) && IsStringEmptyOrNull(SecondLine) && IsStringEmptyOrNull(ThirdLine)) {
+			if (m_pHeaderInfo) {
+				DestroyHeader();
+			}
+			return; // theres no point in continuing all the shit is empty anyways. 
+		}
+		if (!m_pHeaderInfo) {
+			m_pHeaderInfo = new HeaderInformation();
+		}
+		if (!IsStringEmptyOrNull(FirstLine)) {
+			delete[] this->m_pHeaderInfo->NameLine;
+			this->m_pHeaderInfo->NameLine = CopySafeStr(FirstLine);
+		}
+		if (!IsStringEmptyOrNull(SecondLine)) {
+			delete[] this->m_pHeaderInfo->DateLine;
+			this->m_pHeaderInfo->DateLine = CopySafeStr(SecondLine);
+		}
+		if (!IsStringEmptyOrNull(ThirdLine)) {
+			delete[] this->m_pHeaderInfo->CashLine;
+			this->m_pHeaderInfo->CashLine = CopySafeStr(ThirdLine);
+		}
+		m_pHeaderInfo->m_bHeaderInfo = fHeaderSomething; // i do NOT know what this boolean controls. @TODO: Test m_bHeaderInfo/HeaderInfoString;
+	}
+	void SetString(int headerItemIdx, char* str) {
+		LAGInterface::Writeln(__FUNCTION__"");
+		auto* pData = GetOrCreate(headerItemIdx);
+		LAGInterface::Writeln(__FUNCTION__"");
+		if (headerItemIdx < 0 || headerItemIdx >= m_rMenuMax || !str || !pData) return;
+		delete[] pData->m_HeaderString;
+		pData->m_HeaderString = new char[cMaxHeaderLength + 1] {};
+		strncpy_s(pData->m_HeaderString, cMaxHeaderLength + 1, str, cMaxHeaderLength); // hate string operations lmao.!
+		return;
+	}
+	void SetBodyColour(int headerItemIdx, int Col) {
+		auto* pData = GetOrCreate(headerItemIdx);
+		if (headerItemIdx < 0 || headerItemIdx >= m_rMenuMax || !pData) return;
+		pData->m_HudColourBody = Col;
+		return;
+	}
+	void SetStripColour(int headerItemIdx, int Col) {
+		auto* pData = GetOrCreate(headerItemIdx);
+		if (headerItemIdx < 0 || headerItemIdx >= m_rMenuMax || !pData) return;
+		pData->m_HudColourTab = Col;
+		return;
+	}
+	sPauseMenuHeaderInfo*& GetItem(int idx) {
+		
+	}
+	void Update() { // we know that the pause menu must be open before we get here	
+		if (!m_rBase) return;
+		if (m_pCoronaInfo) {
+			if (!IsStringEmptyOrNull(m_pCoronaInfo->m_Description)) {
+				//LAGInterface::Writeln("Test");
+				bool KeepStripBars = 1; // we want to keep the strip bars for this specific menu. In the cases of other menus we may or may not want to toggle them. either way its a separate module basically complete from this code. 
+				bool BumpTitle = 1;
+				m_rBase->ShiftCoronaDescription(BumpTitle, KeepStripBars); // @TODO: Check bools First Truthy moves stuff up second removes strip bars
+			}
+			bool bArg_Unused = 0;
+			bool bArg1_Unused = 0;
+			m_rBase->SetHeaderTitle(m_pCoronaInfo->m_TitleInfo, bArg_Unused, m_pCoronaInfo->m_Description, bArg1_Unused); // @TODO: I don't know what these two do?
+		}
+		if (m_pHeaderInfo) {
+			bool captializeName = false;
+			m_rBase->SetHeadingDetails(m_pHeaderInfo->NameLine, m_pHeaderInfo->DateLine, m_pHeaderInfo->CashLine, captializeName); // @TODO: Check Bools
+		}
+	}
+	void Destroy() {
+		DestroyCustomItems();
+	}
+	~CPauseMenuHeader() {
+		Destroy();
+	}
+private:
+	void DestroyCorona() {
+		delete[] m_pCoronaInfo->m_TitleInfo;
+		delete[] m_pCoronaInfo->m_Description;
+		delete m_pCoronaInfo;
+		m_pCoronaInfo = nullptr;
+	}
+	void DestroyHeader() {
+		delete[] m_pHeaderInfo->NameLine;
+		delete[] m_pHeaderInfo->DateLine;
+		delete[] m_pHeaderInfo->CashLine;
+		delete m_pHeaderInfo;
+		m_pHeaderInfo = nullptr;
+	}
+	void DestroyCustomItems() {
+		if (m_pCoronaInfo) {
+			DestroyCorona();
+		}
+		if (m_pHeaderInfo) {
+			DestroyHeader();
+		}
+		for (auto* it : m_vpHeaderInfo) {
+			delete it;
+		}
+		m_vpHeaderInfo.clear();
+	}
+	sPauseMenuHeaderInfo* GetOrCreate(int headerItemIdx) {
+		if (this == nullptr) {
+			LAGInterface::Writeln("Help");
+			return nullptr;
+		}
+		if (headerItemIdx < 0 || headerItemIdx >= m_rMenuMax) return nullptr;
+		sPauseMenuHeaderInfo* dataref = m_vpHeaderInfo[headerItemIdx];
+		LAGInterface::Writeln("Set String");
+		if (!dataref) dataref = new sPauseMenuHeaderInfo();
+		sPauseMenuHeaderInfo* data = dataref;
+		return data;
+	}
+	CoronaInformation* m_pCoronaInfo = nullptr; // can be optional lmao
+	HeaderInformation* m_pHeaderInfo = nullptr;
+	CPauseMenuBase*& m_rBase;
+	int& m_rMenuMax;
+	std::vector<sPauseMenuHeaderInfo*> m_vpHeaderInfo;
+};
+class CPauseMenuController {  
+	// should have header items basically represents the entire state of the current pause menu.
+	// also move to a new super object like CMod and make it have its own skeleton and specify we want custom header logic.
+public:
+	enum ePauseMenuVersion {
+		SP,
+		MP, // These are the only two we support. Other front end menus will get their own classes.
+	};
+	CPauseMenuController(ePauseMenuVersion ePMV) : m_iMenuMax(ePMV == SP ? 10 : 8), m_pHeader(new CPauseMenuHeader(m_pBase, m_iMenuMax)) {
+
+	}
+	CPauseMenuHeader*& GetHeader() {
+		return this->m_pHeader; // Do not delete this pointer lmao
+	}
+	void ActivateMenu() {
+		this->m_pBase->ActivateMenu();
+	}
+	void CloseMenu() {
+		this->m_pBase->CloseMenu();
+	}
+	void Update() { // when we get here we don't care how we activate the menu. But we do want to disable control actions for base menus
+		m_pHeader->Update();
+	}
+	~CPauseMenuController() {
+		delete m_pHeader; // depends on m_pBase
+		m_pHeader = nullptr;
+		delete m_pBase;
+		m_pBase = nullptr;
+	}
+private:
+	int m_iMenuMax = 0;
+	CPauseMenuHeader* m_pHeader = nullptr;
+	//std::vector<sPauseMenuHeaderInfo*> m_Header; // 10 items mp 8 items sp?
+	CPauseMenuBase* m_pBase = new CPauseMenuBase();
+};
 class CPauseMenu {
 public:
-	Static void Activate(Hash hFrontEndMenuVersion, bool pauseGame = 0, int OpenComponent = 0) {
-		HUD::ACTIVATE_FRONTEND_MENU(hFrontEndMenuVersion, pauseGame, OpenComponent);
-		CurrentMenuVersion = hFrontEndMenuVersion;
-		IsOurFrontendActive = true;
-		m_PostEffects = new CPauseMenuPostFx();
-		m_PostEffects->Init(m_PostEffects->MP);
-		m_PostEffects->StartFade(CPauseMenuPostFx::FT_IN); // FADE_IN
+	enum MenuChoice {
+		MP,
+		SP,
+	};
+	Static void Activate(MenuChoice h) {
+		CPauseMenu::ActiveMenu = CPauseMenu::GetMenuForChoice(h);
+		HUD::ACTIVATE_FRONTEND_MENU(CPauseMenu::ActiveMenu, 0, -1); // we don't start out with anything lmao.
+		m_pPauseMenuController = new CPauseMenuController(h == MP ? CPauseMenuController::MP : CPauseMenuController::SP);
+		m_pPauseMenuController->ActivateMenu();
+		m_bIsFrontendActive = true;
 	}
-	template<typename... T>
-	Static void DoMethodOnHeader(const char* method, T&&... args) {
-		if (GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD_ON_FRONTEND_HEADER(method)) {
-			CScaleform scaleform = CScaleform(0); // default init scaleform call. 
-			(scaleform.Call(std::forward<T>(args)), ...);
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-		}
-	}
-	template<typename... T>
-	Static void DoMethodOnFrontend(const char* method, T&&... args) {
-		if (GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD_ON_FRONTEND(method)) {
-			CScaleform scaleform = CScaleform(0); // default init scaleform call. 
-			(scaleform.Call(std::forward<T>(args)), ...);
-			GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-		}
-	}
-	Static bool IsMapInteriorModeActive() {
-		return HUD::IS_PAUSEMAP_IN_INTERIOR_MODE();
+	Static CPauseMenuController*& GetMenuController() {
+		return CPauseMenu::m_pPauseMenuController;
 	}
 	Static void Update() {
-		if (!IsOurFrontendActive) return;
-		m_PostEffects->Update();
+		if(m_pPauseMenuController && IsGameFrontendActive()) m_pPauseMenuController->Update();
 	}
 	Static void CloseMenu() {
-		if (!m_PostEffects) return;
-		m_PostEffects->StartFade(CPauseMenuPostFx::FT_OUT); // FADE_IN
-		Update();
-		delete m_PostEffects;
-		m_PostEffects = 0;
-		IsOurFrontendActive = false;
-		CurrentMenuVersion = 0x0;
+		m_pPauseMenuController->CloseMenu();
+		m_bIsFrontendActive = false;
 	}
-	Static bool IsMyMenuActive() {
-		return IsOurFrontendActive;
+	Static void Shutdown() {
+		if (m_pPauseMenuController) {
+			delete m_pPauseMenuController;
+		}
+	}
+	Static bool IsFrontendActive() {
+		return m_bIsFrontendActive;
 	}
 	Static bool IsGameFrontendActive() {
 		return HUD::IS_PAUSE_MENU_ACTIVE();
 	}
-	Static bool IsGameFrontendRestarting() {
-		return HUD::IS_PAUSE_MENU_RESTARTING();
+	Static bool IsPauseMenuInInteriorMode() {
+		return HUD::IS_PAUSEMAP_IN_INTERIOR_MODE();
 	}
-
 private:
-	Static bool IsOurFrontendActive = false;
-	Static Hash CurrentMenuVersion = 0x0;
-	Static CPauseMenuPostFx* m_PostEffects = nullptr;
+	Static Hash GetMenuForChoice(MenuChoice c) {
+		if (c == MP) {
+			return MISC::GET_HASH_KEY("FE_MENU_VERSION_MP_PAUSE");
+		}
+		else {
+			return MISC::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
+		}
+	}
+	Static Hash ActiveMenu = 0x0;
+	Static CPauseMenuController* m_pPauseMenuController = nullptr;
+	Static bool m_bIsFrontendActive = false;
 };
 class CGamemodeHud {
 	bool m_bIsFogOfWarHidden = true;
@@ -268,24 +599,50 @@ class CGamemodeHud {
 		PAD::DISABLE_CONTROL_ACTION(2, 200, 0);
 	}
 	void ReplaceCharacterColour(int m_FreemodeColor = 116) {
+		HUD::REPLACE_HUD_COLOUR(143, m_FreemodeColor);
 		HUD::REPLACE_HUD_COLOUR(144, m_FreemodeColor);
+		HUD::REPLACE_HUD_COLOUR(145, m_FreemodeColor); // we replace all hud colours because there isn't a good way to not do it and when the player dies sometimes the hud colour changes when the game's scripts are canceled. 
+		//I wonder if we didn't cancel MAIN_PERSISTENT if it would allow us some more leeway. 
 		m_iCurrentCharacterColor = m_FreemodeColor;
 	}
 	std::vector<int> m_Blips;
 public:
+	void ShowChip(int chip) {
+		if (GRAPHICS::BEGIN_SCALEFORM_SCRIPT_HUD_MOVIE_METHOD(21, "SET_PLAYER_CHIPS")) {
+			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
+			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
+		}
+	}
 	CGamemodeHud(int HudColour = 116) {
+		for (int i = 0; i < 20; i++) {
+			HUD::SET_MINIMAP_COMPONENT(i, true, -1);
+		}
+		HUD::USE_FAKE_MP_CASH(1);
 		ReplaceCharacterColour(HudColour); // BLACK (funzies)
 		HUD::SET_PLAYER_ICON_COLOUR(37);
-		for (int i = 0; i < 20; i++) {
-			Blip b = HUD::ADD_BLIP_FOR_COORD(MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000), MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000), MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000));
-			HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, 1);
-			HUD::SET_BLIP_SPRITE(b, 304);
-			HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
-			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mission");
-			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(b);
-			LAGInterface::Writeln("[BlipID:%d]%d", b, HUD::IS_MISSION_CREATOR_BLIP(b));
-			m_Blips.push_back(b);
+
+		//for (int i = 0; i < 20; i++) {
+		//	Blip b = HUD::ADD_BLIP_FOR_COORD(MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000), MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000), MISC::GET_RANDOM_INT_IN_RANGE(-1000, 1000));
+		//	HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, 1);
+		//	HUD::SET_BLIP_SPRITE(b, 304);
+		//	HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+		//	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mission");
+		//	HUD::END_TEXT_COMMAND_SET_BLIP_NAME(b);
+		//	LAGInterface::Writeln("[BlipID:%d]%d", b, HUD::IS_MISSION_CREATOR_BLIP(b));
+		//	m_Blips.push_back(b);
+		//}
+		//this->MoneyScaleform = GRAPHICS::REQUEST_SCALEFORM_MOVIE("HUD_MP_CASH");
+		int attempts = 0;
+		WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(MoneyScaleform)) {
+			if (attempts >= 10) {
+				LAGInterface::Writeln("Failed to summon cash");
+				break;
+			}
+			this->MoneyScaleform = GRAPHICS::REQUEST_SCALEFORM_MOVIE("HUD_MP_CASH");
+			attempts++;
 		}
+		//this->m_MoneyScaleform = new CScaleform(this->MoneyScaleform);
+
 	}
 	bool IsPauseMenuAccessed() {
 		return PAD::IS_DISABLED_CONTROL_JUST_RELEASED(2, 199) || PAD::IS_DISABLED_CONTROL_JUST_RELEASED(2, 200);
@@ -304,84 +661,155 @@ public:
 	int selectedItemMenuId = 0;
 	int selectedItemUniqueId = 0;
 	int SelectedBlipId = 0;
-	void Update() {
+	int MoneyScaleform = 0;
+	//CScaleform* m_MoneyScaleform = nullptr;
+	void Update() {	
+		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(3);
+		//HUD::ALLOW_DISPLAY_OF_MULTIPLAYER_CASH_TEXT(true);
+		//HUD::USE_FAKE_MP_CASH(1);
+		//HUD::SET_MULTIPLAYER_BANK_CASH();
+		//HUD::SET_MULTIPLAYER_WALLET_CASH();
+		//HUD::SHOW_SCRIPTED_HUD_COMPONENT_THIS_FRAME(21);
+		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(4);
+		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(13);
+		//HUD::DISPLAY_CASH(1);
+		if (IsKeyJustUp(VK_F13)) {
+			ShowChip(4000);
+		}
+		const char* Cash = "0";
+		//DROPSHADOW
+		constexpr static float TEXT_DISPLACEMENT = 0.0012f;
+		{
+			HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			HUD::SET_TEXT_FONT(7);
+			HUD::SET_TEXT_JUSTIFICATION(2);
+			HUD::SET_TEXT_DROP_SHADOW();
+			HUD::SET_TEXT_OUTLINE();
+			HUD::SET_TEXT_SCALE(2, 0.652f);
+			HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$0");
+			HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f - TEXT_DISPLACEMENT, 1); // CASH
+			HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			HUD::SET_TEXT_FONT(7);
+			HUD::SET_TEXT_JUSTIFICATION(2);
+			HUD::SET_TEXT_DROP_SHADOW();
+			HUD::SET_TEXT_OUTLINE();
+			HUD::SET_TEXT_SCALE(2, 0.652f);
+			HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$0");
+			HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f + TEXT_DISPLACEMENT, 1); // CASH
+		}
+		HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+		HUD::SET_TEXT_FONT(7);
+		HUD::SET_TEXT_JUSTIFICATION(2);
+		HUD::SET_TEXT_SCALE(1, 0.652f);
+		HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~g~$0");
+		HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f, 1); // CASH
+
+		float fBankPosition = 0.095f;
+		//DROPSHADOW LAYER
+		{
+			HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			HUD::SET_TEXT_FONT(7);
+			HUD::SET_TEXT_JUSTIFICATION(2);
+			HUD::SET_TEXT_DROP_SHADOW();
+			HUD::SET_TEXT_OUTLINE();
+			HUD::SET_TEXT_SCALE(2, 0.652f);
+			HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$2147000800");
+			HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition - TEXT_DISPLACEMENT, 1); // BANK
+			HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			HUD::SET_TEXT_FONT(7);
+			HUD::SET_TEXT_JUSTIFICATION(2);
+			HUD::SET_TEXT_DROP_SHADOW();
+			HUD::SET_TEXT_OUTLINE();
+			HUD::SET_TEXT_SCALE(2, 0.652f);
+			HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+			HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$2147000800");
+			HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition+TEXT_DISPLACEMENT, 1); // BANK
+		}
+		//TEXT
+		HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+		HUD::SET_TEXT_FONT(7);
+		HUD::SET_TEXT_JUSTIFICATION(2);
+		HUD::SET_TEXT_SCALE(2, 0.652f);
+		HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_GREENLIGHT~$2147000800");
+		HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition, 1); // BANK
+
+
+		//PLAYER::SET_SPECIAL_ABILITY_MP(PLAYER::PLAYER_ID(), 0, 0); //-- I don't think these natives work. Special Abilities are tied to the character model I think
+		//PLAYER::SPECIAL_ABILITY_FILL_METER(PLAYER::PLAYER_ID(), 1, 0);
 		HUD::SET_MINIMAP_HIDE_FOW(m_bIsFogOfWarHidden); // Disable Hud Fog.
 		DisablePauseMenuActivation();
-		if (IsPauseMenuAccessed() && !CPauseMenu::IsGameFrontendActive()) { // note we have to disable pausemenu this frame because else we reveal the outside of the apartment.
-			CPauseMenu::Activate(MISC::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE")); // Multiplayer_Pause
+		if (IsPauseMenuAccessed() && !CPauseMenu::IsGameFrontendActive() && (MISC::UPDATE_ONSCREEN_KEYBOARD() != 0)) { // check uokb() != 0 bc we don't want to open whilst typing this frame.
+			CPauseMenu::Activate(CPauseMenu::SP); // Multiplayer_Pause give me a minute god damn vs
+			CPauseMenu::GetMenuController()->GetHeader()->SetTitleAndDesc("Title", "Desc"); // fetch these from CGamemode::GetModeName() && CGamemode::GetModeDescription(); but more likely just CGamemode::GetModeName();
+			CPauseMenu::GetMenuController()->GetHeader()->SetHeaderInfo(PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_ID()), "SATURDAY 00:00", "$2,147,000,800", true); // @todo update timer
 		}
-		if (IsKeyJustUp(VK_F10)) {
-			if (IsKeyDown(VK_CONTROL)) {
-				TestVal -= 1;
-				LAGInterface::Writeln("TestVal == %d", TestVal);
-				return;
-			}
-			TestVal += 1;
-			LAGInterface::Writeln("TestVal == %d", TestVal);
-		}
-		HUD::SET_RADAR_ZOOM(0);
-
+		//LAGInterface::Writeln("AFTER FOW && DISABLE BUTTONS");
+		//if (IsKeyJustUp(VK_F13)) {
+		//	int sclIndex = GRAPHICS::REQUEST_SCALEFORM_MOVIE("pause_menu_header");
+		//	WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(sclIndex));
+		//	CScaleform scaleform = CScaleform(sclIndex);
+		//	scaleform.CallScaleform("REMOVE_MENU");
+		//	scaleform.CallScaleform("BUILD_MENU", 0,1,2,3);
+		//	scaleform.CallScaleform("SET_HEADER_TITLE", "TEST", 1, "TEST", 1);
+		//	bool m_bTest = true;
+		//	WHILE(m_bTest) {
+		//		GRAPHICS::DRAW_SCALEFORM_MOVIE(scaleform.GetHandle(), 0.5f, 0.25f, 0.5f, 0.15, 255, 255, 255, 255, 255);
+		//		if (IsKeyJustUp(VK_F13)) {
+		//			m_bTest = false;
+		//		}
+		//	}
+		//}
+		//if (IsKeyJustUp(VK_F10)) {
+		//	if (IsKeyDown(VK_CONTROL)) {
+		//		TestVal -= 1;
+		//		LAGInterface::Writeln("TestVal == %d", TestVal);
+		//		return;
+		//	}
+		//	TestVal += 1;
+		//	LAGInterface::Writeln("TestVal == %d", TestVal);
+		//}
+		//HUD::SET_RADAR_ZOOM(0);
 		if (CPauseMenu::IsGameFrontendActive()) {
-			if (IsKeyJustUp(VK_F13)) {
-				int amtOfBlipsAreCreator = 0;
-				for (auto& b : m_Blips) {
-					if (!HUD::IS_MISSION_CREATOR_BLIP(b)) {
-						HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, true);
-						continue;
-					}
-					LAGInterface::Writeln("Blip: %d is a creator blip");
-					amtOfBlipsAreCreator++;
-				}
-				LAGInterface::Writeln("AmtOfBlipsCreator: %d", amtOfBlipsAreCreator);
-			}
-
-			if (MISC::GET_GAME_TIMER() >= LastColumnUpdate + 100) {
-				m_bColumnTitleneedsUpdate = true;
-			}
-			if (this->m_bColumnTitleneedsUpdate) {
-				LastColumnUpdate = MISC::GET_GAME_TIMER();
-				char* selectedCharacter = 0;
-				int selectedIndex = 0;
-				bool bIsCaptial = 0;
-				selectedIndex = MISC::GET_RANDOM_INT_IN_RANGE(0, strnlen_s(ColumnTitle, 64) - 1); // idk if it includes the null character?
-				selectedCharacter = &ColumnTitle[selectedIndex];
-				bIsCaptial = std::isupper(*selectedCharacter);
-				if (bIsCaptial) {
-					*selectedCharacter = std::tolower(*selectedCharacter);
-				}
-				else {
-					*selectedCharacter = std::toupper(*selectedCharacter);
-				}
-				column1Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-				column2Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-				column3Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-
-				m_bColumnTitleneedsUpdate = false;
-				//return;
-			}
-			CPauseMenu::DoMethodOnHeader("SET_HEADING_DETAILS", "Unknown_Player_1", "SAT?SUN?MON?TUES?WEDS", "BANK $?,???,rscStructure::FixUpPointer", false); // FUCKING FINALLY BABY!!!
-			//CPauseMenu::DoMethodOnHeader("SET_CREW_TAG", true, true, "...RSG", true); // FUCKING FINALLY BABY!!!
-			CPauseMenu::DoMethodOnHeader("SET_HEADER_TITLE", "CGAME::0x0000021277DA7720@@::RAGE_TITLE_NAME", true, "", false); // FUCKING FINALLY BABY!!!
-			CPauseMenu::DoMethodOnHeader("SHIFT_CORONA_DESC", 0, 1); // FUCKING FINALLY BABY!!!
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 0, "SCALEFORM::MAP");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 1, "CNetwork@@131");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 2, "CNetwork@@m_SC->Friends");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 3, "RAGE::INFORM");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 4, "CNetTransaction");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 5, "RAGE::SETCONFIG");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 6, "RAGE::TELEMETRY");
-			CPauseMenu::DoMethodOnHeader("SET_MENU_HEADER_TEXT_BY_INDEX", 7, "CSocialClubV1::GetPictures()", 1, 0);
-			//CPauseMenu::DoMethodOnHeader("addColumn", "freemodeList", 8, 540);
-			CPauseMenu::DoMethodOnHeader("SHOW_HEADING_DETAILS", true);
-			CPauseMenu::DoMethodOnHeader("SHOW_MENU", true);
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0);
-			//CPauseMenu::DoMethodOnHeader("SET_DATA_SLOT", 0, 0, 0, 0, 0, 0, 0, 0, 0);
-			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 0);
-			//Unsure
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0); // first is columnID, second is Index In itemList
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 0, 0, 0, 0, 2, 3, false, "name1", 116, false, 0, 1, 0, ".*+ICO", false, "status", 1);
-			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 0);
-
+			//if (IsKeyJustUp(VK_F13)) {
+			//	int amtOfBlipsAreCreator = 0;
+			//	for (auto& b : m_Blips) {
+			//		if (!HUD::IS_MISSION_CREATOR_BLIP(b)) {
+			//			HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, true);
+			//			continue;
+			//		}
+			//		LAGInterface::Writeln("Blip: %d is a creator blip");
+			//		amtOfBlipsAreCreator++;
+			//	}
+			//	LAGInterface::Writeln("AmtOfBlipsCreator: %d", amtOfBlipsAreCreator);
+			//}
+			//if (MISC::GET_GAME_TIMER() >= LastColumnUpdate + 100) {
+			//	m_bColumnTitleneedsUpdate = true;
+			//}
+			//if (this->m_bColumnTitleneedsUpdate) {
+			//	LastColumnUpdate = MISC::GET_GAME_TIMER();
+			//	char* selectedCharacter = 0;
+			//	int selectedIndex = 0;
+			//	bool bIsCaptial = 0;
+			//	selectedIndex = MISC::GET_RANDOM_INT_IN_RANGE(0, strnlen_s(ColumnTitle, 64) - 1); // idk if it includes the null character?
+			//	selectedCharacter = &ColumnTitle[selectedIndex];
+			//	bIsCaptial = std::isupper(*selectedCharacter);
+			//	if (bIsCaptial) {
+			//		*selectedCharacter = std::tolower(*selectedCharacter);
+			//	}
+			//	else {
+			//		*selectedCharacter = std::toupper(*selectedCharacter);
+			//	}
+			//	column1Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+			//	column2Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+			//	column3Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+			//	m_bColumnTitleneedsUpdate = false;
+			//	//return;
+			//}
 			//Details Card
 			if (HUD::HAS_MENU_LAYOUT_CHANGED_EVENT_OCCURRED() || HUD::HAS_MENU_TRIGGER_EVENT_OCCURRED()) {
 				HUD::GET_MENU_LAYOUT_CHANGED_EVENT_DETAILS(&this->lastItemMenuId,
@@ -392,95 +820,43 @@ public:
 				LAGInterface::Writeln(" %d, %d]", this->lastItemMenuId, this->selectedItemUniqueId); // Last Menu Id Tells me where we are in the menu. 
 				LAGInterface::Writeln("%d, %d", HUD::PAUSE_MENU_GET_MOUSE_HOVER_INDEX(), HUD::PAUSE_MENU_GET_MOUSE_HOVER_UNIQUE_ID());
 			}
-				//LAGInterface::Writeln("Hovering over Mission Creator Blip!");
-				SelectedBlipId = HUD::GET_NEW_SELECTED_MISSION_CREATOR_BLIP();
-				//LAGInterface::Writeln("Selecting Blip: %d", SelectedBlipId);
-			CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 1, 0); // first is columnID, second is Index In itemList
-			CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 1, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
-			CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 1, 0, 0, 0, 2, 3, false, "name22", 116, false, 0, 1, 0, "..+ICO", false, "status", 1);
-			int icon = 8;
-			int iconComplete = 2;
-			int iconColour = 116;
-			CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 1, 1, 0, 1, 2, 3, 4, "Name", "IconRightText", icon, iconColour, iconComplete);
-			CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 1);
-			//Unsure
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 2, 0); // first is columnID, second is Index In itemList
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 2, 0, 0, 0, 2, 3, false, "name33", 116, false, 0, 1, 0, "..+ICO", false, "status", 1);
-			//CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", 2);
-			//PLAYER LIST -- PauseMPMenuFriendsListItem -- pause_menu_shared_components.gfx
-			//int PLAYERLIST_COLUMN_ID = 3;
-			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 0, column1Colour);
-			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 1, column2Colour);
-			//CPauseMenu::DoMethodOnHeader("SET_MENU_ITEM_COLOUR", 2, column3Colour);
-			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 0, column3Colour);
-			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 1, column2Colour);
-			//CPauseMenu::DoMethodOnHeader("SET_ALL_HIGHLIGHTS", 2, column1Colour);
-			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_FOCUS", 0, 0, 1, 0);
-			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 0, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
-			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 2, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
-			//CPauseMenu::DoMethodOnFrontend("SET_COLUMN_TITLE", 3, "TITLE", "TITLE1", "TITLE2", "TITLE3", "TITLE4", "TITLE5", "TITLE6");
-			//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", PLAYERLIST_COLUMN_ID); // first is columnID, second is Index In itemList
-			//for (int i = 0; i < 2; i++) {
-			//	CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT", 
-			//		PLAYERLIST_COLUMN_ID, // Column Id 
-			//		i, // Index In Item List
-			//		0, // Menu Id?
-			//		0, // Unique Id?
-			//		2, // TYPE?
-			//		1000, // PlayerRank?
-			//		false, // isSelectable 
-			//		"ITheWorthy", // Player Name 0
-			//		116, // Row Colour (HUDCOLOUR) 1
-			//		false, // vespura: reduce colours (pretty much always off no benefit.) 2
-			//		0, // unused3
-			//		65, // RightPlayerIcon 4
-			//		0, // unused5
-			//		".*+RSG", // 6
-			//		false, // vespura says : blink kick icon 7
-			//		"INVITED", // status Symbol Text 8
-			//		6, // Status Symbol colour 9
-			//		TestVal // 10?
-			//	);
-			//	CPauseMenu::DoMethodOnFrontend("DISPLAY_DATA_SLOT", PLAYERLIST_COLUMN_ID);
-			
-			//int f = GRAPHICS::ANIMPOSTFX_IS_RUNNING("PauseMenuFranklinIn");
-			if (CPauseMenu::IsMapInteriorModeActive()) {
+			if (CPauseMenu::IsPauseMenuInInteriorMode()) {
 				HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
 			}
-			if (!CPauseMenu::IsMapInteriorModeActive()) {
-				HUD::SET_FAKE_PAUSEMAP_PLAYER_POSITION_THIS_FRAME(26.38, -1408.922);
+			if (!CPauseMenu::IsPauseMenuInInteriorMode()) {
+				//HUD::SET_FAKE_PAUSEMAP_PLAYER_POSITION_THIS_FRAME(26.38, -1408.922);
 				HUD::HIDE_MINIMAP_INTERIOR_MAP_THIS_FRAME();
 			}
-			if (IsPauseMenuAccessed()) {
-				HUD::SET_FRONTEND_ACTIVE(0);
-			}
+			CPauseMenu::Update();
 			PauseMenuNeedsFadeOut = true;
 			return;
 		}
+		//LAGInterface::Writeln("After main pause menu blk");
 		if (PauseMenuNeedsFadeOut) {
-			LAGInterface::Writeln("Pause Menu has Faded Out!");
 			CPauseMenu::CloseMenu();
-			GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDFranklinOut");
-			GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDOut", 0, 0);
 			PauseMenuNeedsFadeOut = false;
+			return;
 		}
-		HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
+		//HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
 		//HUD::SET_RADAR_AS_INTERIOR_THIS_FRAME()
-		if (HUD::IS_HUD_COMPONENT_ACTIVE(19)) { // this actually does work to get the weapon wheels state. Just gotta find pfx
+		if ((HUD::IS_HUD_COMPONENT_ACTIVE(19) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) || HUD::IS_HUD_COMPONENT_ACTIVE(16)) { // this actually does work to get the weapon wheels state. Just gotta find pfx
+			//LAGInterface::Writeln("Wheel or Radio active");
 			if (!GRAPHICS::ANIMPOSTFX_IS_RUNNING("SwitchHUDIn")) {
 				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDFranklinIn");
+				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDMichaelIn");
+				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDTrevorIn");
 				GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDIn", 0, 1);
 			}
 			MISC::SET_TIME_SCALE(1.0f);
 			WeaponWheelCheck = true;
 			return;
 		}
+
 		if (WeaponWheelCheck) {
 			GRAPHICS::ANIMPOSTFX_STOP_ALL();
 			GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDOut", 0, 0);
 			WeaponWheelCheck = false;
 		}
-		CPauseMenu::Update();
 	}
 	void Shutdown() {
 		if (CPauseMenu::IsGameFrontendActive()) {
@@ -495,12 +871,120 @@ private:
 	bool WeaponWheelCheck = false;
 	bool PauseMenuNeedsFadeOut = false;
 };
+class CGM_ScriptMgr { // Game Scripts
+public:
+	struct sScriptInfo {
+		char* scriptName;
+		bool m_bIsSHV = false;
+	};
+	CGM_ScriptMgr() {
+		PopulateScripts();
+	}
+	int SummonScript(const char* scriptName, int scriptStackSize) {
+		SCRIPT::REQUEST_SCRIPT(scriptName);
+		int m_Attempts = 0;
+		static constexpr int MAX_SCRIPT_ATTEMPTS = 10;
+		WHILE(!SCRIPT::HAS_SCRIPT_LOADED(scriptName)) { 
+			m_Attempts++;
+			if (m_Attempts >= MAX_SCRIPT_ATTEMPTS) {
+				LAGInterface::Writeln("[CGM_ScriptMgr] Script: %s is invalid", scriptName);
+				break; // fuhhh
+			}
+		}
+		int threadId = SYSTEM::START_NEW_SCRIPT(scriptName, scriptStackSize);
+		LAGInterface::Writeln("[CGM_ScriptMgr] Script: %s is valid pushing threadidx: %d", scriptName, threadId);
+
+		//check threadid != invalid thread
+		m_Scripts.insert({ threadId, {CopySafeStr(scriptName), GetIfScriptIsSHV(MISC::GET_HASH_KEY(scriptName))}}); // @todo: check
+	}
+	bool m_bForceScriptCheck = false;
+	void Update() {
+		if (MISC::GET_GAME_TIMER() >= LastScriptCheck || LastScriptCheck == 0 || m_bForceScriptCheck) {
+			DestroyList();
+			PopulateScripts();
+			LAGInterface::Writeln("[CGM_ScriptMgr] Checking Scripts");
+			for (auto& m : m_Scripts) {
+				LAGInterface::Writeln("[CGM_ScriptMgr] %d { %s, %d}", m.first, m.second.scriptName, m.second.m_bIsSHV);
+			}
+			m_bForceScriptCheck = false;
+			LastScriptCheck = MISC::GET_GAME_TIMER() + 60'000; // 60 seconds/1 minute update
+		}
+	}
+	void TerminateThread(int threadId) {
+		
+	}
+private:
+	void DestroyItem(sScriptInfo& script){
+		delete[] script.scriptName;
+		script.scriptName = nullptr;
+	}
+	void DestroyList() {
+		for (auto& m : m_Scripts) {
+			DestroyItem(m.second);
+		}
+		m_Scripts.clear();
+
+	}
+	int LastScriptCheck = 0;
+	bool GetIfScriptIsSHV(Hash hash) {
+		return hash == MISC::GET_HASH_KEY(SCRIPT::GET_THIS_SCRIPT_NAME());
+	}
+	void PopulateScripts() {
+		SCRIPT::SCRIPT_THREAD_ITERATOR_RESET();
+		int scriptThreadIterator = SCRIPT::SCRIPT_THREAD_ITERATOR_GET_NEXT_THREAD_ID();
+		WHILE(SCRIPT::IS_THREAD_ACTIVE(scriptThreadIterator)) {
+			char* scriptname = CopySafeStr(SCRIPT::GET_NAME_OF_SCRIPT_WITH_THIS_ID(scriptThreadIterator));
+			bool isShv = false;
+			if (strncmp(scriptname, SCRIPT::GET_THIS_SCRIPT_NAME(), MAX_SAFE_STRING_LENGTH) == 0) { // this is unlikely we could force a compiler optimization if C++20
+				isShv = true;
+			}
+			LAGInterface::Writeln("[CGM_ScriptMgr] Debug Script: %d:%s", scriptThreadIterator, scriptname);
+			m_Scripts.insert({ scriptThreadIterator,  {scriptname, isShv}}); // I think this is fine? 
+			scriptThreadIterator = SCRIPT::SCRIPT_THREAD_ITERATOR_GET_NEXT_THREAD_ID(); // we have thread id.
+		}
+	}
+	std::unordered_map<int, sScriptInfo> m_Scripts;
+};
+enum eStackSize : int {
+	MICRO = 128,
+	MINI = 512,
+	DEFAULT = 1424,
+	SPECIAL_ABILITY = 1828,
+	FRIEND = 2050,
+	SHOP = 2324,
+	CELLPHONE = 2552,
+	VEHICLE_SPAWN = 3568,
+	CAR_MOD_SHOP = 3750,
+	PAUSE_MENU_SCRIPT = 3076,
+	APP_INTERNET = 4592,
+	MULTIPLAYER_MISSION = 5050,
+	CONTACTS_APP = 4000,
+	INTERACTION_MENU = 9800,
+	SCRIPT_XML = 8344,
+	PROPERTY_INT = 19400,
+	ACTIVITY_CREATOR_INT = 15900,
+	SMPL_INTERIOR = 2512,
+	WAREHOUSE = 14100,
+	IE_DELIVERY = 2324,
+	SHOP_CONTROLLER = 3800,
+	AM_MP_YACHT = 5000,
+	INGAMEHUD = 4600,
+	TRANSITION = 8032,
+	FMMC_LAUNCHER = 27000,
+	MULTIPLAYER_FREEMODE = 85000,
+	MISSION = 62500,
+	MP_LAUNCH_SCRIPT = 34750
+};
 class CCarWash : public fwScriptEnv{
+private:
+	CGM_ScriptMgr m_LocalScriptManager;
+	int StartupThreadId = 0;
 public:
 	SCRIPT_INIT(CCarWash);
 	CCarWash() = default; // this makes references impossible btw. however there isn't a good way around it? unless you want to change Functor to be variadic as well lmao.
 	CCarWash(int arg_1, int arg_2) {
-		this->m_bInsideInterior = arg_1;
+		this->m_bInsideInterior = 0;
+		//StartupThreadId = m_LocalScriptManager.SummonScript("startup", DEFAULT); // do default shtuff
 	}
 	void OnInit() {
 		DLC::ON_ENTER_MP();
@@ -524,10 +1008,14 @@ public:
 	}
 	bool m_bInsideInterior = false;
 	void OnTick() {
+		//if (IsKeyJustUp(VK_F13)) {
+		//	m_LocalScriptManager.m_bForceScriptCheck = true;
+		//}
+		m_LocalScriptManager.Update();
 		m_FreeCam.Update();
 		if (!SyncScene) {
 			DrawFreemodeMarker(DoorLocation); // door marker
-			DrawFreemodeMarker(GarageLocation); // garage
+			DrawFreemodeMarker(GarageLocation); // garage--
 		}
 		if (DoorLocation.DistCustomZ(PlayerCoords(), 1.1) <= 1.3 && !SyncScene) {
 			if (!pClone) {
@@ -576,7 +1064,7 @@ public:
 			CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
 		}
 		float fSync = SyncScene ? PED::GET_SYNCHRONIZED_SCENE_PHASE(SyncScene) : 0;
-		SHVDrawText(std::to_string(fSync).c_str(), 0.1, 0.1, 1.0f);
+		//SHVDrawText(std::to_string(fSync).c_str(), 0.1, 0.1, 1.0f);
 		if (SyncScene && fSync >= 0.65) {
 			ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(pClone, 1, 1);
 			ENTITY::SET_ENTITY_HAS_GRAVITY(pClone, 1);
@@ -591,7 +1079,6 @@ public:
 			ENTITY::SET_ENTITY_COORDS(pClone, 8.2346, -1399.715, -75.1, 1, 0, 0, 1);
 			ENTITY::SET_ENTITY_HEADING(pClone, 270.0);
 			CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(0.0, 0.0);
-
 			//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 26.26, -1402.355, -73.9997, 1, 0, 0, 1);
 			PLAYER::SIMULATE_PLAYER_INPUT_GAIT(PLAYER::PLAYER_ID(), 1.0, 1000, 1.0, 1, 0, 0);
 			SyncScene = 0;
@@ -601,8 +1088,10 @@ public:
 			m_bInsideInterior = true;
 		}
 		if (m_bInsideInterior) {
-			m_Hud.Update();
 		}
+		m_Hud.Update();
+		//LAGInterface::Writeln("After: CGamemodeHud::Update");
+
 	}
 private:
 	CGamemodeHud m_Hud = CGamemodeHud(116);
@@ -740,6 +1229,7 @@ public:
 			m_pCarWash = nullptr;
 		}
 		hud->Update();
+		//LAGInterface::Writeln("After Hud Update");
 		/*
 			hs4f_drp_off cutscene where lootbag gets dropped off. AFTER FIRST HEIST NOT MADRAZO CUT
 			hs4f_drp_cel cutscene where player drinks and throws lime off of balcony

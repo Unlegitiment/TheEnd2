@@ -133,15 +133,14 @@ public:
 		static_assert(std::is_base_of<fwScriptEnv, T>::value && "[SCRIPT_RUNTIME] " __FUNCTION__ ": Script Must be a Sub-type of fwScriptEnv!");
 		fwScriptEnv* retVal = nullptr;
 		if (sizeof...(Args) < 0) {
-			m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), T::CREATE, true);
 			retVal = CreateScriptNoArgs(T::GetScriptName_STATIC());
 			LAGInterface::Writeln("Script created with no VarArgs");
 		}
 		else {
-			m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), nullptr, true);
 			retVal = CreateScript<T>(std::forward<Args>(args)...);
 			LAGInterface::Writeln("Script created with VarArgs");
 		}
+		m_ScriptRegistry->AppendScript(T::GetScriptName_STATIC(), T::CREATE, true);
 		return retVal;
 	}
 	template<typename T, typename... Args> fwScriptEnv* CreateScript(Args&&... args) {
@@ -219,3 +218,8 @@ private:
 	CScriptRegistry* m_ScriptRegistry = new CScriptRegistry();
 	static inline CScriptRuntime* sm_pRuntime = nullptr;
 };
+/*
+	The current script infrastructure requires a default constructor else the create method won't work.
+	But I don't see a good way around it the script env also doesn't make a default because that goes outside of SCRIPT_INIT.
+	Not really a good way to do it lmao.
+*/

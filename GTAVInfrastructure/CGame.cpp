@@ -119,6 +119,17 @@ void CGame::LoadCheats()
 {
 	sGameCommand deloadAllScr2 = { MISC::GET_HASH_KEY("ULOAD_SCR2"),[&]()->void {
 		CGame::GetScriptMgr().TerminateAllNonSHVThreads();
+		BRAIN::DISABLE_SCRIPT_BRAIN_SET(0);
+		BRAIN::DISABLE_SCRIPT_BRAIN_SET(1);
+		BRAIN::DISABLE_SCRIPT_BRAIN_SET(2);
+		BRAIN::DISABLE_SCRIPT_BRAIN_SET(4);
+		BRAIN::DISABLE_SCRIPT_BRAIN_SET(8); // its a bitset this should enforce that I don't want anything to happen in singleplayer EXCEPT for my shit. 
+		MISC::DISABLE_STUNT_JUMP_SET(0);
+		MISC::DISABLE_STUNT_JUMP_SET(1);
+		MISC::DISABLE_STUNT_JUMP_SET(2);
+		MISC::DISABLE_STUNT_JUMP_SET(3);
+		SCRIPT::BG_SET_EXITFLAG_RESPONSE();
+		SCRIPT::BG_END_CONTEXT("GLOBAL");
 	} };
 	sGameCommand deloadAllScr = { MISC::GET_HASH_KEY("ULOAD_SCR"),[&]()->void {
 		PLAYER::FORCE_CLEANUP(2);
