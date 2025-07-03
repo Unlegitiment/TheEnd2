@@ -17,12 +17,14 @@
     <ClCompile Include="script.cpp" />
     <ClCompile Include="ScriptHeader.cpp" />
     <ClCompile Include="ShittySituationsDog.cpp" />
+    <ClCompile Include="streaming_replacement\fwStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="ScriptHeader.h" />
     <ClInclude Include="ShittySituationsDog.h" />
+    <ClInclude Include="streaming_replacement\fwStream.h" />
     <ClInclude Include="TheEnd.h" />
   </ItemGroup>
   <ItemGroup>

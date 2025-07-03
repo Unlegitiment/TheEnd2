@@ -7,6 +7,7 @@
     <ClCompile Include="ScriptHeader.cpp" />
     <ClCompile Include="ShittySituationsDog.cpp" />
     <ClCompile Include="..\LegitProject1\Markers\MarkerCommon.cpp" />
+    <ClCompile Include="streaming_replacement\fwStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -14,6 +15,7 @@
     <ClInclude Include="TheEnd.h" />
     <ClInclude Include="ScriptHeader.h" />
     <ClInclude Include="ShittySituationsDog.h" />
+    <ClInclude Include="streaming_replacement\fwStream.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
