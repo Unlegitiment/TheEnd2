@@ -110,7 +110,9 @@ private:
 };
 class CMapData {
 public:
-	CMapData();
+	CMapData() {
+
+	}
 	void AddItem(const char* item) {
 		this->m_List.push_back(Streamer::GetIPLManager()->CreateIPL(item));
 	}
@@ -135,9 +137,8 @@ public:
 	}
 	CMapData Finalize(bool request) {
 		if (request) m_MapData.RequestAll();
-		return std::move(m_MapData);
+		return std::move(m_MapData); // not using LIT integration (yet). probably not ever cause std::lib gonna be more effective anyways than whatever I can concoct. 
 	}
 private:
-
 	CMapData m_MapData;
 };

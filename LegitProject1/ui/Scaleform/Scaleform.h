@@ -1,6 +1,7 @@
 #pragma once
 #include <GTAVInfrastructure\SHV\natives.h>
 #include <LegitProject1\LInfras.h>
+#include <type_traits>
 class CScaleform {
 public:
 	explicit CScaleform(int Handle) :m_Handle(Handle) {} // fuck shit 
@@ -15,6 +16,10 @@ public:
 	}
 	int GetHandle() const { return m_Handle; }
 	template<typename T> void Call(T data) {
+		if constexpr (std::is_enum_v<T>) {
+			Call((int)data);
+			return;
+		}
 		LAGInterface::Writeln("Call<T>: Unhandled template specialization type: %s", typeid(T).name());
 	}
 	template<> void Call<int>(int data) {

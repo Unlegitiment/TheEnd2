@@ -12,13 +12,14 @@
 #include <LegitProject1\ui\Hud.h>
 #include <LegitProject1\ui\Scaleform\ScaleformMgr.h>
 #include "LegitProject1\Markers\MarkerCommon.h"
+#include "streaming_replacement\fwStream.h"
 void SHVDrawText(const char* string, float x, float y, float scale);
 class CDeveloperFreecam {
 public:
 	std::string Stringify(const CVector3& vec) {
 		return std::to_string(vec.GetX()) + " " + std::to_string(vec.GetY()) + " " + std::to_string(vec.GetZ());
 	}
-	CDeveloperFreecam() : m_CamPos(CAM::GET_GAMEPLAY_CAM_COORD()), m_CamRotation(0,0,0) {
+	CDeveloperFreecam() : m_CamPos(CAM::GET_GAMEPLAY_CAM_COORD()), m_CamRotation(0, 0, 0) {
 		if (!CAM::DOES_CAM_EXIST(this->cCam)) {
 			cCam = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
 		}
@@ -29,7 +30,8 @@ public:
 			if (CamActive) {
 				m_CamPos = CAM::GET_GAMEPLAY_CAM_COORD();
 				CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
-			} else{
+			}
+			else {
 				CAM::RENDER_SCRIPT_CAMS(0, 0, 0, 0, 0, 0);
 			}
 		}
@@ -124,6 +126,36 @@ private:
 	CVector3 m_CamPos;
 	CVector3 m_CamRotation;
 };
+class DevTools {
+public:
+	DevTools() {
+
+	}
+	static void InitClass() {
+		sm_pDevTools = new DevTools;
+	}
+	static DevTools* GetClass() {
+		return sm_pDevTools;
+	}
+	void Init() {
+	
+	}
+	void Update() {
+		sm_Freecam.Update();
+	}
+	void Destroy() {
+		
+	}
+	~DevTools() {
+		this->Destroy();
+	}
+	static void DestroyClass() {
+		delete sm_pDevTools;
+	}
+private:
+	CDeveloperFreecam sm_Freecam;
+	static inline DevTools* sm_pDevTools = nullptr;
+};
 class CPauseMenuPostFx {
 private:
 	enum eState {
@@ -213,8 +245,7 @@ public:
 	template<>void Call<bool>(bool x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(x); }
 	template<>void Call<char*>(char* x) { GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING(x); }
 };
-#define Static static inline
-class CFrontendMenu{
+class CFrontendMenu {
 public:
 	template<typename... T>
 	void Header(const char* Method, T&&... args) {
@@ -225,7 +256,7 @@ public:
 	template<typename... T>
 	void Frontend(const char* Method, T&&... args) {
 		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD_ON_FRONTEND(Method);
-		(m_SclBase.Call(std::forward<T>(args)),...);
+		(m_SclBase.Call(std::forward<T>(args)), ...);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	}
 	CScaleformBase& GetBase() { return m_SclBase; }
@@ -275,7 +306,7 @@ public:
 	}
 	void SetHeaderTitle(const char* title, bool Somevar, const char* subHeader, bool SomeOthervar) { // @TODO: Fix var name
 		if (!m_pScaleform) return;
-		m_pScaleform->Header("SET_HEADER_TITLE", title, Somevar, subHeader, SomeOthervar); 
+		m_pScaleform->Header("SET_HEADER_TITLE", title, Somevar, subHeader, SomeOthervar);
 	}
 	void SetHeadingDetails(const char* FirstLine, const char* SecondLine, const char* ThirdLine, bool SomeFlag) {
 		if (!m_pScaleform) return;
@@ -290,7 +321,7 @@ public:
 		m_pScaleform->Header("SET_MENU_HEADER_TEXT_BY_INDEX", Title);
 	}
 	//begin of annoying stuff.
-	 
+
 	void EmptyDataSlot(int PM_COLUMN_ID, int m_ItemIndex) {
 		//CPauseMenu::DoMethodOnFrontend("SET_DATA_SLOT_EMPTY", 0, 0); // first is columnID, second is Index In itemList
 		if (!m_pScaleform) return;
@@ -308,7 +339,7 @@ public:
 	Src: https://forum.cfx.re/t/lobby-menus-discussion-pause-menu-research/3909562/12
 	*/
 	template<typename... Args>
-	void SetDataSlot(int PM_COLUMN_ID, int ItemId, Args&&... args) { 
+	void SetDataSlot(int PM_COLUMN_ID, int ItemId, Args&&... args) {
 		if (!m_pScaleform) return;
 		m_pScaleform->Frontend("SET_DATA_SLOT", PM_COLUMN_ID, ItemId, std::forward<Args>(args)...); // gotta perfect forward lmao
 	}
@@ -324,7 +355,7 @@ public:
 		return m_pScaleform; // if you shoot me in the foot I will execute you. 
 	}
 private:
-	void StartInPostEffects(){
+	void StartInPostEffects() {
 		m_pPostEffects = new CPauseMenuPostFx();
 		m_pPostEffects->Init(CPauseMenuPostFx::MP);
 		m_pPostEffects->StartFade(CPauseMenuPostFx::FT_IN); // open Menu
@@ -342,13 +373,13 @@ private:
 };
 constexpr size_t MAX_SAFE_STRING_LENGTH = 1024; // Fetch this from a file if applicable. Would be nicer <3 
 inline bool IsStringEmptyOrNull(const char* String) {
-	return String == nullptr || strnlen_s(String, MAX_SAFE_STRING_LENGTH) == 0; 
+	return String == nullptr || strnlen_s(String, MAX_SAFE_STRING_LENGTH) == 0;
 }
 inline char* CopySafeStr(const char* src, size_t maxLen = MAX_SAFE_STRING_LENGTH) {
 	if (IsStringEmptyOrNull(src)) return "";
 	size_t size = strnlen_s(src, maxLen);
 	char* result = new char[size + 1] {};
-	strncpy_s(result, size+1, src, maxLen);
+	strncpy_s(result, size + 1, src, maxLen);
 	return result;
 }
 class CPauseMenuHeader {
@@ -369,7 +400,7 @@ public:
 		bool m_bHeaderInfo;
 	};
 	static constexpr size_t cMaxHeaderLength = 64;
-	CPauseMenuHeader(CPauseMenuBase*& rbase, int& rmenumax) : m_rMenuMax(rmenumax), m_rBase(rbase){
+	CPauseMenuHeader(CPauseMenuBase*& rbase, int& rmenumax) : m_rMenuMax(rmenumax), m_rBase(rbase) {
 		this->m_vpHeaderInfo.resize(m_rMenuMax, nullptr);
 	} // values must exist before we get here. 
 	static constexpr size_t DESCRIPTION_MAX = MAX_SAFE_STRING_LENGTH * 2;
@@ -436,7 +467,7 @@ public:
 		return;
 	}
 	sPauseMenuHeaderInfo*& GetItem(int idx) {
-		
+
 	}
 	void Update() { // we know that the pause menu must be open before we get here	
 		if (!m_rBase) return;
@@ -506,7 +537,7 @@ private:
 	int& m_rMenuMax;
 	std::vector<sPauseMenuHeaderInfo*> m_vpHeaderInfo;
 };
-class CPauseMenuController {  
+class CPauseMenuController {
 	// should have header items basically represents the entire state of the current pause menu.
 	// also move to a new super object like CMod and make it have its own skeleton and specify we want custom header logic.
 public:
@@ -547,39 +578,39 @@ public:
 		MP,
 		SP,
 	};
-	Static void Activate(MenuChoice h) {
+	static inline void Activate(MenuChoice h) {
 		CPauseMenu::ActiveMenu = CPauseMenu::GetMenuForChoice(h);
 		HUD::ACTIVATE_FRONTEND_MENU(CPauseMenu::ActiveMenu, 0, -1); // we don't start out with anything lmao.
 		m_pPauseMenuController = new CPauseMenuController(h == MP ? CPauseMenuController::MP : CPauseMenuController::SP);
 		m_pPauseMenuController->ActivateMenu();
 		m_bIsFrontendActive = true;
 	}
-	Static CPauseMenuController*& GetMenuController() {
+	static inline CPauseMenuController*& GetMenuController() {
 		return CPauseMenu::m_pPauseMenuController;
 	}
-	Static void Update() {
-		if(m_pPauseMenuController && IsGameFrontendActive()) m_pPauseMenuController->Update();
+	static inline void Update() {
+		if (m_pPauseMenuController && IsGameFrontendActive()) m_pPauseMenuController->Update();
 	}
-	Static void CloseMenu() {
+	static inline void CloseMenu() {
 		m_pPauseMenuController->CloseMenu();
 		m_bIsFrontendActive = false;
 	}
-	Static void Shutdown() {
+	static inline void Shutdown() {
 		if (m_pPauseMenuController) {
 			delete m_pPauseMenuController;
 		}
 	}
-	Static bool IsFrontendActive() {
+	static inline bool IsFrontendActive() {
 		return m_bIsFrontendActive;
 	}
-	Static bool IsGameFrontendActive() {
+	static inline bool IsGameFrontendActive() {
 		return HUD::IS_PAUSE_MENU_ACTIVE();
 	}
-	Static bool IsPauseMenuInInteriorMode() {
+	static inline bool IsPauseMenuInInteriorMode() {
 		return HUD::IS_PAUSEMAP_IN_INTERIOR_MODE();
 	}
 private:
-	Static Hash GetMenuForChoice(MenuChoice c) {
+	static inline Hash GetMenuForChoice(MenuChoice c) {
 		if (c == MP) {
 			return MISC::GET_HASH_KEY("FE_MENU_VERSION_MP_PAUSE");
 		}
@@ -587,10 +618,11 @@ private:
 			return MISC::GET_HASH_KEY("FE_MENU_VERSION_SP_PAUSE");
 		}
 	}
-	Static Hash ActiveMenu = 0x0;
-	Static CPauseMenuController* m_pPauseMenuController = nullptr;
-	Static bool m_bIsFrontendActive = false;
+	static inline Hash ActiveMenu = 0x0;
+	static inline CPauseMenuController* m_pPauseMenuController = nullptr;
+	static inline bool m_bIsFrontendActive = false;
 };
+
 class CGamemodeHud {
 	bool m_bIsFogOfWarHidden = true;
 	int m_iCurrentCharacterColor = 0;
@@ -614,10 +646,10 @@ public:
 		}
 	}
 	CGamemodeHud(int HudColour = 116) {
-		for (int i = 0; i < 20; i++) {
-			HUD::SET_MINIMAP_COMPONENT(i, true, -1);
-		}
-		HUD::USE_FAKE_MP_CASH(1);
+		//for (int i = 0; i < 20; i++) {
+		//	HUD::SET_MINIMAP_COMPONENT(i, true, -1);
+		//}
+		//HUD::USE_FAKE_MP_CASH(1);
 		ReplaceCharacterColour(HudColour); // BLACK (funzies)
 		HUD::SET_PLAYER_ICON_COLOUR(37);
 
@@ -632,15 +664,6 @@ public:
 		//	m_Blips.push_back(b);
 		//}
 		//this->MoneyScaleform = GRAPHICS::REQUEST_SCALEFORM_MOVIE("HUD_MP_CASH");
-		int attempts = 0;
-		WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(MoneyScaleform)) {
-			if (attempts >= 10) {
-				LAGInterface::Writeln("Failed to summon cash");
-				break;
-			}
-			this->MoneyScaleform = GRAPHICS::REQUEST_SCALEFORM_MOVIE("HUD_MP_CASH");
-			attempts++;
-		}
 		//this->m_MoneyScaleform = new CScaleform(this->MoneyScaleform);
 
 	}
@@ -661,19 +684,7 @@ public:
 	int selectedItemMenuId = 0;
 	int selectedItemUniqueId = 0;
 	int SelectedBlipId = 0;
-	int MoneyScaleform = 0;
-	//CScaleform* m_MoneyScaleform = nullptr;
-	void Update() {	
-		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(3);
-		//HUD::ALLOW_DISPLAY_OF_MULTIPLAYER_CASH_TEXT(true);
-		//HUD::USE_FAKE_MP_CASH(1);
-		//HUD::SET_MULTIPLAYER_BANK_CASH();
-		//HUD::SET_MULTIPLAYER_WALLET_CASH();
-		//HUD::SHOW_SCRIPTED_HUD_COMPONENT_THIS_FRAME(21);
-		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(4);
-		//HUD::SHOW_HUD_COMPONENT_THIS_FRAME(13);
-		//HUD::DISPLAY_CASH(1);
-		//HUD::HIDE_HUD_COMPONENT_THIS_FRAME(2);
+	void Update() {
 		HUD::HIDE_HUD_COMPONENT_THIS_FRAME(4);
 		HUD::HIDE_HUD_COMPONENT_THIS_FRAME(5);
 		HUD::HIDE_HUD_COMPONENT_THIS_FRAME(13);
@@ -684,9 +695,9 @@ public:
 			GRAPHICS::REQUEST_SCALEFORM_SCRIPT_HUD_MOVIE(22);
 			WHILE(!GRAPHICS::HAS_SCALEFORM_SCRIPT_HUD_MOVIE_LOADED(22));
 		}
-		
+
 		GRAPHICS::BEGIN_SCALEFORM_SCRIPT_HUD_MOVIE_METHOD(21, "SET_PLAYER_MP_CASH_WITH_STRING");
-		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("~HC_GREEN~<font size='20'>CASH <font size='26'>$0\n~HC_RED~-$2500\n~HC_GREENLIGHT~<font size='20'>BANK<font size='26'> $217000000\n~HC_GREENDARK~+$2500");
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_LITERAL_STRING("");
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 		//STATS::STAT_SET_INT(MISC::GET_HASH_KEY("SP0_"));
@@ -696,233 +707,126 @@ public:
 		const char* Cash = "0";
 		static constexpr float WEAPON_DISPLACEMENT = 0.0012f;
 		{
-			//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			//HUD::SET_TEXT_FONT(7);
-			//HUD::SET_TEXT_JUSTIFICATION(2);
-			//HUD::SET_TEXT_WRAP(0, 0.9512);
-			//HUD::SET_TEXT_SCALE(0, 0.59f);
-			//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~9899100");
-			//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0.05f-0.0012f, 1);
-
-			//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			//HUD::SET_TEXT_FONT(7);
-			//HUD::SET_TEXT_JUSTIFICATION(2);
-			//HUD::SET_TEXT_WRAP(0, 0.9517);
-			//HUD::SET_TEXT_SCALE(0, 0.59f);
-			//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~9899100");
-			//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0.05f+ 0.0015f, 1);
-			//// 0.9515
-			//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			//HUD::SET_TEXT_FONT(7);
-			//HUD::SET_TEXT_JUSTIFICATION(2);
-			//HUD::SET_TEXT_WRAP(0, 0.9505);
-			//HUD::SET_TEXT_SCALE(0, 0.59f);
-			//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~9899100");
-			//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0.05f, 1);
-
-			//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			//HUD::SET_TEXT_FONT(7);
-			//HUD::SET_TEXT_JUSTIFICATION(2);
-			//HUD::SET_TEXT_WRAP(0, 0.9525);
-			//HUD::SET_TEXT_SCALE(0, 0.59f);
-			//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~9899100");
-			//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0.05f, 1);
-		}
-
-		//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//HUD::SET_TEXT_FONT(7);
-		//HUD::SET_TEXT_OUTLINE();
-		//HUD::SET_TEXT_DROP_SHADOW();
-		//HUD::SET_TEXT_JUSTIFICATION(2);
-		//HUD::SET_TEXT_WRAP(0, 0.9515);
-		//HUD::SET_TEXT_SCALE(0, 0.59f);
-		//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("9899~m~100");
-		//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0, 0.04f, 1);
-		HUD::USE_FAKE_MP_CASH(1);
-		HUD::CHANGE_FAKE_MP_CASH(0, 0);
-		HUD::USE_FAKE_MP_CASH(0);
-
-		//FULL CASH DRAWING BELOW
-		//DROPSHADOW
-		//constexpr static float TEXT_DISPLACEMENT = 0.0012f;
-		//{
-		//	HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//	HUD::SET_TEXT_FONT(7);
-		//	HUD::SET_TEXT_JUSTIFICATION(2);
-		//	HUD::SET_TEXT_DROP_SHADOW();
-		//	HUD::SET_TEXT_OUTLINE();
-		//	HUD::SET_TEXT_SCALE(2, 0.652f);
-		//	HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$0");
-		//	HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f - TEXT_DISPLACEMENT, 1); // CASH
-		//	HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//	HUD::SET_TEXT_FONT(7);
-		//	HUD::SET_TEXT_JUSTIFICATION(2);
-		//	HUD::SET_TEXT_DROP_SHADOW();
-		//	HUD::SET_TEXT_OUTLINE();
-		//	HUD::SET_TEXT_SCALE(2, 0.652f);
-		//	HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$0");
-		//	HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f + TEXT_DISPLACEMENT, 1); // CASH
-		//}
-		//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//HUD::SET_TEXT_FONT(7);
-		//HUD::SET_TEXT_JUSTIFICATION(2);
-		//HUD::SET_TEXT_SCALE(1, 0.652f);
-		//HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~g~$0");
-		//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, 0.05f, 1); // CASH
-		//float fBankPosition = 0.095f;
-		////DROPSHADOW LAYER
-		//{
-		//	HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//	HUD::SET_TEXT_FONT(7);
-		//	HUD::SET_TEXT_JUSTIFICATION(2);
-		//	HUD::SET_TEXT_DROP_SHADOW();
-		//	HUD::SET_TEXT_OUTLINE();
-		//	HUD::SET_TEXT_SCALE(2, 0.652f);
-		//	HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$2147000800");
-		//	HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition - TEXT_DISPLACEMENT, 1); // BANK
-		//	HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//	HUD::SET_TEXT_FONT(7);
-		//	HUD::SET_TEXT_JUSTIFICATION(2);
-		//	HUD::SET_TEXT_DROP_SHADOW();
-		//	HUD::SET_TEXT_OUTLINE();
-		//	HUD::SET_TEXT_SCALE(2, 0.652f);
-		//	HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_BLACK~$2147000800");
-		//	HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition+TEXT_DISPLACEMENT, 1); // BANK
-		//}
-		////TEXT
-		//HUD::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		//HUD::SET_TEXT_FONT(7);
-		//HUD::SET_TEXT_JUSTIFICATION(2);
-		//HUD::SET_TEXT_SCALE(2, 0.652f);
-		//HUD::SET_TEXT_WRAP(0, 1 - 0.05315f);
-		//HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("~HC_GREENLIGHT~$2147000800");
-		//HUD::END_TEXT_COMMAND_DISPLAY_TEXT(0.85f, fBankPosition, 1); // BANK
-
-
-		//PLAYER::SET_SPECIAL_ABILITY_MP(PLAYER::PLAYER_ID(), 0, 0); //-- I don't think these natives work. Special Abilities are tied to the character model I think
-		//PLAYER::SPECIAL_ABILITY_FILL_METER(PLAYER::PLAYER_ID(), 1, 0);
-		HUD::SET_MINIMAP_HIDE_FOW(m_bIsFogOfWarHidden); // Disable Hud Fog.
-		DisablePauseMenuActivation();
-		if (IsPauseMenuAccessed() && !CPauseMenu::IsGameFrontendActive() && (MISC::UPDATE_ONSCREEN_KEYBOARD() != 0)) { // check uokb() != 0 bc we don't want to open whilst typing this frame.
-			CPauseMenu::Activate(CPauseMenu::SP); // Multiplayer_Pause give me a minute god damn vs
-			CPauseMenu::GetMenuController()->GetHeader()->SetTitleAndDesc("Title", "Desc"); // fetch these from CGamemode::GetModeName() && CGamemode::GetModeDescription(); but more likely just CGamemode::GetModeName();
-			CPauseMenu::GetMenuController()->GetHeader()->SetHeaderInfo(PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_ID()), "SATURDAY 00:00", "$2,147,000,800", true); // @todo update timer
-		}
-		//LAGInterface::Writeln("AFTER FOW && DISABLE BUTTONS");
-		//if (IsKeyJustUp(VK_F13)) {
-		//	int sclIndex = GRAPHICS::REQUEST_SCALEFORM_MOVIE("pause_menu_header");
-		//	WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(sclIndex));
-		//	CScaleform scaleform = CScaleform(sclIndex);
-		//	scaleform.CallScaleform("REMOVE_MENU");
-		//	scaleform.CallScaleform("BUILD_MENU", 0,1,2,3);
-		//	scaleform.CallScaleform("SET_HEADER_TITLE", "TEST", 1, "TEST", 1);
-		//	bool m_bTest = true;
-		//	WHILE(m_bTest) {
-		//		GRAPHICS::DRAW_SCALEFORM_MOVIE(scaleform.GetHandle(), 0.5f, 0.25f, 0.5f, 0.15, 255, 255, 255, 255, 255);
-		//		if (IsKeyJustUp(VK_F13)) {
-		//			m_bTest = false;
-		//		}
-		//	}
-		//}
-		//if (IsKeyJustUp(VK_F10)) {
-		//	if (IsKeyDown(VK_CONTROL)) {
-		//		TestVal -= 1;
-		//		LAGInterface::Writeln("TestVal == %d", TestVal);
-		//		return;
-		//	}
-		//	TestVal += 1;
-		//	LAGInterface::Writeln("TestVal == %d", TestVal);
-		//}
-		//HUD::SET_RADAR_ZOOM(0);
-		if (CPauseMenu::IsGameFrontendActive()) {
+			//PLAYER::SET_SPECIAL_ABILITY_MP(PLAYER::PLAYER_ID(), 0, 0); //-- I don't think these natives work. Special Abilities are tied to the character model I think
+			//PLAYER::SPECIAL_ABILITY_FILL_METER(PLAYER::PLAYER_ID(), 1, 0);
+			HUD::SET_MINIMAP_HIDE_FOW(m_bIsFogOfWarHidden); // Disable Hud Fog.
+			DisablePauseMenuActivation();
+			if (IsPauseMenuAccessed() && !CPauseMenu::IsGameFrontendActive() && (MISC::UPDATE_ONSCREEN_KEYBOARD() != 0)) { // check uokb() != 0 bc we don't want to open whilst typing this frame.
+				CPauseMenu::Activate(CPauseMenu::SP); // Multiplayer_Pause give me a minute god damn vs
+				CPauseMenu::GetMenuController()->GetHeader()->SetTitleAndDesc("Title", "Desc"); // fetch these from CGamemode::GetModeName() && CGamemode::GetModeDescription(); but more likely just CGamemode::GetModeName();
+				CPauseMenu::GetMenuController()->GetHeader()->SetHeaderInfo(PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_ID()), "SATURDAY 00:00", "$2,147,000,800", true); // @todo update timer
+			}
+			//LAGInterface::Writeln("AFTER FOW && DISABLE BUTTONS");
 			//if (IsKeyJustUp(VK_F13)) {
-			//	int amtOfBlipsAreCreator = 0;
-			//	for (auto& b : m_Blips) {
-			//		if (!HUD::IS_MISSION_CREATOR_BLIP(b)) {
-			//			HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, true);
-			//			continue;
+			//	int sclIndex = GRAPHICS::REQUEST_SCALEFORM_MOVIE("pause_menu_header");
+			//	WHILE(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(sclIndex));
+			//	CScaleform scaleform = CScaleform(sclIndex);
+			//	scaleform.CallScaleform("REMOVE_MENU");
+			//	scaleform.CallScaleform("BUILD_MENU", 0,1,2,3);
+			//	scaleform.CallScaleform("SET_HEADER_TITLE", "TEST", 1, "TEST", 1);
+			//	bool m_bTest = true;
+			//	WHILE(m_bTest) {
+			//		GRAPHICS::DRAW_SCALEFORM_MOVIE(scaleform.GetHandle(), 0.5f, 0.25f, 0.5f, 0.15, 255, 255, 255, 255, 255);
+			//		if (IsKeyJustUp(VK_F13)) {
+			//			m_bTest = false;
 			//		}
-			//		LAGInterface::Writeln("Blip: %d is a creator blip");
-			//		amtOfBlipsAreCreator++;
 			//	}
-			//	LAGInterface::Writeln("AmtOfBlipsCreator: %d", amtOfBlipsAreCreator);
 			//}
-			//if (MISC::GET_GAME_TIMER() >= LastColumnUpdate + 100) {
-			//	m_bColumnTitleneedsUpdate = true;
-			//}
-			//if (this->m_bColumnTitleneedsUpdate) {
-			//	LastColumnUpdate = MISC::GET_GAME_TIMER();
-			//	char* selectedCharacter = 0;
-			//	int selectedIndex = 0;
-			//	bool bIsCaptial = 0;
-			//	selectedIndex = MISC::GET_RANDOM_INT_IN_RANGE(0, strnlen_s(ColumnTitle, 64) - 1); // idk if it includes the null character?
-			//	selectedCharacter = &ColumnTitle[selectedIndex];
-			//	bIsCaptial = std::isupper(*selectedCharacter);
-			//	if (bIsCaptial) {
-			//		*selectedCharacter = std::tolower(*selectedCharacter);
+			//if (IsKeyJustUp(VK_F10)) {
+			//	if (IsKeyDown(VK_CONTROL)) {
+			//		TestVal -= 1;
+			//		LAGInterface::Writeln("TestVal == %d", TestVal);
+			//		return;
 			//	}
-			//	else {
-			//		*selectedCharacter = std::toupper(*selectedCharacter);
-			//	}
-			//	column1Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-			//	column2Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-			//	column3Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
-			//	m_bColumnTitleneedsUpdate = false;
-			//	//return;
+			//	TestVal += 1;
+			//	LAGInterface::Writeln("TestVal == %d", TestVal);
 			//}
-			//Details Card
-			if (HUD::HAS_MENU_LAYOUT_CHANGED_EVENT_OCCURRED() || HUD::HAS_MENU_TRIGGER_EVENT_OCCURRED()) {
-				HUD::GET_MENU_LAYOUT_CHANGED_EVENT_DETAILS(&this->lastItemMenuId,
-					&this->selectedItemMenuId,
-					&this->selectedItemUniqueId);
-				LAGInterface::Writeln ("[%d, %d, %d]", this->lastItemMenuId, this->selectedItemMenuId, this->selectedItemUniqueId);
-				HUD::GET_MENU_TRIGGER_EVENT_DETAILS(&this->lastItemMenuId, &selectedItemUniqueId);
-				LAGInterface::Writeln(" %d, %d]", this->lastItemMenuId, this->selectedItemUniqueId); // Last Menu Id Tells me where we are in the menu. 
-				LAGInterface::Writeln("%d, %d", HUD::PAUSE_MENU_GET_MOUSE_HOVER_INDEX(), HUD::PAUSE_MENU_GET_MOUSE_HOVER_UNIQUE_ID());
+			//HUD::SET_RADAR_ZOOM(0);
+			if (CPauseMenu::IsGameFrontendActive()) {
+				//if (IsKeyJustUp(VK_F13)) {
+				//	int amtOfBlipsAreCreator = 0;
+				//	for (auto& b : m_Blips) {
+				//		if (!HUD::IS_MISSION_CREATOR_BLIP(b)) {
+				//			HUD::SET_BLIP_AS_MISSION_CREATOR_BLIP(b, true);
+				//			continue;
+				//		}
+				//		LAGInterface::Writeln("Blip: %d is a creator blip");
+				//		amtOfBlipsAreCreator++;
+				//	}
+				//	LAGInterface::Writeln("AmtOfBlipsCreator: %d", amtOfBlipsAreCreator);
+				//}
+				//if (MISC::GET_GAME_TIMER() >= LastColumnUpdate + 100) {
+				//	m_bColumnTitleneedsUpdate = true;
+				//}
+				//if (this->m_bColumnTitleneedsUpdate) {
+				//	LastColumnUpdate = MISC::GET_GAME_TIMER();
+				//	char* selectedCharacter = 0;
+				//	int selectedIndex = 0;
+				//	bool bIsCaptial = 0;
+				//	selectedIndex = MISC::GET_RANDOM_INT_IN_RANGE(0, strnlen_s(ColumnTitle, 64) - 1); // idk if it includes the null character?
+				//	selectedCharacter = &ColumnTitle[selectedIndex];
+				//	bIsCaptial = std::isupper(*selectedCharacter);
+				//	if (bIsCaptial) {
+				//		*selectedCharacter = std::tolower(*selectedCharacter);
+				//	}
+				//	else {
+				//		*selectedCharacter = std::toupper(*selectedCharacter);
+				//	}
+				//	column1Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+				//	column2Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+				//	column3Colour = MISC::GET_RANDOM_INT_IN_RANGE(0, 116);
+				//	m_bColumnTitleneedsUpdate = false;
+				//	//return;
+				//}
+				//Details Card
+				if (HUD::HAS_MENU_LAYOUT_CHANGED_EVENT_OCCURRED() || HUD::HAS_MENU_TRIGGER_EVENT_OCCURRED()) {
+					HUD::GET_MENU_LAYOUT_CHANGED_EVENT_DETAILS(&this->lastItemMenuId,
+						&this->selectedItemMenuId,
+						&this->selectedItemUniqueId);
+					LAGInterface::Writeln("[%d, %d, %d]", this->lastItemMenuId, this->selectedItemMenuId, this->selectedItemUniqueId);
+					HUD::GET_MENU_TRIGGER_EVENT_DETAILS(&this->lastItemMenuId, &selectedItemUniqueId);
+					LAGInterface::Writeln(" %d, %d]", this->lastItemMenuId, this->selectedItemUniqueId); // Last Menu Id Tells me where we are in the menu. 
+					LAGInterface::Writeln("%d, %d", HUD::PAUSE_MENU_GET_MOUSE_HOVER_INDEX(), HUD::PAUSE_MENU_GET_MOUSE_HOVER_UNIQUE_ID());
+				}
+				if (CPauseMenu::IsPauseMenuInInteriorMode()) {
+					HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
+				}
+				if (!CPauseMenu::IsPauseMenuInInteriorMode()) {
+					HUD::HIDE_MINIMAP_INTERIOR_MAP_THIS_FRAME();
+				}
+				CPauseMenu::Update();
+				PauseMenuNeedsFadeOut = true;
+				return;
 			}
-			if (CPauseMenu::IsPauseMenuInInteriorMode()) {
-				HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
+			//LAGInterface::Writeln("After main pause menu blk");
+			if (PauseMenuNeedsFadeOut) {
+				CPauseMenu::CloseMenu();
+				PauseMenuNeedsFadeOut = false;
+				return;
 			}
-			if (!CPauseMenu::IsPauseMenuInInteriorMode()) {
-				//HUD::SET_FAKE_PAUSEMAP_PLAYER_POSITION_THIS_FRAME(26.38, -1408.922);
-				HUD::HIDE_MINIMAP_INTERIOR_MAP_THIS_FRAME();
+			//HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
+			//HUD::SET_RADAR_AS_INTERIOR_THIS_FRAME()
+			if ((HUD::IS_HUD_COMPONENT_ACTIVE(19) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) || HUD::IS_HUD_COMPONENT_ACTIVE(16)) { // this actually does work to get the weapon wheels state. Just gotta find pfx
+				//LAGInterface::Writeln("Wheel or Radio active");
+				if (!GRAPHICS::ANIMPOSTFX_IS_RUNNING("SwitchHUDIn")) {
+					GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDFranklinIn");
+					GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDMichaelIn");
+					GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDTrevorIn");
+					GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDIn", 0, 1);
+				}
+				MISC::SET_TIME_SCALE(1.0f);
+				WeaponWheelCheck = true;
+				return;
 			}
-			CPauseMenu::Update();
-			PauseMenuNeedsFadeOut = true;
-			return;
-		}
-		//LAGInterface::Writeln("After main pause menu blk");
-		if (PauseMenuNeedsFadeOut) {
-			CPauseMenu::CloseMenu();
-			PauseMenuNeedsFadeOut = false;
-			return;
-		}
-		//HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME();
-		//HUD::SET_RADAR_AS_INTERIOR_THIS_FRAME()
-		if ((HUD::IS_HUD_COMPONENT_ACTIVE(19) && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) || HUD::IS_HUD_COMPONENT_ACTIVE(16)) { // this actually does work to get the weapon wheels state. Just gotta find pfx
-			//LAGInterface::Writeln("Wheel or Radio active");
-			if (!GRAPHICS::ANIMPOSTFX_IS_RUNNING("SwitchHUDIn")) {
-				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDFranklinIn");
-				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDMichaelIn");
-				GRAPHICS::ANIMPOSTFX_STOP("SwitchHUDTrevorIn");
-				GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDIn", 0, 1);
-			}
-			MISC::SET_TIME_SCALE(1.0f);
-			WeaponWheelCheck = true;
-			return;
-		}
 
-		if (WeaponWheelCheck) {
-			GRAPHICS::ANIMPOSTFX_STOP_ALL();
-			GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDOut", 0, 0);
-			WeaponWheelCheck = false;
+			if (WeaponWheelCheck) {
+				GRAPHICS::ANIMPOSTFX_STOP_ALL();
+				GRAPHICS::ANIMPOSTFX_PLAY("SwitchHUDOut", 0, 0);
+				WeaponWheelCheck = false;
+			}
 		}
 	}
+
 	void Shutdown() {
 		if (CPauseMenu::IsGameFrontendActive()) {
 			HUD::SET_FRONTEND_ACTIVE(0);
@@ -935,6 +839,50 @@ public:
 private:
 	bool WeaponWheelCheck = false;
 	bool PauseMenuNeedsFadeOut = false;
+};
+class CSelector {
+public:
+	enum class eSlotIndex {
+		FRANKLIN = 0,
+		TREVOR = 1,
+		ONLINE = 2,
+		MICHAEL = 3
+	};
+	enum class eCharacters {
+		MICHAEL, TREVOR, FRANKLIN, ONLINE
+	};
+	enum eSelectorState {
+		UNDEFINED,
+		AVAILABLE,
+		UNAVAILABLE,
+		NOT_MET
+	};
+	void Init() {
+		m_Scaleform = CScaleformManager::Get()->GetScaleform("PLAYER_SWITCH");
+		if (!m_Scaleform) {
+			LAGInterface::Writeln("Scaleform not found!");
+		}
+	}
+	void Update() {
+		m_Scaleform->CallScaleform("SET_SWITCH_VISIBLE", false);
+		m_Scaleform->CallScaleform("SET_PLAYER_SELECTED", eSlotIndex::FRANKLIN);
+		m_Scaleform->CallScaleform("SET_SWITCH_SLOT", eSlotIndex::FRANKLIN, AVAILABLE, eCharacters::FRANKLIN, true);
+		m_Scaleform->CallScaleform("SET_SWITCH_SLOT", eSlotIndex::TREVOR, AVAILABLE, eCharacters::TREVOR, false);
+		m_Scaleform->CallScaleform("SET_SWITCH_SLOT", eSlotIndex::ONLINE, UNDEFINED, eCharacters::ONLINE, false);
+		m_Scaleform->CallScaleform("SET_SWITCH_SLOT", eSlotIndex::MICHAEL, AVAILABLE, eCharacters::MICHAEL, false);
+		m_Scaleform->CallScaleform("SET_MP_LABEL", "24 HOURS");
+		m_Scaleform->CallScaleform("SET_SWITCH_HINTED_ALL", false, false, false, false);
+		m_Scaleform->CallScaleform("SET_SWITCH_COUNTER_ALL", 0, 0, 0, 0);
+		m_Scaleform->CallScaleform("SET_SWITCH_VISIBLE", true);
+		GRAPHICS::DRAW_SCALEFORM_MOVIE(m_Scaleform->GetHandle(), 0.9346683f, 0.913f, 0.1306634f, 0.175f, 255, 255, 255, 255, 0);
+	}
+	void Shutdown() {
+		if (m_Scaleform) {
+			CScaleformManager::Get()->Release("PLAYER_SWITCH");
+		}
+	}
+private:
+	CScaleform* m_Scaleform;
 };
 class CGM_ScriptMgr { // Game Scripts
 public:
@@ -949,7 +897,7 @@ public:
 		SCRIPT::REQUEST_SCRIPT(scriptName);
 		int m_Attempts = 0;
 		static constexpr int MAX_SCRIPT_ATTEMPTS = 10;
-		WHILE(!SCRIPT::HAS_SCRIPT_LOADED(scriptName)) { 
+		WHILE(!SCRIPT::HAS_SCRIPT_LOADED(scriptName)) {
 			m_Attempts++;
 			if (m_Attempts >= MAX_SCRIPT_ATTEMPTS) {
 				LAGInterface::Writeln("[CGM_ScriptMgr] Script: %s is invalid", scriptName);
@@ -960,7 +908,7 @@ public:
 		LAGInterface::Writeln("[CGM_ScriptMgr] Script: %s is valid pushing threadidx: %d", scriptName, threadId);
 
 		//check threadid != invalid thread
-		m_Scripts.insert({ threadId, {CopySafeStr(scriptName), GetIfScriptIsSHV(MISC::GET_HASH_KEY(scriptName))}}); // @todo: check
+		m_Scripts.insert({ threadId, {CopySafeStr(scriptName), GetIfScriptIsSHV(MISC::GET_HASH_KEY(scriptName))} }); // @todo: check
 	}
 	bool m_bForceScriptCheck = false;
 	void Update() {
@@ -976,10 +924,10 @@ public:
 		}
 	}
 	void TerminateThread(int threadId) {
-		
+
 	}
 private:
-	void DestroyItem(sScriptInfo& script){
+	void DestroyItem(sScriptInfo& script) {
 		delete[] script.scriptName;
 		script.scriptName = nullptr;
 	}
@@ -1004,7 +952,7 @@ private:
 				isShv = true;
 			}
 			LAGInterface::Writeln("[CGM_ScriptMgr] Debug Script: %d:%s", scriptThreadIterator, scriptname);
-			m_Scripts.insert({ scriptThreadIterator,  {scriptname, isShv}}); // I think this is fine? 
+			m_Scripts.insert({ scriptThreadIterator,  {scriptname, isShv} }); // I think this is fine? 
 			scriptThreadIterator = SCRIPT::SCRIPT_THREAD_ITERATOR_GET_NEXT_THREAD_ID(); // we have thread id.
 		}
 	}
@@ -1040,32 +988,152 @@ enum eStackSize : int {
 	MISSION = 62500,
 	MP_LAUNCH_SCRIPT = 34750
 };
-class CCarWash : public fwScriptEnv{
+struct EnterSequence {
+	EnterSequence(const std::string& dict, const std::string& name, CVector3 sceneStart, float fRot) : m_AnimDictionary(dict), m_AnimName(name), m_SceneStart(sceneStart), m_fSequenceRotation(fRot){
+		STREAMING::REQUEST_ANIM_DICT(dict.c_str());
+		WHILE(!STREAMING::HAS_ANIM_DICT_LOADED(dict.c_str()));
+		
+	}
+	~EnterSequence() {
+		STREAMING::REMOVE_ANIM_DICT(m_AnimDictionary.c_str());
+	}
+	void BeginScene() {
+		m_SceneHandle = PED::CREATE_SYNCHRONIZED_SCENE(m_SceneStart.GetX(), m_SceneStart.GetY(), m_SceneStart.GetZ(), 0, 0, m_fSequenceRotation, 0);
+	}
+	//Animation Data
+	std::string m_AnimDictionary, m_AnimName;
+	CVector3 m_SceneStart;
+	float m_fSequenceRotation;
+	int m_SceneHandle;
+	// ** Cam Data. ** 
+};
+class CScriptUtils {
+public:
+	static CVector3 PlayerCoords() {
+		return ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+	}
+	static float PlayerHeading() {
+		return ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+	}
+private:
+
+};
+class CCarWashProperty {
+public:
+	CCarWashProperty() {}
+	CCarWashProperty(const CCarWashProperty&) = delete;
+	CCarWashProperty& operator=(const CCarWashProperty&) = delete;
+	void Update() {
+		if (m_DoorSequence) {
+			if (GetSyncSceneProgression() >= 0.65f) {
+				delete m_DoorSequence;
+				m_DoorSequence = nullptr;
+				EndEntranceGarage();
+			}
+			return;
+		}
+		DrawFreemodeMarker(m_GarageLocation);
+		DrawFreemodeMarker(m_DoorLocation);
+		if (m_GarageLocation.DistCustomZ(CScriptUtils::PlayerCoords(), 1.1) <= 1.3) {
+			BeginEntranceSequenceGarage();
+			return;
+		}
+	}
+	~CCarWashProperty() {
+		if(m_DoorSequence){
+			delete m_DoorSequence;
+			m_DoorSequence = nullptr;
+		}
+	}
+private:
+	void BeginEntranceSequenceGarage() {
+		const char* dict = "anim@apt_trans@garage";
+		const char* anim = "gar_open_3_left";
+		CVector3 m_SyncStart = { 10.244, -1405.610, 28.281797 };
+		float fRot = 50.f;
+		m_pClone = PLAYER::PLAYER_PED_ID();
+		m_DoorSequence = new EnterSequence(dict, anim, m_SyncStart, fRot);
+		m_DoorSequence->BeginScene();
+		TASK::TASK_SYNCHRONIZED_SCENE(m_pClone, m_DoorSequence->m_SceneHandle, dict, anim, 1000.0, -8.0, 4, 0, 0x447a0000, 0);
+		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 0, 0);
+		//c = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
+		//
+		//	0.954014, -1402.701050, 31.967506
+		//	-15.685034, 0.000000, -107.779564
+		//	45.000000
+		//
+		//CAM::SHAKE_CAM(c, "HAND_SHAKE", 1.0f);
+		//CAM::SET_CAM_COORD(c, 0.954014, -1402.701050, 31.967506);
+		//CAM::SET_CAM_ROT(c, -15.685034, 0.000000, -107.779564, 2);
+		//CAM::SET_CAM_FOV(c, 45.000000);
+		//CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
+	}
+	void EndEntranceGarage() {
+		// ped reset
+		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 1, 1);
+		ENTITY::SET_ENTITY_HAS_GRAVITY(m_pClone, 1);
+		STREAMING::LOAD_SCENE(8.4070, -1399.707, -72.8997);
+		CAM::RENDER_SCRIPT_CAMS(0, 0, 0, 0, 0, 0);
+		//interior
+		Interior interior = INTERIOR::GET_INTERIOR_AT_COORDS(26.07468000, -1398.97900000, -75.00000000);
+		INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_InteriorShellEntitySet);
+		INTERIOR::REFRESH_INTERIOR(interior);
+		//clean interior and prep for enter
+		GRAPHICS::REMOVE_DECALS_IN_RANGE(26.07468000, -1398.97900000, -75.00000000, 19);
+		TASK::CLEAR_PED_TASKS_IMMEDIATELY(m_pClone);
+		// put player inside interior
+		ENTITY::SET_ENTITY_COORDS(m_pClone, 8.2346, -1399.715, -75.1, 1, 0, 0, 1);
+		ENTITY::SET_ENTITY_HEADING(m_pClone, 270.0);
+		CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(0.0, 0.0);
+		//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 26.26, -1402.355, -73.9997, 1, 0, 0, 1);
+		//walk player
+		PLAYER::SIMULATE_PLAYER_INPUT_GAIT(PLAYER::PLAYER_ID(), 1.0, 1000, 1.0, 1, 0, 0);
+		if (m_pClone != PLAYER::PLAYER_PED_ID()) {
+			PED::DELETE_PED(&m_pClone);
+		}
+	}
+	int GetSyncSceneProgression() {
+		return PED::GET_SYNCHRONIZED_SCENE_PHASE(this->m_DoorSequence->m_SceneHandle);
+	}
+	Ped m_pClone =0;
+	const char* m_InteriorShellEntitySet = "aanthologies.burlesque";
+	EnterSequence* m_DoorSequence = nullptr;
+	CVector3 m_GarageLocation = { 10.22, -1405.5, 28.08 };
+	CVector3 m_DoorLocation = { 26.25, -1409.9, 28.08 };
+};
+class CCarWash : public fwScriptEnv {
 private:
 	CGM_ScriptMgr m_LocalScriptManager;
 	int StartupThreadId = 0;
+	int PLAYER_SWITCH_SCALEFORM = 0;
+	CSelector* m_Selector = nullptr;
+	CCarWashProperty* m_pProperty = nullptr;
 public:
 	SCRIPT_INIT(CCarWash);
 	CCarWash() = default; // this makes references impossible btw. however there isn't a good way around it? unless you want to change Functor to be variadic as well lmao.
 	CCarWash(int arg_1, int arg_2) {
 		this->m_bInsideInterior = 0;
-		//StartupThreadId = m_LocalScriptManager.SummonScript("startup", DEFAULT); // do default shtuff
+		m_Selector = new CSelector();
+		m_Selector->Init();
+		m_pProperty = new CCarWashProperty();
 	}
+
 	void OnInit() {
+		DevTools::InitClass();
 		DLC::ON_ENTER_MP();
+		Streamer::Init();
 	}
 	void OnShutdown() {
+		m_Selector->Shutdown();
+		delete m_Selector;
+		m_Selector = nullptr;
+		delete m_pProperty;
+		m_pProperty = nullptr;
+		DevTools::DestroyClass();
 		m_Hud.Shutdown();
+		Streamer::Shutdown();
 	}
-	CVector3 PlayerCoords() {
-		return ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-	}
-	float PlayerHeading() {
-		return ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
-	}
-	void InitiateLoad() {
 
-	}
 	Ped pClone = 0;
 	Cam c = 0;
 	bool IsPauseMenuAccessed() {
@@ -1073,16 +1141,15 @@ public:
 	}
 	bool m_bInsideInterior = false;
 	void OnTick() {
-		//if (IsKeyJustUp(VK_F13)) {
-		//	m_LocalScriptManager.m_bForceScriptCheck = true;
-		//}
-		m_LocalScriptManager.Update();
-		m_FreeCam.Update();
-		if (!SyncScene) {
-			DrawFreemodeMarker(DoorLocation); // door marker
-			DrawFreemodeMarker(GarageLocation); // garage--
+		GRAPHICS::RESET_SCRIPT_GFX_ALIGN();
+		if (IsKeyJustUp(VK_F13)) {
+			m_LocalScriptManager.m_bForceScriptCheck = true;
 		}
-		if (DoorLocation.DistCustomZ(PlayerCoords(), 1.1) <= 1.3 && !SyncScene) {
+		m_Selector->Update();
+		m_LocalScriptManager.Update();
+		m_pProperty->Update();
+		DevTools::GetClass()->Update();
+		if (DoorLocation.DistCustomZ(CScriptUtils::PlayerCoords(), 1.1) <= 1.3 && !SyncScene) {
 			if (!pClone) {
 				pClone = PLAYER::PLAYER_PED_ID();
 			}
@@ -1096,8 +1163,8 @@ public:
 			c = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
 			/*
 				25.314474, -1409.389648, 30.139713
-                -2.267719 0.000000 -108.787979
-                37.000000
+				-2.267719 0.000000 -108.787979
+				37.000000
 			*/
 			CAM::SHAKE_CAM(c, "HAND_SHAKE", 1.0f);
 			CAM::SET_CAM_COORD(c, 25.314474, -1409.389648, 29.839713);
@@ -1105,65 +1172,16 @@ public:
 			CAM::SET_CAM_FOV(c, 37.000000);
 			CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
 		}
-		if (GarageLocation.DistCustomZ(PlayerCoords(), 1.1) <= 1.3 && !SyncScene) {
-			if (!pClone) {
-				pClone = PLAYER::PLAYER_PED_ID();
-			}
-			const char* dict = "anim@apt_trans@garage";
-			const char* anim = "gar_open_3_left"; 
-			STREAMING::REQUEST_ANIM_DICT(dict);
-			WHILE(!STREAMING::HAS_ANIM_DICT_LOADED(dict));
-			SyncScene = PED::CREATE_SYNCHRONIZED_SCENE(10.244, -1405.610, 28.281797, 0, 0.000000, 50.0, 2);
-			TASK::TASK_SYNCHRONIZED_SCENE(pClone, SyncScene, dict, anim, 1000.0, -8.0, 4, 0, 0x447a0000, 0);
-			ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(pClone, 0, 0);
-			c = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
-			/*
-				0.954014, -1402.701050, 31.967506
-				-15.685034, 0.000000, -107.779564
-				45.000000
-			*/
-			CAM::SHAKE_CAM(c, "HAND_SHAKE", 1.0f);
-			CAM::SET_CAM_COORD(c, 0.954014, -1402.701050, 31.967506);
-			CAM::SET_CAM_ROT(c, -15.685034, 0.000000, -107.779564, 2);
-			CAM::SET_CAM_FOV(c, 45.000000);
-			CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
-		}
-		float fSync = SyncScene ? PED::GET_SYNCHRONIZED_SCENE_PHASE(SyncScene) : 0;
-		//SHVDrawText(std::to_string(fSync).c_str(), 0.1, 0.1, 1.0f);
-		if (SyncScene && fSync >= 0.65) {
-			ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(pClone, 1, 1);
-			ENTITY::SET_ENTITY_HAS_GRAVITY(pClone, 1);
-			STREAMING::LOAD_SCENE(8.4070, -1399.707, -72.8997);
-			CAM::RENDER_SCRIPT_CAMS(0, 0, 0, 0, 0, 0);
-			Interior interior = INTERIOR::GET_INTERIOR_AT_COORDS(26.07468000, -1398.97900000, -75.00000000);
-			INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_InteriorShellEntitySet);
-			INTERIOR::REFRESH_INTERIOR(interior);
-			GRAPHICS::REMOVE_DECALS_IN_RANGE(26.07468000, -1398.97900000, -75.00000000, 19);
-			TASK::CLEAR_PED_TASKS_IMMEDIATELY(pClone);
-			CAM::DESTROY_CAM(c, 0);
-			ENTITY::SET_ENTITY_COORDS(pClone, 8.2346, -1399.715, -75.1, 1, 0, 0, 1);
-			ENTITY::SET_ENTITY_HEADING(pClone, 270.0);
-			CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(0.0, 0.0);
-			//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 26.26, -1402.355, -73.9997, 1, 0, 0, 1);
-			PLAYER::SIMULATE_PLAYER_INPUT_GAIT(PLAYER::PLAYER_ID(), 1.0, 1000, 1.0, 1, 0, 0);
-			SyncScene = 0;
-			if (pClone != PLAYER::PLAYER_PED_ID()) {
-				PED::DELETE_PED(&pClone);
-			}
-			m_bInsideInterior = true;
-		}
 		if (m_bInsideInterior) {
+
 		}
 		m_Hud.Update();
-		//LAGInterface::Writeln("After: CGamemodeHud::Update");
-
 	}
 private:
 	CGamemodeHud m_Hud = CGamemodeHud(116);
 	bool WeaponWheelCheck = false;
 	bool PauseMenuNeedsFadeOut = false;
 	int SyncScene = 0;
-	CDeveloperFreecam m_FreeCam = CDeveloperFreecam();
 	const char* m_InteriorShellEntitySet = "aanthologies.burlesque";
 	CVector3 GarageLocation = { 10.22, -1405.5, 28.08 };
 	CVector3 DoorLocation = { 26.25, -1409.9, 28.08 };
@@ -1190,7 +1208,7 @@ private:
 
 	struct hashTEst {
 		unsigned long long hash;
-		std::array<const char* , 2> strs;
+		std::array<const char*, 2> strs;
 	};
 	void TestFunc() {
 		//PLAYER::FORCE_CLEANUP(2);
@@ -1283,9 +1301,9 @@ public:
 	void OnTick() override
 	{
 		//logf("Test");
-		if (IsKeyJustUp(VK_F14)&& !m_pCarWash) {
+		if (IsKeyJustUp(VK_F14) && !m_pCarWash) {
 			static int i = 0;
-			m_pCarWash = CScriptRuntime::Get()->AddScriptAndCreate<CCarWash>(1,0); // idk if this would work
+			m_pCarWash = CScriptRuntime::Get()->AddScriptAndCreate<CCarWash>(1, 0); // idk if this would work
 			CScriptRuntime::Get()->PrintAll();
 		}
 		if (IsKeyJustUp(VK_F15) && m_pCarWash) {
