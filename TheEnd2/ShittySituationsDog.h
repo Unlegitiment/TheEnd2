@@ -642,7 +642,7 @@ public:
 	void ShowChip(int chip) {
 		if (GRAPHICS::BEGIN_SCALEFORM_SCRIPT_HUD_MOVIE_METHOD(21, "SET_PLAYER_CHIPS")) {
 			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
-			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
+			GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1); // ayo wtf
 		}
 	}
 	CGamemodeHud(int HudColour = 116) {
@@ -701,9 +701,9 @@ public:
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 		//STATS::STAT_SET_INT(MISC::GET_HASH_KEY("SP0_"));
-		if (IsKeyJustUp(VK_F13)) {
-			ShowChip(4000);
-		}
+		//if (IsKeyJustUp(VK_F13)) {
+		//	ShowChip(4000);
+		//}
 		const char* Cash = "0";
 		static constexpr float WEAPON_DISPLACEMENT = 0.0012f;
 		{
@@ -988,24 +988,97 @@ enum eStackSize : int {
 	MISSION = 62500,
 	MP_LAUNCH_SCRIPT = 34750
 };
+
 struct EnterSequence {
+private:
+	void BeginSceneCam() {
+		int RotationOrder = 2;
+
+		if (!IsStringEmptyOrNull(this->m_ShakeEffect)) {
+			CAM::SHAKE_CAM(this->m_Cam, this->m_ShakeEffect, this->fShakeAmplitude);
+		}
+		CAM::SET_CAM_COORD(this->m_Cam, this->m_CameraPosition.GetX(), this->m_CameraPosition.GetY(), this->m_CameraPosition.GetZ());
+		CAM::SET_CAM_ROT(this->m_Cam, m_CameraRotation.GetX(), m_CameraRotation.GetY(), m_CameraRotation.GetZ(), RotationOrder); // RotationOrder doesn't seem to matter? 2 is what most of the scripts used?
+		CAM::SET_CAM_FOV(this->m_Cam, this->f_CamFOV);
+		CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
+	}
+public:
+
 	EnterSequence(const std::string& dict, const std::string& name, CVector3 sceneStart, float fRot) : m_AnimDictionary(dict), m_AnimName(name), m_SceneStart(sceneStart), m_fSequenceRotation(fRot){
 		STREAMING::REQUEST_ANIM_DICT(dict.c_str());
 		WHILE(!STREAMING::HAS_ANIM_DICT_LOADED(dict.c_str()));
-		
+		this->m_Cam = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1); // check 1?
+
 	}
+	EnterSequence(const EnterSequence&) = delete;
+	EnterSequence& operator=(const EnterSequence&) = delete;
+
 	~EnterSequence() {
 		STREAMING::REMOVE_ANIM_DICT(m_AnimDictionary.c_str());
+		if (this->m_Cam && CAM::DOES_CAM_EXIST(m_Cam)) {
+			CAM::DESTROY_CAM(this->m_Cam, 1); 
+		}
 	}
 	void BeginScene() {
 		m_SceneHandle = PED::CREATE_SYNCHRONIZED_SCENE(m_SceneStart.GetX(), m_SceneStart.GetY(), m_SceneStart.GetZ(), 0, 0, m_fSequenceRotation, 0);
+		BeginSceneCam();
 	}
 	//Animation Data
 	std::string m_AnimDictionary, m_AnimName;
 	CVector3 m_SceneStart;
 	float m_fSequenceRotation;
 	int m_SceneHandle;
+	float fSequenceThreshold;
 	// ** Cam Data. ** 
+	CVector3 m_CameraPosition = { 0,0,0 };
+	CVector3 m_CameraRotation = { 0,0,0 };
+	float f_CamFOV = 45.0f;
+	const char* m_ShakeEffect = "";
+	float fShakeAmplitude = 0.0f;
+	Camera m_Cam;
+	// ** Data For Transfer? ** 
+
+
+};
+class CBlip {
+public:
+	CBlip(CVector3 position) {
+		m_Blip = HUD::ADD_BLIP_FOR_COORD(position.GetX(), position.GetY(), position.GetZ());
+	}
+	CBlip(Entity entt) {
+		m_Blip = HUD::ADD_BLIP_FOR_ENTITY(entt);
+	}
+	CBlip(CVector3 position, float fRadius) {
+		m_Blip = HUD::ADD_BLIP_FOR_RADIUS(position.GetX(), position.GetY(), position.GetZ(), fRadius);
+	}
+	CBlip(CVector3 position, float width, float height) {
+		m_Blip = HUD::ADD_BLIP_FOR_AREA(position.GetX(), position.GetY(), position.GetZ(), width, height);
+	}
+	void SetRotation(float fRotation) {
+		this->m_fBlipRotation = fRotation;
+		HUD::SET_BLIP_ROTATION_WITH_FLOAT(m_Blip, fRotation);
+	}
+	void SetBlipName(const char* name) {
+		HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(name);
+		HUD::END_TEXT_COMMAND_SET_BLIP_NAME(m_Blip);
+		this->m_Name = name; // copy unfortunate.
+	}
+	void SetBlipName(std::string&& name) {
+		HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(name.c_str());
+		HUD::END_TEXT_COMMAND_SET_BLIP_NAME(m_Blip);
+	}
+	void SetBlipSprite(int spriteIndex, bool KeepName = true) {
+		HUD::SET_BLIP_SPRITE(m_Blip, spriteIndex);
+		if (KeepName) {
+			SetBlipName(std::move(m_Name)); // Check this cause im not sure lmao.
+		}
+	}
+private:
+	std::string m_Name;
+	float m_fBlipRotation = 0.0f;
+	Blip m_Blip;
 };
 class CScriptUtils {
 public:
@@ -1015,20 +1088,100 @@ public:
 	static float PlayerHeading() {
 		return ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 	}
+	static void SetPedCoordsHeadingGCamPitch(Ped Target, CVector3 Location, float Heading) {
+		ENTITY::SET_ENTITY_COORDS(Target, Location.GetX(), Location.GetY(), Location.GetZ(), 1, 0, 0, 1);
+		ENTITY::SET_ENTITY_HEADING(Target, Heading);
+		CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(0.0, 0.0);
+	}
 private:
 
 };
 class CCarWashProperty {
+private:
+	Blip m_Blip = 0;
+	void ConfigBlip() {
+		HUD::SET_BLIP_SPRITE(m_Blip, 100);
+		HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Car Wash");
+		HUD::END_TEXT_COMMAND_SET_BLIP_NAME(m_Blip);
+		HUD::SET_BLIP_AS_SHORT_RANGE(m_Blip, true);
+		HUD::SET_BLIP_SCALE(m_Blip, 1.3f);
+	}
 public:
-	CCarWashProperty() {}
+	CCarWashProperty() {
+		m_Interior = INTERIOR::GET_INTERIOR_AT_COORDS(26.07468000, -1398.97900000, -75.00000000); // check this works on boot else we have a NASTY bug!
+		m_Blip = HUD::ADD_BLIP_FOR_COORD(this->m_DoorLocation.GetX(), m_DoorLocation.GetY(), m_DoorLocation.GetZ());
+		ConfigBlip();
+
+	}
 	CCarWashProperty(const CCarWashProperty&) = delete;
 	CCarWashProperty& operator=(const CCarWashProperty&) = delete;
 	void Update() {
+		UpdateCommon();
+		UpdateInterior();
+		UpdateExterior();
+	}
+	~CCarWashProperty() {
+		if(m_DoorSequence){
+			delete m_DoorSequence;
+			m_DoorSequence = nullptr;
+		}
+		if (m_Blip) {
+			HUD::REMOVE_BLIP(&m_Blip);
+			m_Blip = 0;
+		}
+	}
+private:
+	void UpdateCommon() {
+		if (IsKeyJustUp(VK_F13)) { // DEBUG
+			HUD::SET_RADAR_ZOOM(0); // does this have to be persistent or can I just do it once?
+			HUD::SET_INSIDE_VERY_SMALL_INTERIOR(1);
+			m_bIsInsideInterior = !m_bIsInsideInterior;
+		}
+		if (INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID()) == m_Interior) {
+			m_bIsInsideInterior = true;
+		}
+		else {
+			m_bIsInsideInterior = false;
+			//LAGInterface::Writeln("You are no longer inside of the interior!");
+		}
+	}
+	bool m_bIsInsideInterior = false;
+	void UpdateInterior() {
+		if (!m_bIsInsideInterior) return;
+		if (!CPauseMenu::IsGameFrontendActive()) {
+			HUD::HIDE_MINIMAP_EXTERIOR_MAP_THIS_FRAME(); // Hide Exterior on Minimap.
+			HUD::SET_BLIP_DISPLAY(m_Blip, 0);
+		}
+		if (CPauseMenu::IsGameFrontendActive() && !CPauseMenu::IsPauseMenuInInteriorMode()) {
+			HUD::SET_FAKE_PAUSEMAP_PLAYER_POSITION_THIS_FRAME(m_DoorLocation.GetX(), m_DoorLocation.GetY()); // whats the diff between a GPS_PLAYER and a PAUSEMAP_PLAYER? lmao
+			HUD::SET_BLIP_DISPLAY(m_Blip, 2); // display if we are viewing from outside of the interior.
+		}
+		if (CPauseMenu::IsPauseMenuInInteriorMode()) {
+			HUD::SET_BLIP_DISPLAY(m_Blip, 0); // dont display at all!
+		}
+
+	}
+	void EndSequence() {
+		if (this->m_CurrentSequence == DOOR) {
+			EndEntranceSequenceDoor();
+		}
+		else if (this->m_CurrentSequence == GARAGE) {
+			EndEntranceGarage();
+		}
+		else {
+			LAGInterface::Writeln("You have no destination scheduled!");
+		}
+		HUD::SET_BLIP_DISPLAY(m_Blip, 0); // might want to just verify that this needs to be changed instead of doing per-tick item();
+		this->m_CurrentSequence = INVALID;
+		m_bIsInsideInterior = true;
+	}
+	void UpdateExterior() {
 		if (m_DoorSequence) {
-			if (GetSyncSceneProgression() >= 0.65f) {
+			if (GetSyncSceneProgression() >= m_DoorSequence->fSequenceThreshold) {
 				delete m_DoorSequence;
 				m_DoorSequence = nullptr;
-				EndEntranceGarage();
+				EndSequence();
 			}
 			return;
 		}
@@ -1038,59 +1191,97 @@ public:
 			BeginEntranceSequenceGarage();
 			return;
 		}
-	}
-	~CCarWashProperty() {
-		if(m_DoorSequence){
-			delete m_DoorSequence;
-			m_DoorSequence = nullptr;
+		if (m_DoorLocation.DistCustomZ(CScriptUtils::PlayerCoords(), 1.1) <= 1.3) {
+			BeginEntranceSequenceDoor();
+			return;
 		}
 	}
-private:
+	void BeginEntranceSequenceDoor() {
+		const char* dict = "anim@apt_trans@hinge_l";
+		const char* anim = "ext_player"; // check
+		CVector3 SyncScene = { 26.336155, -1408.914062, 28.230229 };
+		m_pClone = PLAYER::PLAYER_PED_ID();
+		m_DoorSequence = new EnterSequence(dict, anim, SyncScene, 358);
+		m_DoorSequence->fSequenceThreshold = 0.55;
+		m_DoorSequence->m_Cam = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
+		/*
+			25.314474, -1409.389648, 30.139713
+			-2.267719 0.000000 -108.787979
+			37.000000
+		*/
+		m_DoorSequence->m_ShakeEffect = "HAND_SHAKE";
+		m_DoorSequence->fShakeAmplitude = 1.0f;
+		m_DoorSequence->m_CameraPosition = { 25.314474, -1409.389648, 29.839713 };
+		m_DoorSequence->m_CameraRotation = {-2.267719, 0.000000f, -108.787979 };
+		m_DoorSequence->f_CamFOV = 37.000000;
+		m_DoorSequence->BeginScene();
+		TASK::TASK_SYNCHRONIZED_SCENE(m_pClone, m_DoorSequence->m_SceneHandle, dict, anim, 1000.0, -8.0, 4, 0, 0x447a0000, 0);
+		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 0, 0);
+		this->m_CurrentSequence = DOOR;
+	}
+	void EndEntranceSequenceDoor() {
+		ResetPed();
+		CAM::RENDER_SCRIPT_CAMS(0, 0, 0, 0, 0, 0);
+		CScriptUtils::SetPedCoordsHeadingGCamPitch(m_pClone, { 26.1542, -1402.204, -75.1 }, 358);
+	}
 	void BeginEntranceSequenceGarage() {
 		const char* dict = "anim@apt_trans@garage";
 		const char* anim = "gar_open_3_left";
 		CVector3 m_SyncStart = { 10.244, -1405.610, 28.281797 };
 		float fRot = 50.f;
+		float fCamFOV = 45.000000;
+		CVector3 CamRotVec = { -15.685034, 0.000000, -107.779564 };
+		CVector3 CamPosVec = { 0.954014, -1402.701050, 31.967506 };
+		const char* sCameraEffectName = "HAND_SHAKE";
+		float fCamAmp = 1.0f;
 		m_pClone = PLAYER::PLAYER_PED_ID();
 		m_DoorSequence = new EnterSequence(dict, anim, m_SyncStart, fRot);
+		m_DoorSequence->fSequenceThreshold = 0.65f;
+		m_DoorSequence->f_CamFOV = fCamFOV;
+		m_DoorSequence->m_CameraPosition = CamPosVec;
+		m_DoorSequence->m_CameraRotation= CamRotVec;
+		m_DoorSequence->m_ShakeEffect = sCameraEffectName;
+		m_DoorSequence->fShakeAmplitude = fCamAmp;
+		//CAM::SHAKE_CAM(m_DoorSequence->m_Cam, "HAND_SHAKE", 1.0f);
+		//CAM::SET_CAM_COORD(m_DoorSequence->m_Cam, 0.954014, -1402.701050, 31.967506);
+		//CAM::SET_CAM_ROT(m_DoorSequence->m_Cam, -15.685034, 0.000000, -107.779564, 2);
+		//CAM::SET_CAM_FOV(m_DoorSequence->m_Cam, );
+		//CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
 		m_DoorSequence->BeginScene();
 		TASK::TASK_SYNCHRONIZED_SCENE(m_pClone, m_DoorSequence->m_SceneHandle, dict, anim, 1000.0, -8.0, 4, 0, 0x447a0000, 0);
 		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 0, 0);
-		//c = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
-		//
-		//	0.954014, -1402.701050, 31.967506
-		//	-15.685034, 0.000000, -107.779564
-		//	45.000000
-		//
-		//CAM::SHAKE_CAM(c, "HAND_SHAKE", 1.0f);
-		//CAM::SET_CAM_COORD(c, 0.954014, -1402.701050, 31.967506);
-		//CAM::SET_CAM_ROT(c, -15.685034, 0.000000, -107.779564, 2);
-		//CAM::SET_CAM_FOV(c, 45.000000);
-		//CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
+		this->m_CurrentSequence = GARAGE;
+	}
+	enum eCurrentSequence : int{
+		DOOR,
+		GARAGE,
+		INVALID
+	};
+	eCurrentSequence m_CurrentSequence;
+	void ResetPed() {
+		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 1, 1);
+		ENTITY::SET_ENTITY_HAS_GRAVITY(m_pClone, 1);
 	}
 	void EndEntranceGarage() {
 		// ped reset
-		ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(m_pClone, 1, 1);
-		ENTITY::SET_ENTITY_HAS_GRAVITY(m_pClone, 1);
+		ResetPed();
 		STREAMING::LOAD_SCENE(8.4070, -1399.707, -72.8997);
 		CAM::RENDER_SCRIPT_CAMS(0, 0, 0, 0, 0, 0);
 		//interior
-		Interior interior = INTERIOR::GET_INTERIOR_AT_COORDS(26.07468000, -1398.97900000, -75.00000000);
-		INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(interior, m_InteriorShellEntitySet);
-		INTERIOR::REFRESH_INTERIOR(interior);
+		INTERIOR::ACTIVATE_INTERIOR_ENTITY_SET(m_Interior, m_InteriorShellEntitySet);
+		INTERIOR::REFRESH_INTERIOR(m_Interior);
 		//clean interior and prep for enter
 		GRAPHICS::REMOVE_DECALS_IN_RANGE(26.07468000, -1398.97900000, -75.00000000, 19);
 		TASK::CLEAR_PED_TASKS_IMMEDIATELY(m_pClone);
 		// put player inside interior
-		ENTITY::SET_ENTITY_COORDS(m_pClone, 8.2346, -1399.715, -75.1, 1, 0, 0, 1);
-		ENTITY::SET_ENTITY_HEADING(m_pClone, 270.0);
-		CAM::SET_GAMEPLAY_CAM_RELATIVE_PITCH(0.0, 0.0);
+
 		//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 26.26, -1402.355, -73.9997, 1, 0, 0, 1);
 		//walk player
 		PLAYER::SIMULATE_PLAYER_INPUT_GAIT(PLAYER::PLAYER_ID(), 1.0, 1000, 1.0, 1, 0, 0);
 		if (m_pClone != PLAYER::PLAYER_PED_ID()) {
 			PED::DELETE_PED(&m_pClone);
 		}
+
 	}
 	int GetSyncSceneProgression() {
 		return PED::GET_SYNCHRONIZED_SCENE_PHASE(this->m_DoorSequence->m_SceneHandle);
@@ -1100,6 +1291,7 @@ private:
 	EnterSequence* m_DoorSequence = nullptr;
 	CVector3 m_GarageLocation = { 10.22, -1405.5, 28.08 };
 	CVector3 m_DoorLocation = { 26.25, -1409.9, 28.08 };
+	Interior m_Interior = 0;
 };
 class CCarWash : public fwScriptEnv {
 private:
@@ -1142,39 +1334,13 @@ public:
 	bool m_bInsideInterior = false;
 	void OnTick() {
 		GRAPHICS::RESET_SCRIPT_GFX_ALIGN();
-		if (IsKeyJustUp(VK_F13)) {
-			m_LocalScriptManager.m_bForceScriptCheck = true;
-		}
+		//if (IsKeyJustUp(VK_F13)) {
+		//	m_LocalScriptManager.m_bForceScriptCheck = true;
+		//}
 		m_Selector->Update();
 		m_LocalScriptManager.Update();
 		m_pProperty->Update();
 		DevTools::GetClass()->Update();
-		if (DoorLocation.DistCustomZ(CScriptUtils::PlayerCoords(), 1.1) <= 1.3 && !SyncScene) {
-			if (!pClone) {
-				pClone = PLAYER::PLAYER_PED_ID();
-			}
-			const char* dict = "anim@apt_trans@hinge_l";
-			const char* anim = "ext_player"; // check
-			STREAMING::REQUEST_ANIM_DICT(dict);
-			WHILE(!STREAMING::HAS_ANIM_DICT_LOADED(dict));
-			SyncScene = PED::CREATE_SYNCHRONIZED_SCENE(26.336155, -1408.914062, 28.230229, 0, 0, 358, 2);
-			TASK::TASK_SYNCHRONIZED_SCENE(pClone, SyncScene, dict, anim, 1000.0, -8.0, 4, 0, 0x447a0000, 0);
-			ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(pClone, 0, 0);
-			c = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
-			/*
-				25.314474, -1409.389648, 30.139713
-				-2.267719 0.000000 -108.787979
-				37.000000
-			*/
-			CAM::SHAKE_CAM(c, "HAND_SHAKE", 1.0f);
-			CAM::SET_CAM_COORD(c, 25.314474, -1409.389648, 29.839713);
-			CAM::SET_CAM_ROT(c, -2.267719, 0.000000f, -108.787979, 2);
-			CAM::SET_CAM_FOV(c, 37.000000);
-			CAM::RENDER_SCRIPT_CAMS(1, 0, 0, 0, 0, 0);
-		}
-		if (m_bInsideInterior) {
-
-		}
 		m_Hud.Update();
 	}
 private:
